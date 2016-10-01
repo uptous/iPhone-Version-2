@@ -1,0 +1,13 @@
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '9.0'
+use_frameworks!
+
+pod 'Alamofire', '~> 3.4'
+pod 'SWRevealViewController'
+pod 'SDWebImage'
+pod 'TimeAgoInWords'
+pod 'RandomColorSwift'
+pod 'Just'
+pod "RappleProgressHUD"
+pod "SwiftString"
+pod 'M13PDFKit', '1.0.2'

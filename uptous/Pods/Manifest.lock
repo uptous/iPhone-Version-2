@@ -1,0 +1,39 @@
+PODS:
+  - Alamofire (3.4.2)
+  - Just (0.4.8)
+  - M13PDFKit (1.0.2):
+    - TTOpenInAppActivity
+  - RandomColorSwift (0.1.0)
+  - RappleProgressHUD (1.1.0)
+  - SDWebImage (3.8.1):
+    - SDWebImage/Core (= 3.8.1)
+  - SDWebImage/Core (3.8.1)
+  - SwiftString (0.5)
+  - SWRevealViewController (2.3.0)
+  - TimeAgoInWords (2.0.0)
+  - TTOpenInAppActivity (1.0)
+
+DEPENDENCIES:
+  - Alamofire (~> 3.4)
+  - Just
+  - M13PDFKit (= 1.0.2)
+  - RandomColorSwift
+  - RappleProgressHUD
+  - SDWebImage
+  - SwiftString
+  - SWRevealViewController
+  - TimeAgoInWords
+
+SPEC CHECKSUMS:
+  Alamofire: 6aa33201d20d069e1598891cf928883ff1888c7a
+  Just: ed7665521c49651ccf3a09a4280f563978f4741c
+  M13PDFKit: bc121a55ccb8ddfcf3982f1a5a8592b9f492cd73
+  RandomColorSwift: b2e95d6d3670def6d2f907ec7b7041138b268ac9
+  RappleProgressHUD: 8b20270859792fb03ea8b2cece54126daa31b84e
+  SDWebImage: 35f9627a3e44b4f292a8a8ce6a531fa488239b91
+  SwiftString: ec9c31c55b2aa147a1154f5f5f8483dc71e3165f
+  SWRevealViewController: 6d3fd97f70112fd7cef9de14df4260eacce4c63a
+  TimeAgoInWords: be1144596814c8de5d2fe51a60977ec98115e4fb
+  TTOpenInAppActivity: c2218fe419d03ddd4ffb1f07d52d66e0d213d0d4
+
+COCOAPODS: 0.39.0
