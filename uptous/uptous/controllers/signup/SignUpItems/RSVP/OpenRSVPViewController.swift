@@ -1,112 +1,152 @@
 //
-//  CommentViewController.swift
+//  OpenRSVPViewController.swift
 //  uptous
 //
-//  Created by Roshan Gita  on 9/11/16.
+//  Created by Roshan Gita  on 10/2/16.
 //  Copyright © 2016 SPA. All rights reserved.
 //
 
 import UIKit
 import Alamofire
 
-class CommentViewController: GeneralViewController {
 
-    @IBOutlet weak var groupNameLbl: UILabel!
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var msgNameLbl: UILabel!
-    @IBOutlet weak var newsItemNameLbl: UILabel!
-    @IBOutlet weak var ownerPhotoImgView: CircularImageView!
-    @IBOutlet weak var dateLbl: UILabel!
-    @IBOutlet weak var newsItemDescriptionLbl: UILabel!
-    @IBOutlet weak var replyToBtn: UIButton!
+class OpenRSVPViewController: GeneralViewController {
+
+    @IBOutlet weak var headingLbl: UILabel!
+    @IBOutlet weak var rsvpLbl: UILabel!
+    @IBOutlet weak var dateTimeLbl: UILabel!
+    @IBOutlet weak var attendeesTxtField: UITextField!
+    @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var commentsTextView: UIView!
     @IBOutlet weak var textField_comments: UITextField!
     @IBOutlet weak var btn_comments: UIButton!
     @IBOutlet var commentsBoxBottomSpacing: NSLayoutConstraint!
     @IBOutlet weak var textView_comments: HPTextViewInternal!
-    @IBOutlet weak var ownerView: UIView!
-    @IBOutlet weak var ownerNameLbl: UILabel!
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var gifImageView: UIImageView!
     
-    var data: Feed!
-    var commentList = NSArray()
+    var volunteerData = NSArray()
+    var sheetData: SignupSheet!
+    var itemData: Items!
     var scrollToTop = false
     var offset = 0
     var placeHolderText = "Type comments here.."
     var isCommentEdit_1_replyEdit_2 : Int?
+    var list = NSArray()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        Custom.buttonCorner(cancelButton)
+        self.headingLbl.text = ("Join the \(sheetData.name!)")
+        self.rsvpLbl.text = "Yeah! You have just RSVP'd as joining the party!"
+        self.dateTimeLbl.text = ("\(Custom.dayStringFromTime1(sheetData.createDate!))")
+        
+        //attendeesTxtField.text = data.volunteers![0].objectForKey("phone") as? String ?? ""
+        
         textView_comments.placeholder = placeHolderText
         textView_comments.text = placeHolderText
         textView_comments.textColor = UIColor.lightGrayColor()
         textField_comments.placeholder = "Type comments here.."
         // Observer Keyboard
         let center: NSNotificationCenter = NSNotificationCenter.defaultCenter()
-        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardWillHide(_:)), name: UIKeyboardDidHideNotification, object: nil)
-        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardDidChangeFrame(_:)), name: UIKeyboardDidChangeFrameNotification, object: nil)
+        center.addObserver(self, selector: #selector(OpenRSVPViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        center.addObserver(self, selector: #selector(OpenRSVPViewController.keyboardWillHide(_:)), name: UIKeyboardDidHideNotification, object: nil)
+        center.addObserver(self, selector: #selector(OpenRSVPViewController.keyboardDidChangeFrame(_:)), name: UIKeyboardDidChangeFrameNotification, object: nil)
         
-        let tapRecognizer = UITapGestureRecognizer(target: self , action: #selector(ReplyAllViewController.HideTextKeyboard(_:)))
+        let tapRecognizer = UITapGestureRecognizer(target: self , action: #selector(OpenRSVPViewController.HideTextKeyboard(_:)))
         tableView.addGestureRecognizer(tapRecognizer)
         
         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
-            self.updateData(self.data)
-            self.fetchCommentList()
-        }
-        Custom.fullCornerView(ownerView)
-
+         dispatch_after(delayTime, dispatch_get_main_queue()) {
+            //self.updateData(self.data)
+            //self.fetchItems()
+         }
+        
+        let imageData = NSData(contentsOfURL: NSBundle.mainBundle().URLForResource("smiley_test", withExtension: "gif")!)
+        let advTimeGif = UIImage.gifImageWithData(imageData!)
+        gifImageView.image = advTimeGif
+        
+        print(self.itemData.volunteers!)
+        print(self.itemData.volunteers!.count)
+        self.volunteerData = self.itemData.volunteers!
+        self.tableView.reloadData()
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.tableView.hidden = true
+        //self.tableView.hidden = true
         tableView.estimatedRowHeight = 110
         tableView.rowHeight = UITableViewAutomaticDimension
     }
     
     //Post Comment
-    func postComment(msg: String) {
-        let apiName = PostCommentAPI + ("\(data.feedId!)")
+    func postComment(msg: String,attendees: String) {
+        //let opportunityID = result.objectForKey("id") as? String
+        let apiName = SignupItems + ("\(sheetData.id!)") + ("/item/\(itemData.Id!)/Add")
         ActivityIndicator.show()
-        let parameters = ["contents": msg]
+        
+        let parameters = ["comment": msg,"numberOfAttendees": attendees]
         
         Alamofire.request(.POST, apiName, headers: appDelegate.loginHeaderCredentials,parameters: parameters)
             .responseJSON { response in
                 ActivityIndicator.hide()
                 //if self.commentList.count > 0 {
-                    self.fetchCommentList()
+                self.fetchItems()
                 //}
         }
     }
     
     //Fetch Comment
-    func fetchCommentList() {
-        let apiName = FetchCommentAPI + ("\(data.feedId!)")
+    func fetchItems() {
+        let apiName = SignupItems + ("\(sheetData.id!)")
         ActivityIndicator.show()
         
         Alamofire.request(.GET, apiName, headers: appDelegate.loginHeaderCredentials)
             .responseJSON { response in
-                
-                if let JSON = response.result.value {
-                    print("JSON: \(JSON)")
+                if let result = response.result.value {
                     ActivityIndicator.hide()
-                    self.commentList = response.result.value as! NSArray
-                    if self.commentList.count > 0 {
-                        self.tableView.hidden = false
-                        self.tableView.reloadData()
-                    }
+                    let datas = (result as? NSArray)!
+                    let dic = datas.objectAtIndex(0) as? NSDictionary
+                    let sheet = SignupSheet(info: dic)
+                    let item = (dic?.objectForKey("items")) as! NSArray
+                    let dic1 = item.objectAtIndex(0) as? NSDictionary
+                    
+//                    self.headingLbl.text = ("Join the \(sheet.name)")
+//                    self.rsvpLbl.text = "Yeah! You have just RSVP'd as joining the party!"
+//                    self.dateTimeLbl.text = ("\(Custom.dayStringFromTime1(sheet.createDate!))")
+//                    
+                    //attendeesTxtField.text = data.volunteers![0].objectForKey("phone") as? String ?? ""
+                    
+                    //self.itemsDatas = (dic1?.objectForKey("volunteers")) as! NSArray
+                    //self.tableView.reloadData()
                 }else {
                     ActivityIndicator.hide()
                 }
         }
     }
     
+    
+    //MARK:- Keyboard
     func HideTextKeyboard(sender: UITapGestureRecognizer?) {
+        //textField_comments.resignFirstResponder()
         placeHolderText = "Type comments here.."
         textView_comments.text = placeHolderText
         textView_comments.textColor = UIColor.lightGrayColor()
         textView_comments.resignFirstResponder()
+    }
+    
+    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         
+        // Check offset and load more feeds
+        let currentOffset = scrollView.contentOffset.y
+        let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height;
+        
+        if (maximumOffset - currentOffset <= 200.0) {
+            
+            //            if commentArray?.count > 0 {
+            //                getCommentsListForStatus ()
+            //
+            //            }
+        }
     }
     
     func tableViewScrollToBottom(animated: Bool) {
@@ -116,20 +156,28 @@ class CommentViewController: GeneralViewController {
         
         dispatch_after(time, dispatch_get_main_queue(), {
             
-            let numberOfRows = (self.commentList.count) - 2
-            
+            let numberOfSections = self.tableView.numberOfSections
+            let numberOfRows = (self.list.count) - self.tableView.numberOfRowsInSection(numberOfSections-1)
             if numberOfRows > 0 {
                 let indexPath = NSIndexPath(forRow: 0, inSection: numberOfRows)
                 self.tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: animated)
             }
-            
         })
     }
     
     @IBAction func commentsSend_btnAction(sender: UIButton) {
-        if (textView_comments.text != "" ||  textView_comments.text != " ") && textView_comments.textColor == UIColor.blackColor() {
-            postComment(textView_comments.text)
-            textView_comments.text = ""
+        if (textView_comments.text != "" || textView_comments.text != " ") && textView_comments.textColor == UIColor.blackColor() {
+            if attendeesTxtField.text == "" || attendeesTxtField.text == nil {
+                BaseUIView.toast("Please enter Attendees.")
+                attendeesTxtField.becomeFirstResponder()
+                textView_comments.resignFirstResponder()
+            }else {
+                postComment(textView_comments.text, attendees: attendeesTxtField.text!)
+                attendeesTxtField.text = ""
+                textView_comments.text = ""
+                attendeesTxtField.becomeFirstResponder()
+                textView_comments.resignFirstResponder()
+            }
             
         }else {
             BaseUIView.toast("Please enter text")
@@ -138,13 +186,10 @@ class CommentViewController: GeneralViewController {
     }
     
     // MARK: - UIKeyBoard Delegate
-    
     func keyboardWillShow(notification: NSNotification) {
         let info:NSDictionary = notification.userInfo!
         let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
-        
         let keyboardHeight:CGFloat = keyboardSize.height
-        
         
         UIView.animateWithDuration(0.25, delay: 0.25, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
             
@@ -152,15 +197,12 @@ class CommentViewController: GeneralViewController {
             
             }, completion: {
                 (value: Bool) in
-                
         })
-        
     }
     
     func keyboardWillHide(notification: NSNotification) {
         let info:NSDictionary = notification.userInfo!
         let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
-        
         let keyboardHeight:CGFloat = keyboardSize.height
         
         self.commentsBoxBottomSpacing.constant = keyboardHeight
@@ -168,7 +210,6 @@ class CommentViewController: GeneralViewController {
             self.commentsBoxBottomSpacing.constant = 0
             self.view.layoutIfNeeded()
             }, completion: nil)
-        
         
     }
     
@@ -188,105 +229,48 @@ class CommentViewController: GeneralViewController {
     
     // MARK: - UITextFiled Delegate
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        
         textField_comments.resignFirstResponder()
         return true
     }
     
-    
-    func attributedString(str: String) -> NSAttributedString? {
-        let attributes = [
-            NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue
-        ]
-        let attributedString = NSAttributedString(string: str, attributes: attributes)
-        return attributedString
-    }
-    
-    
-    
-    func updateData(data: Feed) {
-        
-        if data.ownerPhotoUrl == "https://dsnn35vlkp0h4.cloudfront.net/images/blank_image.gif" {
-            ownerView.hidden = false
-            ownerPhotoImgView.hidden = true
-            let stringArray = data.ownerName?.componentsSeparatedByString(" ")
-            let firstName = stringArray![0]
-            let secondName = stringArray![1]
-            let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
-            
-            ownerNameLbl.text = resultString
-            let color1 = Utility.hexStringToUIColor(data.ownerBackgroundColor!)
-            let color2 = Utility.hexStringToUIColor(data.ownerTextColor!)
-            ownerView.backgroundColor = color1
-            ownerNameLbl.textColor = color2
-            
-            
-        }else {
-            ownerView.hidden = true
-            ownerPhotoImgView.hidden = false
-            if let avatarUrl = data.ownerPhotoUrl {
-                ownerPhotoImgView.setUserAvatar(avatarUrl)
-            }
-        }
-
-        
-        let attributedStr = NSMutableAttributedString()
-        if data.communityName != "" {
-            let attributedString1 = NSAttributedString(string: ("\(data.ownerName!) in: "), attributes: nil)
-            attributedStr.appendAttributedString(attributedString1)
-            attributedStr.appendAttributedString(attributedString(" \(data.communityName!)")!)
-        }else{
-            
-            let attributedString1 = NSAttributedString(string: ("\(data.ownerName!)"), attributes: nil)
-            attributedStr.appendAttributedString(attributedString1)
-        }
-        groupNameLbl.attributedText = attributedStr
-        
-        let name = data.ownerName!.componentsSeparatedByString(" ")
-        msgNameLbl.text = ("\(name[0]) message")
-        newsItemNameLbl.text = data.newsItemName
-        newsItemDescriptionLbl.text = data.newsItemDescription!.decodeHTML()
-
-        dateLbl.text = ("\(Custom.dayStringFromTime(data.createDate!))")
-    }
-    
     //MARK: - Button Action
     @IBAction func backBtnClick(sender: UIButton) {
-        ActivityIndicator.hide()
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
 }
 
 //MARK:- TableView
-extension CommentViewController: UITableViewDelegate, UITableViewDataSource {
+extension OpenRSVPViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.commentList.count
+        
+        return self.volunteerData.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("ReadMoreCell") as! ReadMoreCell
-        let data = commentList[indexPath.row] as? NSDictionary
-        print(Comment(info: data))
-        cell.updateData(Comment(info: data!))
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier("RSVPItemCell") as! RSVPItemCell
+        let data = self.volunteerData[indexPath.row] as? NSDictionary
+        cell.updateData(data!)
+        
         return cell
     }
     
 }
 
-// MARK: - Extensions for UITextView
 
-extension CommentViewController: UITextViewDelegate {
+// MARK: - Extensions for UITextView
+extension OpenRSVPViewController: UITextViewDelegate {
     
     func textViewDidBeginEditing(textView: UITextView) {
         
@@ -346,5 +330,3 @@ extension CommentViewController: UITextViewDelegate {
     }
     
 }
-
-

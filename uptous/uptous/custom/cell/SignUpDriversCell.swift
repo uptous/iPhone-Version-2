@@ -13,10 +13,10 @@ class SignUpDriversCell: UITableViewCell {
     @IBOutlet weak var volunteeredView: UIView!
     @IBOutlet weak var openView: UIView!
     @IBOutlet weak var fullView: UIView!
-    @IBOutlet weak var signUpFromLbl: UILabel!
-    @IBOutlet weak var signUpToLbl: UILabel!
-    @IBOutlet weak var volunteeredFromLbl: UILabel!
-    @IBOutlet weak var volunteeredToLbl: UILabel!
+    @IBOutlet weak var openFromLbl: UILabel!
+    @IBOutlet weak var openToLbl: UILabel!
+    @IBOutlet weak var fullFromLbl: UILabel!
+    @IBOutlet weak var fullToLbl: UILabel!
     @IBOutlet weak var volunteeredLbl: UILabel!
 
     @IBOutlet weak var ownerPhotoImgView: CircularImageView!
@@ -24,31 +24,49 @@ class SignUpDriversCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        // Initialization code
         cornerView(volunteeredView)
         cornerView(fullView)
         cornerView(openView)
-        
     }
     
     func updateView(data: Items) {
-        print(data)
-        
+        let attributedStr = NSMutableAttributedString()
+        let attributedStr1 = NSMutableAttributedString()
         if data.volunteerStatus == "Open" {
             volunteeredView.hidden = true
             fullView.hidden = true
             openView.hidden = false
+            
+            let attributedString1 = NSAttributedString(string: ("\(data.name!)"), attributes: nil)
+            attributedStr.appendAttributedString(Custom.attributedString("From: ",size: 16.0)!)
+            attributedStr.appendAttributedString(attributedString1)
+            openFromLbl.attributedText = attributedStr
+            
+            let attributedString2 = NSAttributedString(string: ("\(data.extra!)"), attributes: nil)
+            attributedStr1.appendAttributedString(Custom.attributedString("To: ",size: 16.0)!)
+            attributedStr1.appendAttributedString(attributedString2)
+            openToLbl.attributedText = attributedStr1
             
         }else if data.volunteerStatus == "Volunteered" {
             volunteeredView.hidden = false
             fullView.hidden = true
             openView.hidden = true
             
+            
         }else if data.volunteerStatus == "Full" {
             volunteeredView.hidden = true
             fullView.hidden = false
             openView.hidden = true
+            
+            /*let attributedString1 = NSAttributedString(string: ("\(data.name!)"), attributes: nil)
+            attributedStr.appendAttributedString(Custom.attributedString("From: ",size: 16.0)!)
+            attributedStr.appendAttributedString(attributedString1)
+            fullFromLbl.text = ("\(attributedStr)")
+            
+            let attributedString2 = NSAttributedString(string: ("\(data.extra!)"), attributes: nil)
+            attributedStr.appendAttributedString(Custom.attributedString("To: ",size: 16.0)!)
+            attributedStr.appendAttributedString(attributedString2)
+            fullToLbl.text = ("\(attributedStr)")*/
             
         }
        /* if data.dateTime == 0 {

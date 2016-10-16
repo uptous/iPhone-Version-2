@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PDFViewerViewController: GeneralViewController {
+class PDFViewerViewController: GeneralViewController,UIWebViewDelegate {
 
     @IBOutlet weak var webView: UIWebView!
     var data: Feed!
@@ -28,15 +28,36 @@ class PDFViewerViewController: GeneralViewController {
         
         //let url : NSURL! = NSURL(string: "http://developer.apple.com/iphone/library/documentation/UIKit/Reference/UIWebView_Class/UIWebView_Class.pdf")
         webView.loadRequest(NSURLRequest(URL: url!))
+        
+        
+        
+        let req = NSURLRequest(URL: url!)
+        webView.delegate = self
+        //here is the sole part
+        webView.scalesPageToFit = true
+        webView.contentMode = .ScaleToFill
+        webView.loadRequest(req)
     }
     
+    func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
+        print("Webview fail with error \(error)");
+    }
+    
+    
+    
     func webViewDidStartLoad(webView: UIWebView) {
-        ActivityIndicator.show()
+        print("Webview started Loading")
+       // ActivityIndicator.show()
+
     }
     
     func webViewDidFinishLoad(webView: UIWebView) {
-        ActivityIndicator.hide()
+        print("Webview did finish load")
+        //ActivityIndicator.hide()
+
     }
+    
+    
     
     //MARK: - Button Action
     @IBAction func backBtnClick(sender: UIButton) {

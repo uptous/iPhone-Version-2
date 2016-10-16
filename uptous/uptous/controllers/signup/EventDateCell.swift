@@ -41,7 +41,7 @@ class EventDateCell: UITableViewCell {
         }
         //lblWidth.constant = Custom.widthSize(data.name!, fontName: "Helvetica Neue", fontSize: 14.0) + 20
         
-        if data.dateTime == 0 {
+        /*if data.dateTime == 0 {
             if data.createDate! == 0 {
                 eventDateLbl.text = ""
             }else {
@@ -52,6 +52,14 @@ class EventDateCell: UITableViewCell {
         }else {
             eventDateLbl.text = Custom.dayStringFromTime1(data.dateTime!)
 
+        }*/
+        eventDateLbl.text = Custom.dayStringFromTime1(data.dateTime!)
+        
+        if data.dateTime == 0 {
+            eventDateLbl.text = ""
+            
+        }else {
+            eventDateLbl.text = Custom.dayStringFromTime1(data.dateTime!)
         }
         
         if data.cutoffDate == 0 {

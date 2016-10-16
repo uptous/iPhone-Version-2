@@ -75,6 +75,7 @@ class MyUpToUsSignUpViewController: GeneralViewController {
                             let dic = list.objectAtIndex(index) as! NSDictionary
                             self.list.addObject(SignupSheet(info: dic))
                         }
+                        
                         self.tableView.reloadData()
                     }
                 }else {
@@ -118,7 +119,7 @@ extension MyUpToUsSignUpViewController: UITableViewDelegate,UITableViewDataSourc
             self.navigationController?.pushViewController(controller, animated: true)
             
         }else if (event.type! == "RSVP" || event.type! == "Vote") {
-            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("SignUpDriverViewController") as! SignUpDriverViewController
+            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("SignUpRSVPViewController") as! SignUpRSVPViewController
             controller.data = event
             self.navigationController?.pushViewController(controller, animated: true)
             
@@ -133,7 +134,9 @@ extension MyUpToUsSignUpViewController: UITableViewDelegate,UITableViewDataSourc
             self.navigationController?.pushViewController(controller, animated: true)
             
         }else if (event.type! == "Volunteer" || event.type! == "Potluck" || event.type! == "Wish List") {
-            
+            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("SignUpOpenViewController") as! SignUpOpenViewController
+            controller.data = event
+            self.navigationController?.pushViewController(controller, animated: true)
         }
     }
     

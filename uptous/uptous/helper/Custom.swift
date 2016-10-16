@@ -36,5 +36,50 @@ class Custom: NSObject {
         
         return textSize.width
     }
+    
+    //MARK:- Bold String
+    class func attributedString(str: String,size:CGFloat) -> NSAttributedString? {
+        let attributes = [
+            NSForegroundColorAttributeName : UIColor.blackColor(),
+            NSFontAttributeName: UIFont.boldSystemFontOfSize(size)
+            //NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue
+        ]
+        let attributedString = NSAttributedString(string: str, attributes: attributes)
+        return attributedString
+    }
+    
+    class func attributedString1(str: String,size:CGFloat) -> NSAttributedString? {
+        let attributes = [
+            NSForegroundColorAttributeName : UIColor.redColor(),
+            NSFontAttributeName: UIFont.boldSystemFontOfSize(size)
+            //NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue
+        ]
+        let attributedString = NSAttributedString(string: str, attributes: attributes)
+        return attributedString
+    }
+    
+    class func fullCornerView(ownerView: UIView) ->UIView {
+        ownerView.layer.borderColor = UIColor.clearColor().CGColor
+        ownerView.layer.borderWidth = CGFloat(1.0)
+        ownerView.layer.cornerRadius = ownerView.frame.size.width/2
+        
+        return ownerView
+    }
+    
+    class func cornerView(contentsView: UIView) ->UIView {
+        contentsView.layer.borderColor = UIColor(red: CGFloat(0.8), green: CGFloat(0.8), blue: CGFloat(0.8), alpha: CGFloat(1)).CGColor
+        contentsView.layer.borderWidth = CGFloat(1.0)
+        contentsView.layer.cornerRadius = 8.0
+        
+        return contentsView
+    }
+    
+    class func buttonCorner(button: UIButton) ->UIButton {
+        button.layer.borderColor = UIColor.clearColor().CGColor
+        button.layer.borderWidth = CGFloat(1.0)
+        button.layer.cornerRadius = 8.0
+        
+        return button
+    }
 
 }

@@ -41,6 +41,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     var searchedArray = [Feed]()
     var refreshControl: UIRefreshControl!
     let defaults = NSUserDefaults.standardUserDefaults()
+    
 
     private struct photosCellConstants {
         static var cellIdentifier:String = "PhotosCell"

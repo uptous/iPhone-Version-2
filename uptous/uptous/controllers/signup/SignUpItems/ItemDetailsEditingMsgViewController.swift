@@ -1,38 +1,37 @@
 //
-//  CommentViewController.swift
+//  ItemDetailsEditingMsgViewController.swift
 //  uptous
 //
-//  Created by Roshan Gita  on 9/11/16.
+//  Created by Roshan Gita  on 10/8/16.
 //  Copyright © 2016 SPA. All rights reserved.
 //
 
 import UIKit
 import Alamofire
 
-class CommentViewController: GeneralViewController {
 
-    @IBOutlet weak var groupNameLbl: UILabel!
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var msgNameLbl: UILabel!
-    @IBOutlet weak var newsItemNameLbl: UILabel!
-    @IBOutlet weak var ownerPhotoImgView: CircularImageView!
-    @IBOutlet weak var dateLbl: UILabel!
-    @IBOutlet weak var newsItemDescriptionLbl: UILabel!
-    @IBOutlet weak var replyToBtn: UIButton!
+class ItemDetailsEditingMsgViewController: GeneralViewController {
+
     @IBOutlet weak var commentsTextView: UIView!
     @IBOutlet weak var textField_comments: UITextField!
     @IBOutlet weak var btn_comments: UIButton!
     @IBOutlet var commentsBoxBottomSpacing: NSLayoutConstraint!
     @IBOutlet weak var textView_comments: HPTextViewInternal!
-    @IBOutlet weak var ownerView: UIView!
-    @IBOutlet weak var ownerNameLbl: UILabel!
+    @IBOutlet weak var headingLbl: UILabel!
+    @IBOutlet weak var msgLbl: UILabel!
+    @IBOutlet weak var eventDateLbl: UILabel!
+    @IBOutlet weak var spotLbl: UILabel!
+    @IBOutlet weak var contentView: UIView!
+    @IBOutlet weak var tableView: UITableView!
     
-    var data: Feed!
-    var commentList = NSArray()
     var scrollToTop = false
     var offset = 0
     var placeHolderText = "Type comments here.."
     var isCommentEdit_1_replyEdit_2 : Int?
+    var data: SignupSheet!
+    var selectedItems: Items!
+    var driverDatas = NSArray()
+    var voluniteerdDatas = NSArray()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,71 +41,167 @@ class CommentViewController: GeneralViewController {
         textField_comments.placeholder = "Type comments here.."
         // Observer Keyboard
         let center: NSNotificationCenter = NSNotificationCenter.defaultCenter()
-        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardWillHide(_:)), name: UIKeyboardDidHideNotification, object: nil)
-        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardDidChangeFrame(_:)), name: UIKeyboardDidChangeFrameNotification, object: nil)
-        
-        let tapRecognizer = UITapGestureRecognizer(target: self , action: #selector(ReplyAllViewController.HideTextKeyboard(_:)))
+        center.addObserver(self, selector: #selector(ItemDetailsEditingMsgViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        center.addObserver(self, selector: #selector(ItemDetailsEditingMsgViewController.keyboardWillHide(_:)), name: UIKeyboardDidHideNotification, object: nil)
+        center.addObserver(self, selector: #selector(ItemDetailsEditingMsgViewController.keyboardDidChangeFrame(_:)), name: UIKeyboardDidChangeFrameNotification, object: nil)
+        let tapRecognizer = UITapGestureRecognizer(target: self , action: #selector(ItemDetailsEditingMsgViewController.HideTextKeyboard(_:)))
         tableView.addGestureRecognizer(tapRecognizer)
         
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
-            self.updateData(self.data)
-            self.fetchCommentList()
-        }
-        Custom.fullCornerView(ownerView)
+        Custom.cornerView(contentView)
+        updateData(selectedItems)
+        
+        voluniteerdDatas = selectedItems.volunteers!
+        print(voluniteerdDatas)
+        
+        headingLbl.text = data.name
+        msgLbl.text = selectedItems.name
+        eventDateLbl.text = ("\(Custom.dayStringFromTime1(selectedItems.dateTime!))")
+        
+        
+        let x = selectedItems.volunteerCount!
+        let y = selectedItems.numVolunteers!
+        if y == 0 {
+            
+            spotLbl.text = "More spots are open"
 
+        }else {
+            let text = ("\(x) out of ") + ("\(y) spots open")
+            spotLbl.text = text
+
+        }
+        
+        
+        
+    }
+    
+    func updateData(data: Items) {
+        let attributedStr = NSMutableAttributedString()
+
+        //msgLbl.text = data.notes
+        
+        //eventDateLbl.text = ("\(Custom.dayStringFromTime1(data.createDate!))")
+        //let text = ("\() out of") + ("\() spots open")
+        //spotLbl.text = "2 out of 10 spots open"
+        
+//        attributedStr.appendAttributedString(Custom.attributedString1(("\(data.numVolunteers!) "),size: 14.0)!)
+//        let attributedString1 = NSAttributedString(string: "spots open", attributes: nil)
+//        
+//        attributedStr.appendAttributedString(attributedString1)
+        //spotLbl.attributedText = attributedStr
+        
+    }
+    
+    
+    @IBAction func back(sender: UIButton) {
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.tableView.hidden = true
         tableView.estimatedRowHeight = 110
         tableView.rowHeight = UITableViewAutomaticDimension
+        self.fetchItems()
     }
+    
+    //MARK:- Delete
+    @IBAction func deleteButtonClick(sender: UIButton) {
+        let alertView = UIAlertController(title: "UpToUs", message: "are you sure you want to delete this record?", preferredStyle: .Alert)
+        alertView.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { (alertAction) -> Void in
+            self.delete()
+        }))
+        alertView.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        presentViewController(alertView, animated: true, completion: nil)
+    }
+    
+    func delete() {
+        let apiName = SignupItems + ("\(data.id!)") + ("/item/\(selectedItems.Id!)/Del")
+        ActivityIndicator.show()
+        
+        Alamofire.request(.POST, apiName, headers: appDelegate.loginHeaderCredentials,parameters: nil)
+            .responseJSON { response in
+                ActivityIndicator.hide()
+                self.navigationController?.popViewControllerAnimated(true)
+        }
+        
+    }
+
     
     //Post Comment
     func postComment(msg: String) {
-        let apiName = PostCommentAPI + ("\(data.feedId!)")
+        //let opportunityID = selectedItems.Id
+        let apiName = SignupItems + ("\(data.id!)") + ("/item/\(selectedItems.Id!)/Add")
+        print(apiName)
         ActivityIndicator.show()
-        let parameters = ["contents": msg]
+        let parameters = ["comment": msg]
         
         Alamofire.request(.POST, apiName, headers: appDelegate.loginHeaderCredentials,parameters: parameters)
             .responseJSON { response in
                 ActivityIndicator.hide()
+                print(response)
+                let result = response as? NSDictionary
+//                if (result?.objectForKey("status"))! as! String == "0"{
+//                    
+//                }
                 //if self.commentList.count > 0 {
-                    self.fetchCommentList()
+                self.fetchItems()
                 //}
         }
     }
+
     
-    //Fetch Comment
-    func fetchCommentList() {
-        let apiName = FetchCommentAPI + ("\(data.feedId!)")
+    //MARK: Fetch Records
+    func fetchItems() {
+        let apiName = SignupItems + ("\(data.id!)")
         ActivityIndicator.show()
         
         Alamofire.request(.GET, apiName, headers: appDelegate.loginHeaderCredentials)
             .responseJSON { response in
-                
-                if let JSON = response.result.value {
-                    print("JSON: \(JSON)")
+                if let result = response.result.value {
                     ActivityIndicator.hide()
-                    self.commentList = response.result.value as! NSArray
-                    if self.commentList.count > 0 {
-                        self.tableView.hidden = false
-                        self.tableView.reloadData()
+                    self.driverDatas = (result as? NSArray)!
+                    let dic = self.driverDatas.objectAtIndex(0) as? NSDictionary
+                    //self.updateData(SignupSheet(info: dic))
+                    let data = (dic?.objectForKey("items")) as! NSArray
+                   
+                    for index in 0..<data.count {
+                        let dic = data.objectAtIndex(index) as? NSDictionary
+                         if dic?.objectForKey("id") as? Int == self.selectedItems.Id {
+                            print(dic?.objectForKey("volunteers"))
+                            self.voluniteerdDatas = dic?.objectForKey("volunteers") as! NSArray
+                            break
+                        }
                     }
+                    print("self.voluniteerdDatas==\(self.voluniteerdDatas.count)")
+                    
+                    self.tableView.reloadData()
                 }else {
                     ActivityIndicator.hide()
                 }
         }
     }
     
+    //***************Comment***************
+    
+    //MARK:- Keyboard
     func HideTextKeyboard(sender: UITapGestureRecognizer?) {
         placeHolderText = "Type comments here.."
         textView_comments.text = placeHolderText
         textView_comments.textColor = UIColor.lightGrayColor()
         textView_comments.resignFirstResponder()
+    }
+    
+    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         
+        // Check offset and load more feeds
+        let currentOffset = scrollView.contentOffset.y
+        let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height;
+        
+        if (maximumOffset - currentOffset <= 200.0) {
+            
+            //            if commentArray?.count > 0 {
+            //                getCommentsListForStatus ()
+            //
+            //            }
+        }
     }
     
     func tableViewScrollToBottom(animated: Bool) {
@@ -116,13 +211,12 @@ class CommentViewController: GeneralViewController {
         
         dispatch_after(time, dispatch_get_main_queue(), {
             
-            let numberOfRows = (self.commentList.count) - 2
-            
+            let numberOfSections = self.tableView.numberOfSections
+            let numberOfRows = (self.voluniteerdDatas.count) - self.tableView.numberOfRowsInSection(numberOfSections-1)
             if numberOfRows > 0 {
                 let indexPath = NSIndexPath(forRow: 0, inSection: numberOfRows)
                 self.tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: animated)
             }
-            
         })
     }
     
@@ -130,6 +224,7 @@ class CommentViewController: GeneralViewController {
         if (textView_comments.text != "" ||  textView_comments.text != " ") && textView_comments.textColor == UIColor.blackColor() {
             postComment(textView_comments.text)
             textView_comments.text = ""
+            textView_comments.resignFirstResponder()
             
         }else {
             BaseUIView.toast("Please enter text")
@@ -138,13 +233,10 @@ class CommentViewController: GeneralViewController {
     }
     
     // MARK: - UIKeyBoard Delegate
-    
     func keyboardWillShow(notification: NSNotification) {
         let info:NSDictionary = notification.userInfo!
         let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
-        
         let keyboardHeight:CGFloat = keyboardSize.height
-        
         
         UIView.animateWithDuration(0.25, delay: 0.25, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
             
@@ -152,9 +244,7 @@ class CommentViewController: GeneralViewController {
             
             }, completion: {
                 (value: Bool) in
-                
         })
-        
     }
     
     func keyboardWillHide(notification: NSNotification) {
@@ -168,7 +258,6 @@ class CommentViewController: GeneralViewController {
             self.commentsBoxBottomSpacing.constant = 0
             self.view.layoutIfNeeded()
             }, completion: nil)
-        
         
     }
     
@@ -188,105 +277,38 @@ class CommentViewController: GeneralViewController {
     
     // MARK: - UITextFiled Delegate
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        
         textField_comments.resignFirstResponder()
         return true
-    }
-    
-    
-    func attributedString(str: String) -> NSAttributedString? {
-        let attributes = [
-            NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue
-        ]
-        let attributedString = NSAttributedString(string: str, attributes: attributes)
-        return attributedString
-    }
-    
-    
-    
-    func updateData(data: Feed) {
-        
-        if data.ownerPhotoUrl == "https://dsnn35vlkp0h4.cloudfront.net/images/blank_image.gif" {
-            ownerView.hidden = false
-            ownerPhotoImgView.hidden = true
-            let stringArray = data.ownerName?.componentsSeparatedByString(" ")
-            let firstName = stringArray![0]
-            let secondName = stringArray![1]
-            let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
-            
-            ownerNameLbl.text = resultString
-            let color1 = Utility.hexStringToUIColor(data.ownerBackgroundColor!)
-            let color2 = Utility.hexStringToUIColor(data.ownerTextColor!)
-            ownerView.backgroundColor = color1
-            ownerNameLbl.textColor = color2
-            
-            
-        }else {
-            ownerView.hidden = true
-            ownerPhotoImgView.hidden = false
-            if let avatarUrl = data.ownerPhotoUrl {
-                ownerPhotoImgView.setUserAvatar(avatarUrl)
-            }
-        }
-
-        
-        let attributedStr = NSMutableAttributedString()
-        if data.communityName != "" {
-            let attributedString1 = NSAttributedString(string: ("\(data.ownerName!) in: "), attributes: nil)
-            attributedStr.appendAttributedString(attributedString1)
-            attributedStr.appendAttributedString(attributedString(" \(data.communityName!)")!)
-        }else{
-            
-            let attributedString1 = NSAttributedString(string: ("\(data.ownerName!)"), attributes: nil)
-            attributedStr.appendAttributedString(attributedString1)
-        }
-        groupNameLbl.attributedText = attributedStr
-        
-        let name = data.ownerName!.componentsSeparatedByString(" ")
-        msgNameLbl.text = ("\(name[0]) message")
-        newsItemNameLbl.text = data.newsItemName
-        newsItemDescriptionLbl.text = data.newsItemDescription!.decodeHTML()
-
-        dateLbl.text = ("\(Custom.dayStringFromTime(data.createDate!))")
-    }
-    
-    //MARK: - Button Action
-    @IBAction func backBtnClick(sender: UIButton) {
-        ActivityIndicator.hide()
-        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
 }
 
 //MARK:- TableView
-extension CommentViewController: UITableViewDelegate, UITableViewDataSource {
+extension ItemDetailsEditingMsgViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.commentList.count
+        return self.voluniteerdDatas.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("ReadMoreCell") as! ReadMoreCell
-        let data = commentList[indexPath.row] as? NSDictionary
-        print(Comment(info: data))
-        cell.updateData(Comment(info: data!))
+        let cell = tableView.dequeueReusableCellWithIdentifier("ItemDetailsMsgCell") as! ItemDetailsMsgCell
+        let data = self.voluniteerdDatas[indexPath.row] as? NSDictionary
+        cell.updateData(data!)
         return cell
     }
-    
 }
 
 // MARK: - Extensions for UITextView
-
-extension CommentViewController: UITextViewDelegate {
+extension ItemDetailsEditingMsgViewController: UITextViewDelegate {
     
     func textViewDidBeginEditing(textView: UITextView) {
         

@@ -1,14 +1,14 @@
 //
-//  ShiftCell.swift
+//  ItemCell.swift
 //  uptous
 //
-//  Created by Roshan Gita  on 9/24/16.
+//  Created by Roshan Gita  on 10/4/16.
 //  Copyright © 2016 SPA. All rights reserved.
 //
 
 import UIKit
 
-class ShiftCell: UITableViewCell {
+class ItemCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()

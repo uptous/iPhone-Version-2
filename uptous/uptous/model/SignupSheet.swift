@@ -9,6 +9,14 @@
 import UIKit
 
 class SignupSheet: NSObject {
+    
+    var organizer1PhotoUrl: String?
+    var organizer2PhotoUrl: String?
+    var organizer1BackgroundColor: String?
+    var organizer2BackgroundColor: String?
+    var organizer1TextColor: String?
+    var organizer2TextColor: String?
+    
     var contact: String?
     var contact2: String?
     var dateTime: Double?
@@ -30,6 +38,12 @@ class SignupSheet: NSObject {
     
     init(info: NSDictionary?) {
         super.init()
+        self.organizer1PhotoUrl = info?.objectForKey("organizer1PhotoUrl") as? String ?? ""
+        self.organizer2PhotoUrl = info?.objectForKey("organizer2PhotoUrl") as? String ?? ""
+        self.organizer1BackgroundColor = info?.objectForKey("organizer1BackgroundColor") as? String ?? ""
+        self.organizer2BackgroundColor = info?.objectForKey("organizer2BackgroundColor") as? String ?? ""
+        self.organizer1TextColor = info?.objectForKey("organizer1TextColor") as? String ?? ""
+        self.organizer2TextColor = info?.objectForKey("organizer2TextColor") as? String ?? ""
         
         self.contact = info?.objectForKey("contact") as? String ?? ""
         self.contact2 = info?.objectForKey("contact2") as? String ?? ""

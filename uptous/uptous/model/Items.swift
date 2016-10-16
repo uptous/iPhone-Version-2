@@ -10,7 +10,6 @@ import UIKit
 
 class Items: NSObject {
 
-    
     var Id: Int?
     var dateTime: Double?
     var endTime: Double?

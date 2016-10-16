@@ -20,13 +20,14 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
     @IBOutlet weak var dateLbl: UILabel!
     @IBOutlet weak var newsItemDescriptionLbl: UILabel!
     @IBOutlet weak var replyToBtn: UIButton!
-    @IBOutlet weak var identifierView: GroupIdentifierView!
     @IBOutlet weak var commentsTextView: UIView!
     @IBOutlet weak var textField_comments: UITextField!
     @IBOutlet weak var btn_comments: UIButton!
     @IBOutlet var commentsBoxBottomSpacing: NSLayoutConstraint!
     @IBOutlet weak var textView_comments: HPTextViewInternal!
     @IBOutlet weak var webView: UIWebView!
+    @IBOutlet weak var ownerView: UIView!
+    @IBOutlet weak var ownerNameLbl: UILabel!
     
     var data: Feed!
     var commentList = NSArray()
@@ -56,6 +57,8 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
             self.updateData(self.data)
             self.fetchOldReplyList()
         }
+        
+        Custom.fullCornerView(ownerView)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -190,21 +193,22 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
     
     func updateData(data: Feed) {
         if data.ownerPhotoUrl == "https://dsnn35vlkp0h4.cloudfront.net/images/blank_image.gif" {
-            identifierView.hidden = false
+            ownerView.hidden = false
             ownerPhotoImgView.hidden = true
             let stringArray = data.ownerName?.componentsSeparatedByString(" ")
             let firstName = stringArray![0]
             let secondName = stringArray![1]
             let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
             
-            identifierView.abbrLabel.text = resultString
+            ownerNameLbl.text = resultString
             let color1 = Utility.hexStringToUIColor(data.ownerBackgroundColor!)
             let color2 = Utility.hexStringToUIColor(data.ownerTextColor!)
-            identifierView.abbrLabel.textColor = color2
-            identifierView.backgroundLayerColor = color1
+            ownerView.backgroundColor = color1
+            ownerNameLbl.textColor = color2
+            
             
         }else {
-            identifierView.hidden = true
+            ownerView.hidden = true
             ownerPhotoImgView.hidden = false
             if let avatarUrl = data.ownerPhotoUrl {
                 ownerPhotoImgView.setUserAvatar(avatarUrl)
@@ -354,6 +358,7 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
     
     //MARK: - Button Action
     @IBAction func backBtnClick(sender: UIButton) {
+        ActivityIndicator.hide()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
 
@@ -453,4 +458,27 @@ extension ReplyAllViewController: UITextViewDelegate {
     }
 }
 
-
+extension UIColor{
+    func HexToColor(hexString: String, alpha:CGFloat? = 1.0) -> UIColor {
+        // Convert hex string to an integer
+        let hexint = Int(self.intFromHexString(hexString))
+        let red = CGFloat((hexint & 0xff0000) >> 16) / 255.0
+        let green = CGFloat((hexint & 0xff00) >> 8) / 255.0
+        let blue = CGFloat((hexint & 0xff) >> 0) / 255.0
+        let alpha = alpha!
+        // Create color object, specifying alpha as well
+        let color = UIColor(red: red, green: green, blue: blue, alpha: alpha)
+        return color
+    }
+    
+    func intFromHexString(hexStr: String) -> UInt32 {
+        var hexInt: UInt32 = 0
+        // Create scanner
+        let scanner: NSScanner = NSScanner(string: hexStr)
+        // Tell scanner to skip the # character
+        scanner.charactersToBeSkipped = NSCharacterSet(charactersInString: "#")
+        // Scan hex value
+        scanner.scanHexInt(&hexInt)
+        return hexInt
+    }
+}

@@ -16,7 +16,6 @@ protocol PhotosCellDelegate {
     func photoComment1(_: NSInteger)
 }
 
-
 class PhotosCell: UITableViewCell {
     
     @IBOutlet weak var contentsView: UIView!

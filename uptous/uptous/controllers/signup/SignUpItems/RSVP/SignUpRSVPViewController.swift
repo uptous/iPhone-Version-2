@@ -1,5 +1,5 @@
 //
-//  OnGoingSignUpsViewController.swift
+//  SignUpRSVPViewController.swift
 //  uptous
 //
 //  Created by Roshan Gita  on 9/21/16.
@@ -9,13 +9,8 @@
 import UIKit
 import Alamofire
 
-class OnGoingSignUpsViewController: GeneralViewController {
+class SignUpRSVPViewController: GeneralViewController {
 
-    @IBOutlet weak var commentsTextView: UIView!
-    @IBOutlet weak var textField_comments: UITextField!
-    @IBOutlet weak var btn_comments: UIButton!
-    @IBOutlet var commentsBoxBottomSpacing: NSLayoutConstraint!
-    @IBOutlet weak var textView_comments: HPTextViewInternal!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var tableView: UITableView!
     
@@ -34,17 +29,14 @@ class OnGoingSignUpsViewController: GeneralViewController {
     @IBOutlet weak var owner2View: UIView!
     @IBOutlet weak var owner2NameLbl: UILabel!
     
-    
-    var placeHolderText = "Type comments here.."
-    var isCommentEdit_1_replyEdit_2 : Int?
     var data: SignupSheet!
+    var itemsDatas = NSArray()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         Custom.cornerView(contentView)
         Custom.fullCornerView(owner1View)
         Custom.fullCornerView(owner2View)
-        
     }
     
     func attributedString(str: String) -> NSAttributedString? {
@@ -128,9 +120,9 @@ class OnGoingSignUpsViewController: GeneralViewController {
         nameLbl.text = data.name
         notesLbl.text = data.notes
         //eventDateLbl.text = ("\(Custom.dayStringFromTime1(data.createDate!))")
-        eventTimeLbl.text = ""//data.endTime
+        //eventTimeLbl.text = ""//data.endTime
         //cutoffDateLbl.text = ("\(Custom.dayStringFromTime1(data.dateTime!))")
-        cutoffTimeLbl.text = ""//data.endTime
+        //cutoffTimeLbl.text = ""//data.endTime
         
         if data.dateTime == 0 {
             eventDateLbl.text = ""
@@ -152,6 +144,27 @@ class OnGoingSignUpsViewController: GeneralViewController {
         self.navigationController?.popViewControllerAnimated(true)
     }
     
+    //MARK: Fetch Driver Records
+    func fetchItems() {
+        let apiName = SignupItems + ("\(data.id!)")
+        ActivityIndicator.show()
+        
+        Alamofire.request(.GET, apiName, headers: appDelegate.loginHeaderCredentials)
+            .responseJSON { response in
+                if let result = response.result.value {
+                    ActivityIndicator.hide()
+                    let datas = (result as? NSArray)!
+                    let dic = datas.objectAtIndex(0) as? NSDictionary
+                    self.updateData(SignupSheet(info: dic ))
+                    self.itemsDatas = (dic?.objectForKey("items")) as! NSArray
+                    
+                    self.tableView.reloadData()
+                }else {
+                    ActivityIndicator.hide()
+                }
+        }
+    }
+    
     func cornerView(contentsView: UIView) ->UIView {
         contentsView.layer.borderColor = UIColor(red: CGFloat(0.8), green: CGFloat(0.8), blue: CGFloat(0.8), alpha: CGFloat(1)).CGColor
         contentsView.layer.borderWidth = CGFloat(1.0)
@@ -161,117 +174,43 @@ class OnGoingSignUpsViewController: GeneralViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.fetchDriverItems()
+        self.fetchItems()
     }
     
-    //MARK: Fetch Driver Records
-    func fetchDriverItems() {
-        let apiName = SignupItems + ("\(data.id!)")
-        ActivityIndicator.show()
-        
-        Alamofire.request(.GET, apiName, headers: appDelegate.loginHeaderCredentials)
-            .responseJSON { response in
-                if let JSON = response.result.value {
-                    ActivityIndicator.hide()
-                    
-                    /*self.commentList = JSON as! NSArray
-                     if self.commentList.count > 0 {
-                     self.tableView.hidden = false
-                     self.tableView.reloadData()
-                     }*/
-                }else {
-                    ActivityIndicator.hide()
-                }
-        }
-    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 }
 
 //MARK:- TableView
-extension OnGoingSignUpsViewController: UITableViewDelegate, UITableViewDataSource {
+extension SignUpRSVPViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2//self.commentList.count
+        return self.itemsDatas.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("OnGoingCell") as! OnGoingCell
-        //let data = commentList[indexPath.row] as? NSDictionary
-        //print(Comment(info: data))
-        //cell.updateData(Comment(info: data!))
+        let cell = tableView.dequeueReusableCellWithIdentifier("RSVPCell") as! RSVPCell
+        let data = itemsDatas[indexPath.row] as? NSDictionary
+        cell.updateView(Items(info: data!))
         return cell
     }
     
-}
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let dic = self.itemsDatas.objectAtIndex(indexPath.row) as? NSDictionary
+        print(self.data)
+        //let data = Items(info: dic!)
+        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("OpenRSVPViewController") as! OpenRSVPViewController
+        controller.itemData = Items(info: dic)
+        controller.sheetData = self.data
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
 
-// MARK: - Extensions for UITextView
-extension OnGoingSignUpsViewController: UITextViewDelegate {
-    
-    func textViewDidBeginEditing(textView: UITextView) {
-        
-        textView.selectedRange = NSMakeRange(0, 0)
-        if textView.textColor == UIColor.lightGrayColor() && textView.text != placeHolderText && isCommentEdit_1_replyEdit_2 == 0{
-            textView.text = nil
-            textView.textColor = UIColor.blackColor()
-        }
-        else{
-            
-        }
-    }
-    
-    func textViewDidEndEditing(textView: UITextView) {
-        if textView.text.isEmpty {
-            textView.text = placeHolderText
-            textView.textColor = UIColor.lightGrayColor()
-        }
-    }
-    
-    func textViewDidChange(textView: UITextView) {
-        //self.textView_comments.textViewDidChange(textView)
-    }
-    
-    func textViewShouldBeginEditing(textView: UITextView) -> Bool {
-        
-        if textView.text == "Add caption tag another user with @username..." {
-            textView.text = nil
-        }
-        return true
-    }
-    
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-        
-        if textView.textColor == UIColor.lightGrayColor() && textView.text == placeHolderText {
-            textView.text = nil
-            textView.textColor = UIColor.blackColor()
-        }
-        if text == "" && textView_comments.text.characters.count == 1 && textView.textColor == UIColor.blackColor(){
-            textView.text = placeHolderText
-            textView.textColor = UIColor.lightGrayColor()
-            textView.selectedRange = NSMakeRange(0, 0)
-        }
-        if text == "\n" {
-        }
-        
-        let totalText = textView.text + text
-        
-        if totalText.characters.count > 0 && totalText != placeHolderText {
-            //btn_comments.setImage(UIImage(named: "chat_send"), forState: .Normal)
-        }
-        else{
-            //btn_comments.setImage(UIImage(named: "chat_send_gray"), forState: .Normal)
-        }
-        
-        return true
-    }
-    
 }
 
 

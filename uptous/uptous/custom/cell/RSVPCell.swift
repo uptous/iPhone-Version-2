@@ -10,9 +10,16 @@ import UIKit
 
 class RSVPCell: UITableViewCell {
 
+    @IBOutlet weak var cellView: UIView!
+    @IBOutlet weak var rsvpLbl: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        Custom.cornerView(cellView)
+    }
+    
+    func updateView(data: Items) {
+        rsvpLbl.text = data.name!
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
