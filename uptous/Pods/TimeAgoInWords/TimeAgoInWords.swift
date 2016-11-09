@@ -23,9 +23,9 @@ public struct TimeAgoInWordsStrings {
     static var Months   = NSLocalizedString("mth", comment:"More than one month in time")
     static var Years    = NSLocalizedString("y", comment:"More than one year in time")
 
-    static public func updateStrings(dict: [String: String]) {
+    static public func updateStrings(_ dict: [String: String]) {
         for (key, value) in dict {
-            switch key.lowercaseString {
+            switch key.lowercased() {
             case "lessthan": LessThan = value
             case "about": About = value
             case "over": Over = value
@@ -45,14 +45,14 @@ public struct TimeAgoInWordsStrings {
     }
 }
 
-public extension NSDate {
-    func distanceOfTimeInWords(toDate:NSDate) -> String {
+public extension Date {
+    func distanceOfTimeInWords(_ toDate:Date) -> String {
 
         let MINUTES_IN_YEAR = 525_600.0
         let MINUTES_IN_QUARTER_YEAR	= 131_400.0
         let MINUTES_IN_THREE_QUARTERS_YEAR = 394_200.0
 
-        let distanceInSeconds = round(abs(toDate.timeIntervalSinceDate(self)))
+        let distanceInSeconds = round(abs(toDate.timeIntervalSince(self)))
         let distanceInMinutes = round(distanceInSeconds / 60.0)
 
         switch distanceInMinutes {
@@ -92,7 +92,7 @@ public extension NSDate {
             return "\(Int(round(distanceInMinutes / 43_200.0)))" + TimeAgoInWordsStrings.Months
         // TODO: handle leap year like rails does
         default:
-            let remainder = distanceInMinutes % MINUTES_IN_YEAR
+            let remainder = distanceInMinutes.truncatingRemainder(dividingBy: MINUTES_IN_YEAR)
             let distanceInYears = Int(floor(distanceInMinutes / MINUTES_IN_YEAR))
             if remainder < MINUTES_IN_QUARTER_YEAR {
                 return TimeAgoInWordsStrings.About + "\(distanceInYears)" + TimeAgoInWordsStrings.Years
@@ -107,6 +107,6 @@ public extension NSDate {
     }
 
     func timeAgoInWords() -> String {
-        return self.distanceOfTimeInWords(NSDate())
+        return self.distanceOfTimeInWords(Date())
     }
 }

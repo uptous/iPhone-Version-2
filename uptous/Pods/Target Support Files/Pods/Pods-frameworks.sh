@@ -85,25 +85,17 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods/Alamofire.framework"
-  install_framework "Pods/Just.framework"
-  install_framework "Pods/M13PDFKit.framework"
   install_framework "Pods/RandomColorSwift.framework"
   install_framework "Pods/RappleProgressHUD.framework"
   install_framework "Pods/SDWebImage.framework"
   install_framework "Pods/SWRevealViewController.framework"
-  install_framework "Pods/SwiftString.framework"
-  install_framework "Pods/TTOpenInAppActivity.framework"
   install_framework "Pods/TimeAgoInWords.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods/Alamofire.framework"
-  install_framework "Pods/Just.framework"
-  install_framework "Pods/M13PDFKit.framework"
   install_framework "Pods/RandomColorSwift.framework"
   install_framework "Pods/RappleProgressHUD.framework"
   install_framework "Pods/SDWebImage.framework"
   install_framework "Pods/SWRevealViewController.framework"
-  install_framework "Pods/SwiftString.framework"
-  install_framework "Pods/TTOpenInAppActivity.framework"
   install_framework "Pods/TimeAgoInWords.framework"
 fi

@@ -7,7 +7,27 @@
 //
 
 import UIKit
-import SwiftString
+//import SwiftString
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 protocol PhotosCellDelegate {
     func photoReplyTo(_: NSInteger)
@@ -37,18 +57,18 @@ class PhotosCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        contentsView.layer.borderColor = UIColor(red: CGFloat(0.8), green: CGFloat(0.8), blue: CGFloat(0.8), alpha: CGFloat(1)).CGColor
+        contentsView.layer.borderColor = UIColor(red: CGFloat(0.8), green: CGFloat(0.8), blue: CGFloat(0.8), alpha: CGFloat(1)).cgColor
         contentsView.layer.borderWidth = CGFloat(1.0)
         contentsView.layer.cornerRadius = 8.0
         //commentLbl.hidden = true
-        readMoreBtn.hidden = true
+        readMoreBtn.isHidden = true
     }
     
     //Mark : Get Label Height with text
-    func heightForView(text:String, font:UIFont, width:CGFloat) -> CGFloat{
-        let label:UILabel = UILabel(frame: CGRectMake(0, 0, width, CGFloat.max))
+    func heightForView(_ text:String, font:UIFont, width:CGFloat) -> CGFloat{
+        let label:UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: CGFloat.greatestFiniteMagnitude))
         label.numberOfLines = 0
-        label.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        label.lineBreakMode = NSLineBreakMode.byWordWrapping
         label.font = font
         label.text = text
         
@@ -56,51 +76,51 @@ class PhotosCell: UITableViewCell {
         return label.frame.height
     }
     
-    @IBAction func replyTo(sender: UIButton) {
+    @IBAction func replyTo(_ sender: UIButton) {
         delegate.photoReplyTo(sender.tag)
     }
     
-    @IBAction func comment(sender: UIButton) {
+    @IBAction func comment(_ sender: UIButton) {
         delegate.photoComment(sender.tag)
     }
     
-    @IBAction func readMore(sender: UIButton) {
+    @IBAction func readMore(_ sender: UIButton) {
         delegate.readMore(sender.tag)
     }
     
-    @IBAction func comment1(sender: UIButton) {
+    @IBAction func comment1(_ sender: UIButton) {
         delegate.photoComment1(sender.tag)
     }
 
-    func attributedString(str: String) -> NSAttributedString? {
+    func attributedString(_ str: String) -> NSAttributedString? {
         let attributes = [
-            NSForegroundColorAttributeName : UIColor.whiteColor(),
-            NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue
-        ]
+            NSForegroundColorAttributeName : UIColor.white,
+            NSUnderlineStyleAttributeName : NSUnderlineStyle.styleSingle.rawValue
+        ] as [String : Any]
         let attributedString = NSAttributedString(string: str, attributes: attributes)
         return attributedString
     }
     
-    func updateData(data: Feed) {
+    func updateData(_ data: Feed) {
         
         if data.ownerPhotoUrl == "https://dsnn35vlkp0h4.cloudfront.net/images/blank_image.gif" {
-            identifierView.hidden = false
-            ownerPhotoImgView.hidden = true
-            let stringArray = data.ownerName?.componentsSeparatedByString(" ")
+            identifierView.isHidden = false
+            ownerPhotoImgView.isHidden = true
+            let stringArray = data.ownerName?.components(separatedBy: " ")
             let firstName = stringArray![0]
             let secondName = stringArray![1]
             
             let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
             
             identifierView.abbrLabel.text = resultString
-            let color1 = Utility.hexStringToUIColor(data.ownerBackgroundColor!)
-            let color2 = Utility.hexStringToUIColor(data.ownerTextColor!)
+            let color1 = Utility.hexStringToUIColor(hex: data.ownerBackgroundColor!)
+            let color2 = Utility.hexStringToUIColor(hex: data.ownerTextColor!)
             identifierView.abbrLabel.textColor = color2
             identifierView.backgroundLayerColor = color1
             
         }else {
-            identifierView.hidden = true
-            ownerPhotoImgView.hidden = false
+            identifierView.isHidden = true
+            ownerPhotoImgView.isHidden = false
             if let avatarUrl = data.ownerPhotoUrl {
                 ownerPhotoImgView.setUserAvatar(avatarUrl)
             }
@@ -109,17 +129,17 @@ class PhotosCell: UITableViewCell {
         let attributedStr = NSMutableAttributedString()
         if data.communityName != nil {
             let attributedString1 = NSAttributedString(string: ("\(data.ownerName!) in: "), attributes: nil)
-            attributedStr.appendAttributedString(attributedString1)
-            attributedStr.appendAttributedString(attributedString(" \(data.communityName!)")!)
+            attributedStr.append(attributedString1)
+            attributedStr.append(attributedString("\(data.communityName!)")!)
         }else{
             
             let attributedString1 = NSAttributedString(string: ("\(data.ownerName!)"), attributes: nil)
-            attributedStr.appendAttributedString(attributedString1)
+            attributedStr.append(attributedString1)
         }
         groupNameLbl.attributedText = attributedStr
         
-        let replyName = data.ownerName?.componentsSeparatedByString(" ")[0]
-        replyToBtn.setTitle(("Reply to" + " " + replyName!), forState: .Normal)
+        let replyName = data.ownerName?.components(separatedBy: " ")[0]
+        replyToBtn.setTitle(("Reply to" + " " + replyName!), for: UIControlState())
         
         if let newsItemPhotoUrl = data.newsItemPhoto {
             CustomImgView.setUserAvatar(newsItemPhotoUrl,imgView: newsItemPhotoImgView)
@@ -129,28 +149,33 @@ class PhotosCell: UITableViewCell {
             let textHeight =  heightForView(data.newsItemDescription!, font: UIFont(name: "Helvetica Neue Regular", size: 16)!, width: self.frame.size.width - 20)
             
             if textHeight > 70 {
-                readMoreBtn.hidden = false
+                readMoreBtn.isHidden = false
             }else {
-                readMoreBtn.hidden = true
+                readMoreBtn.isHidden = true
             }
         }
         
         if data.comments?.count > 0 {
-            comment1Btn.hidden = false
-            let text = ("\((data.comments?.count)!) comments")
-            comment1Btn.setTitle(text, forState: UIControlState.Normal)
+            comment1Btn.isHidden = false
+            if data.comments?.count == 1 {
+                let text = ("\((data.comments?.count)!) comment")
+                comment1Btn.setTitle(text, for: UIControlState())
+            }else {
+                let text = ("\((data.comments?.count)!) comments")
+                comment1Btn.setTitle(text, for: UIControlState())
+            }
         }else{
-            comment1Btn.hidden = true
+            comment1Btn.isHidden = true
         }
         
         newsItemNameLbl.text = data.newsItemName
-        newsItemDescriptionLbl.text = data.newsItemDescription!.decodeHTML()
+        newsItemDescriptionLbl.text = data.newsItemDescription!
         dateLbl.text = ("\(Custom.dayStringFromTime(data.createDate!))")
     }
 
 
     
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         
         // Configure the view for the selected state

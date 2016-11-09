@@ -24,12 +24,12 @@ class VolunteeredViewController: GeneralViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        headingLbl.text = ("Join the \(data.volunteers![0].objectForKey("firstName") as? String ?? "")")
+        headingLbl.text = ("Join the \((data.volunteers![0] as AnyObject).object(forKey: "firstName") as? String ?? "")")
         fromLbl.text = "Driving from: \(data.name!)"
         toLbl.text = "To: \(data.extra!)"
         dateTimeLbl.text = ("\(Custom.dayStringFromTime1(data.dateTime!))")
         
-        let imageData = NSData(contentsOfURL: NSBundle.mainBundle().URLForResource("smiley_test", withExtension: "gif")!)
+        let imageData = try? Data(contentsOf: Bundle.main.url(forResource: "smiley_test", withExtension: "gif")!)
         let advTimeGif = UIImage.gifImageWithData(imageData!)
         gifImageView.image = advTimeGif
         
@@ -38,36 +38,49 @@ class VolunteeredViewController: GeneralViewController {
     }
     
     //MARK:- Delete
-    @IBAction func deleteButtonClick(sender: UIButton) {
-        let alertView = UIAlertController(title: "UpToUs", message: "are you sure you want to delete this record?", preferredStyle: .Alert)
-        alertView.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { (alertAction) -> Void in
+    @IBAction func deleteButtonClick(_ sender: UIButton) {
+        let alertView = UIAlertController(title: "UpToUs", message: "Are you sure that you want to delete your assignment?", preferredStyle: .alert)
+        alertView.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (alertAction) -> Void in
             
-            dispatch_async(dispatch_get_main_queue(), { 
+            DispatchQueue.main.async(execute: { 
                 self.delete()
 
             })
         }))
-        alertView.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-        presentViewController(alertView, animated: true, completion: nil)
+        alertView.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alertView, animated: true, completion: nil)
     }
     
     func delete() {
         let apiName = SignupItems + ("\(sheetData.id!)") + ("/item/\(data.Id!)/Del")
         ActivityIndicator.show()
         
-        Alamofire.request(.POST, apiName, headers: appDelegate.loginHeaderCredentials,parameters: nil)
+        ActivityIndicator.show()
+        DataConnectionManager.requestPOSTURL(api: apiName, para: ["":""], success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+            self.navigationController?.popViewController(animated: true)
+            
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+            self.navigationController?.popViewController(animated: true)
+
+        }
+       /* Alamofire.request(.POST, apiName, headers: appDelegate.loginHeaderCredentials,parameters: nil)
             .responseJSON { response in
                 ActivityIndicator.hide()
-                self.navigationController?.popViewControllerAnimated(true)
-        }
+                self.navigationController?.popViewController(animated: true)
+        }*/
         
     }
 
     
     //MARK: - Button Action
-    @IBAction func backBtnClick(sender: UIButton) {
+    @IBAction func backBtnClick(_ sender: UIButton) {
         //self.dismissViewControllerAnimated(true, completion: nil)
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -79,17 +92,17 @@ class VolunteeredViewController: GeneralViewController {
 //MARK:- TableView
 extension VolunteeredViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.data.volunteers!.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("DriverItemCell") as! DriverItemCell
-        let data = self.data.volunteers![indexPath.row] as? NSDictionary
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DriverItemCell") as! DriverItemCell
+        let data = self.data.volunteers![(indexPath as NSIndexPath).row] as? NSDictionary
         print(data)
         cell.updateData(data!)
         

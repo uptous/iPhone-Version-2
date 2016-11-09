@@ -20,23 +20,23 @@ class CutOffDateCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        contentsView.roundCorners([.TopLeft,.BottomLeft], radius: 8)
-        teamLbl.layer.borderColor = UIColor.blackColor().CGColor
+        contentsView.roundCorners([.topLeft,.bottomLeft], radius: 8)
+        teamLbl.layer.borderColor = UIColor.black.cgColor
         teamLbl.layer.borderWidth = 1.0
     }
     
-    func update(data: SignupSheet) {
+    func update(_ data: SignupSheet) {
         print(data)
-        let todaysDate:NSDate = NSDate()
-        let dateFormatter:NSDateFormatter = NSDateFormatter()
+        let todaysDate:Date = Date()
+        let dateFormatter:DateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM d"
-        let today:String = dateFormatter.stringFromDate(todaysDate)
+        let today:String = dateFormatter.string(from: todaysDate)
         if today == Custom.dayStringFromTime1(data.dateTime!) {
-            cutOffDateLbl.textColor = UIColor.redColor()
+            cutOffDateLbl.textColor = UIColor.red
             eventDateImgView.image = UIImage(named: "red-file-selected")
             
         }else {
-            cutOffDateLbl.textColor = UIColor.blackColor()
+            cutOffDateLbl.textColor = UIColor.black
             eventDateImgView.image = UIImage(named: "black-file-selected")
         }
         lblWidth.constant = Custom.widthSize(data.name!, fontName: "Helvetica Neue", fontSize: 14.0) + 20
@@ -58,7 +58,7 @@ class CutOffDateCell: UITableViewCell {
         //teamLbl.text = data.name!
     }
    
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

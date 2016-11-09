@@ -15,6 +15,8 @@ class SignUpDriversCell: UITableViewCell {
     @IBOutlet weak var fullView: UIView!
     @IBOutlet weak var openFromLbl: UILabel!
     @IBOutlet weak var openToLbl: UILabel!
+    @IBOutlet weak var volunteeredFromLbl: UILabel!
+    @IBOutlet weak var volunteeredToLbl: UILabel!
     @IBOutlet weak var fullFromLbl: UILabel!
     @IBOutlet weak var fullToLbl: UILabel!
     @IBOutlet weak var volunteeredLbl: UILabel!
@@ -29,44 +31,43 @@ class SignUpDriversCell: UITableViewCell {
         cornerView(openView)
     }
     
-    func updateView(data: Items) {
+    func updateView(_ data: Items) {
         let attributedStr = NSMutableAttributedString()
         let attributedStr1 = NSMutableAttributedString()
         if data.volunteerStatus == "Open" {
-            volunteeredView.hidden = true
-            fullView.hidden = true
-            openView.hidden = false
+            volunteeredView.isHidden = true
+            fullView.isHidden = true
+            openView.isHidden = false
             
             let attributedString1 = NSAttributedString(string: ("\(data.name!)"), attributes: nil)
-            attributedStr.appendAttributedString(Custom.attributedString("From: ",size: 16.0)!)
-            attributedStr.appendAttributedString(attributedString1)
+            attributedStr.append(Custom.attributedString("From: ",size: 16.0)!)
+            attributedStr.append(attributedString1)
             openFromLbl.attributedText = attributedStr
             
             let attributedString2 = NSAttributedString(string: ("\(data.extra!)"), attributes: nil)
-            attributedStr1.appendAttributedString(Custom.attributedString("To: ",size: 16.0)!)
-            attributedStr1.appendAttributedString(attributedString2)
+            attributedStr1.append(Custom.attributedString("To: ",size: 16.0)!)
+            attributedStr1.append(attributedString2)
             openToLbl.attributedText = attributedStr1
             
         }else if data.volunteerStatus == "Volunteered" {
-            volunteeredView.hidden = false
-            fullView.hidden = true
-            openView.hidden = true
+            volunteeredView.isHidden = false
+            fullView.isHidden = true
+            openView.isHidden = true
             
-            
-        }else if data.volunteerStatus == "Full" {
-            volunteeredView.hidden = true
-            fullView.hidden = false
-            openView.hidden = true
-            
-            /*let attributedString1 = NSAttributedString(string: ("\(data.name!)"), attributes: nil)
-            attributedStr.appendAttributedString(Custom.attributedString("From: ",size: 16.0)!)
-            attributedStr.appendAttributedString(attributedString1)
-            fullFromLbl.text = ("\(attributedStr)")
+            let attributedString1 = NSAttributedString(string: ("\(data.name!)"), attributes: nil)
+            attributedStr.append(Custom.attributedString("From: ",size: 16.0)!)
+            attributedStr.append(attributedString1)
+            volunteeredFromLbl.attributedText = attributedStr
             
             let attributedString2 = NSAttributedString(string: ("\(data.extra!)"), attributes: nil)
-            attributedStr.appendAttributedString(Custom.attributedString("To: ",size: 16.0)!)
-            attributedStr.appendAttributedString(attributedString2)
-            fullToLbl.text = ("\(attributedStr)")*/
+            attributedStr1.append(Custom.attributedString("To: ",size: 16.0)!)
+            attributedStr1.append(attributedString2)
+            volunteeredToLbl.attributedText = attributedStr1
+            
+        }else if data.volunteerStatus == "Full" {
+            volunteeredView.isHidden = true
+            fullView.isHidden = false
+            openView.isHidden = true
             
         }
        /* if data.dateTime == 0 {
@@ -94,15 +95,15 @@ class SignUpDriversCell: UITableViewCell {
     }
 
     
-    func cornerView(contentsView: UIView) ->UIView {
-        contentsView.layer.borderColor = UIColor(red: CGFloat(0.8), green: CGFloat(0.8), blue: CGFloat(0.8), alpha: CGFloat(1)).CGColor
+    func cornerView(_ contentsView: UIView) ->UIView {
+        contentsView.layer.borderColor = UIColor(red: CGFloat(0.8), green: CGFloat(0.8), blue: CGFloat(0.8), alpha: CGFloat(1)).cgColor
         contentsView.layer.borderWidth = CGFloat(1.0)
         contentsView.layer.cornerRadius = 8.0
         
         return contentsView
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

@@ -16,7 +16,7 @@ class PDFViewerViewController: GeneralViewController,UIWebViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let url = NSURL(string: data.newsItemUrl!)
+        let url = URL(string: data.newsItemUrl!)
         
         //Create the document for the viewer when the segue is performed.
 //        var viewer = segue.destinationViewController as PDFKBasicPDFViewer
@@ -27,31 +27,31 @@ class PDFViewerViewController: GeneralViewController,UIWebViewDelegate {
         
         
         //let url : NSURL! = NSURL(string: "http://developer.apple.com/iphone/library/documentation/UIKit/Reference/UIWebView_Class/UIWebView_Class.pdf")
-        webView.loadRequest(NSURLRequest(URL: url!))
+        webView.loadRequest(URLRequest(url: url!))
         
         
         
-        let req = NSURLRequest(URL: url!)
+        let req = URLRequest(url: url!)
         webView.delegate = self
         //here is the sole part
         webView.scalesPageToFit = true
-        webView.contentMode = .ScaleToFill
+        webView.contentMode = .scaleToFill
         webView.loadRequest(req)
     }
     
-    func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
+    func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
         print("Webview fail with error \(error)");
     }
     
     
     
-    func webViewDidStartLoad(webView: UIWebView) {
+    func webViewDidStartLoad(_ webView: UIWebView) {
         print("Webview started Loading")
        // ActivityIndicator.show()
 
     }
     
-    func webViewDidFinishLoad(webView: UIWebView) {
+    func webViewDidFinishLoad(_ webView: UIWebView) {
         print("Webview did finish load")
         //ActivityIndicator.hide()
 
@@ -60,8 +60,8 @@ class PDFViewerViewController: GeneralViewController,UIWebViewDelegate {
     
     
     //MARK: - Button Action
-    @IBAction func backBtnClick(sender: UIButton) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func backBtnClick(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {

@@ -20,22 +20,23 @@ class ItemDetailsMsgCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         Custom.cornerView(cellView)
+        
     }
     
-    func updateData(data: NSDictionary) {
+    func updateData(_ data: NSDictionary) {
         print(data)
-        identifierView.hidden = true
-        ownerPhotoImgView.hidden = false
-        let name = data.objectForKey("firstName") as? String ?? ""
-        let phone = data.objectForKey("phone") as? String ?? ""
+        identifierView.isHidden = true
+        ownerPhotoImgView.isHidden = false
+        let name = data.object(forKey: "firstName") as? String ?? ""
+        let phone = data.object(forKey: "phone") as? String ?? ""
         if phone == "" {
             nameLbl.text = name
             
         }else {
             let attributedStr = NSMutableAttributedString()
             let attributedString1 = NSAttributedString(string: name, attributes: nil)
-            attributedStr.appendAttributedString(attributedString1)
-            attributedStr.appendAttributedString(Custom.attributedString(("- \(phone)"),size: 16.0)!)
+            attributedStr.append(attributedString1)
+            attributedStr.append(Custom.attributedString(("- \(phone)"),size: 16.0)!)
             
             nameLbl.attributedText = attributedStr
             //nameLbl.text = data.objectForKey("firstName") as? String ?? ""
@@ -47,7 +48,7 @@ class ItemDetailsMsgCell: UITableViewCell {
         commentDescriptionLbl.text = phone
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

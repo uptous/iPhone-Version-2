@@ -23,17 +23,17 @@ class Items: NSObject {
      init(info: NSDictionary?) {
         super.init()
         
-        self.Id = info?.objectForKey("id") as? Int ?? 0
-        self.dateTime = info?.objectForKey("dateTime") as? Double ?? 0
-        self.endTime = info?.objectForKey("endTime") as? Double ?? 0
-        self.name = info?.objectForKey("name") as? String ?? ""
-        self.extra = info?.objectForKey("extra") as? String ?? ""
-        self.volunteerStatus = info?.objectForKey("VolunteerStatus") as? String ?? ""
+        self.Id = info?.object(forKey: "id") as? Int ?? 0
+        self.dateTime = info?.object(forKey: "dateTime") as? Double ?? 0
+        self.endTime = info?.object(forKey: "endTime") as? Double ?? 0
+        self.name = info?.object(forKey: "name") as? String ?? ""
+        self.extra = info?.object(forKey: "extra") as? String ?? ""
+        self.volunteerStatus = info?.object(forKey: "VolunteerStatus") as? String ?? ""
 
-        self.volunteerCount = info?.objectForKey("VolunteerCount") as? Int ?? 0
+        self.volunteerCount = info?.object(forKey: "VolunteerCount") as? Int ?? 0
 
-        self.numVolunteers = info?.objectForKey("numVolunteers") as? Int ?? 0
-        self.volunteers = info?.objectForKey("volunteers") as? NSArray ?? NSArray()
+        self.numVolunteers = info?.object(forKey: "numVolunteers") as? Int ?? 0
+        self.volunteers = info?.object(forKey: "volunteers") as? NSArray ?? NSArray()
     }
 }
 

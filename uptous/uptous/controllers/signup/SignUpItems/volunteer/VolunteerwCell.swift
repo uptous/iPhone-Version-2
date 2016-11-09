@@ -29,49 +29,48 @@ class VolunteerwCell: UITableViewCell {
         cornerView(openView)
     }
     
-    func updateView(data: Items) {
+    func updateView(_ data: Items) {
         let attributedStr = NSMutableAttributedString()
         
         if data.volunteerStatus == "Open" {
-            volunteeredView.hidden = true
-            fullView.hidden = true
-            openView.hidden = false
+            volunteeredView.isHidden = true
+            fullView.isHidden = true
+            openView.isHidden = false
             msgLbl.text = data.name!
             let count = data.numVolunteers! - data.volunteerCount!
             
-            attributedStr.appendAttributedString(Custom.attributedString1(("\(count) "),size: 14.0)!)
+            attributedStr.append(Custom.attributedString1(("\(count) "),size: 14.0)!)
             let attributedString1 = NSAttributedString(string: "spots open", attributes: nil)
             
-            attributedStr.appendAttributedString(attributedString1)
+            attributedStr.append(attributedString1)
             spotLbl.attributedText = attributedStr
             
             
         }else if data.volunteerStatus == "Volunteered" {
-            volunteeredView.hidden = false
-            fullView.hidden = true
-            openView.hidden = true
+            volunteeredView.isHidden = false
+            fullView.isHidden = true
+            openView.isHidden = true
             msg1Lbl.text = data.name!
             
             
         }else if data.volunteerStatus == "Full" {
-            volunteeredView.hidden = true
-            fullView.hidden = false
-            openView.hidden = true
+            volunteeredView.isHidden = true
+            fullView.isHidden = false
+            openView.isHidden = true
             msg2Lbl.text = data.name!
-            
         }
     }
     
     
-    func cornerView(contentsView: UIView) ->UIView {
-        contentsView.layer.borderColor = UIColor(red: CGFloat(0.8), green: CGFloat(0.8), blue: CGFloat(0.8), alpha: CGFloat(1)).CGColor
+    func cornerView(_ contentsView: UIView) ->UIView {
+        contentsView.layer.borderColor = UIColor(red: CGFloat(0.8), green: CGFloat(0.8), blue: CGFloat(0.8), alpha: CGFloat(1)).cgColor
         contentsView.layer.borderWidth = CGFloat(1.0)
         contentsView.layer.cornerRadius = 8.0
         
         return contentsView
     }
     
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         
         // Configure the view for the selected state

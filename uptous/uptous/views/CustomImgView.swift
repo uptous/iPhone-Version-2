@@ -15,11 +15,11 @@ import SDWebImage
 class CustomImgView: UIImageView {
         let img = UIImage()
     
-    class func setUserAvatar(avatarUrl: String, imgView: UIImageView) {
-        let downloader = SDWebImageDownloader.sharedDownloader()
+    class func setUserAvatar(_ avatarUrl: String, imgView: UIImageView) {
+        let downloader = SDWebImageDownloader.shared()
     
-        downloader.downloadImageWithURL(NSURL(string: avatarUrl), options: SDWebImageDownloaderOptions.AllowInvalidSSLCertificates, progress: nil) { (image, data, error, finished) -> Void in
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+        downloader?.downloadImage(with: URL(string: avatarUrl), options: SDWebImageDownloaderOptions.allowInvalidSSLCertificates, progress: nil) { (image, data, error, finished) -> Void in
+            DispatchQueue.main.async(execute: { () -> Void in
                 if let pic = image {
                     imgView.image = pic
                 }

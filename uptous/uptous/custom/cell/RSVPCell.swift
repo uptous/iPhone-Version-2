@@ -18,11 +18,11 @@ class RSVPCell: UITableViewCell {
         Custom.cornerView(cellView)
     }
     
-    func updateView(data: Items) {
+    func updateView(_ data: Items) {
         rsvpLbl.text = data.name!
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

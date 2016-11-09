@@ -10,9 +10,9 @@ import UIKit
 
 class CustomTextField: UITextField {
 
-    @IBInspectable var placeholderColor: UIColor = UIColor.whiteColor() {
+    @IBInspectable var placeholderColor: UIColor = UIColor.white {
         didSet {
-            let canEditPlaceholderColor = self.respondsToSelector(Selector("setAttributedPlaceholder:"))
+            let canEditPlaceholderColor = self.responds(to: #selector(setter: UITextField.attributedPlaceholder))
             
             if (canEditPlaceholderColor) {
                 self.attributedPlaceholder = NSAttributedString(string: placeholder!, attributes:[NSForegroundColorAttributeName: placeholderColor])

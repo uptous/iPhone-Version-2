@@ -28,20 +28,20 @@ class Opportunity: NSObject {
     init(info: NSDictionary?) {
         super.init()
         
-        self.commentId = info?.objectForKey("commentId") as? Int ?? 0
-        self.referenceType = info?.objectForKey("referenceType") as? String ?? ""
-        self.referenceId = info?.objectForKey("referenceId") as? Int ?? 0
-        self.communityId = info?.objectForKey("communityId") as? Int ?? 0
-        self.ownerId = info?.objectForKey("ownerId") as? Int ?? 0
-        self.ownerName = info?.objectForKey("ownerName") as? String ?? ""
-        self.ownerPhotoUrl = info?.objectForKey("ownerPhotoUrl") as? String ?? ""
-        self.ownerBackgroundColor = info?.objectForKey("ownerBackgroundColor") as? String ?? ""
-        self.ownerTextColor = info?.objectForKey("ownerTextColor") as? String ?? ""
-        self.createDate = info?.objectForKey("createDate") as? Double ?? 0
-        self.createTime = info?.objectForKey("createTime") as? Double ?? 0
-        self.modifiedDate = info?.objectForKey("modifiedDate") as? String ?? ""
-        self.body = info?.objectForKey("body") as? String ?? ""
-        self.createdByUserName = info?.objectForKey("createdByUserName") as? String ?? ""
+        self.commentId = info?.object(forKey: "commentId") as? Int ?? 0
+        self.referenceType = info?.object(forKey: "referenceType") as? String ?? ""
+        self.referenceId = info?.object(forKey: "referenceId") as? Int ?? 0
+        self.communityId = info?.object(forKey: "communityId") as? Int ?? 0
+        self.ownerId = info?.object(forKey: "ownerId") as? Int ?? 0
+        self.ownerName = info?.object(forKey: "ownerName") as? String ?? ""
+        self.ownerPhotoUrl = info?.object(forKey: "ownerPhotoUrl") as? String ?? ""
+        self.ownerBackgroundColor = info?.object(forKey: "ownerBackgroundColor") as? String ?? ""
+        self.ownerTextColor = info?.object(forKey: "ownerTextColor") as? String ?? ""
+        self.createDate = info?.object(forKey: "createDate") as? Double ?? 0
+        self.createTime = info?.object(forKey: "createTime") as? Double ?? 0
+        self.modifiedDate = info?.object(forKey: "modifiedDate") as? String ?? ""
+        self.body = info?.object(forKey: "body") as? String ?? ""
+        self.createdByUserName = info?.object(forKey: "createdByUserName") as? String ?? ""
         
     }
 }

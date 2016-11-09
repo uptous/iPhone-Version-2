@@ -21,22 +21,22 @@ class EventDateCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        contentsView.roundCorners([.TopLeft,.BottomLeft], radius: 8)
-        teamLbl.layer.borderColor = UIColor.blackColor().CGColor
+        contentsView.roundCorners([.topLeft,.bottomLeft], radius: 8)
+        teamLbl.layer.borderColor = UIColor.black.cgColor
         teamLbl.layer.borderWidth = 1.0
     }
     
-    func update(data: SignupSheet) {
+    func update(_ data: SignupSheet) {
         print(data)
-        let format = NSDateFormatter()
-        format.dateFromString("MMM d")
-        let today = format.stringFromDate(NSDate())
+        let format = DateFormatter()
+        format.date(from: "MMM d")
+        let today = format.string(from: Date())
         if today == Custom.dayStringFromTime1(data.dateTime!) {
-            eventDateLbl.textColor = UIColor.redColor()
+            eventDateLbl.textColor = UIColor.red
             eventDateImgView.image = UIImage(named: "red-file-selected")
             
         }else {
-            eventDateLbl.textColor = UIColor.blackColor()
+            eventDateLbl.textColor = UIColor.black
             eventDateImgView.image = UIImage(named: "black-file-selected")
         }
         //lblWidth.constant = Custom.widthSize(data.name!, fontName: "Helvetica Neue", fontSize: 14.0) + 20
@@ -73,7 +73,7 @@ class EventDateCell: UITableViewCell {
         
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
@@ -82,10 +82,10 @@ class EventDateCell: UITableViewCell {
 }
 
 extension UIView {
-    func roundCorners(corners:UIRectCorner, radius: CGFloat) {
+    func roundCorners(_ corners:UIRectCorner, radius: CGFloat) {
         let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
         let mask = CAShapeLayer()
-        mask.path = path.CGPath
+        mask.path = path.cgPath
         self.layer.mask = mask
     }
 }

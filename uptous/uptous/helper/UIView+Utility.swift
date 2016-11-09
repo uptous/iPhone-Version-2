@@ -11,34 +11,34 @@ import UIKit
 extension UIView {
     
     
-    class func toast (messages:String) {
+    class func toast (_ messages:String) {
 
      let toast =    UIAlertView(title: nil, message: messages, delegate: nil, cancelButtonTitle: nil)
         
         toast.show()
         delay(2) { () -> () in
-            toast.dismissWithClickedButtonIndex(0, animated: true)
+            toast.dismiss(withClickedButtonIndex: 0, animated: true)
         }
         
     }
-    class func loadWithNib(nibName:String, viewIndex:Int, owner: AnyObject) -> AnyObject
-    {
-        return (NSBundle.mainBundle().loadNibNamed(nibName, owner: owner, options: nil) as NSArray).objectAtIndex(viewIndex);
-    } //F.E.
+//    class func loadWithNib(_ nibName:String, viewIndex:Int, owner: AnyObject) -> AnyObject
+//    {
+//        return ((Bundle.main.loadNibNamed(nibName, owner: owner, options: nil) as Any) as AnyObject).object(at: viewIndex);
+//    } //F.E.
     
-    class func loadDynamicViewWithNib(nibName:String, viewIndex:Int, owner: AnyObject) -> AnyObject {
+    class func loadDynamicViewWithNib(_ nibName:String, viewIndex:Int, owner: AnyObject) -> AnyObject {
         
-        let bundle = NSBundle(forClass: owner.dynamicType);
+        let bundle = Bundle(for: type(of: owner));
         let nib = UINib(nibName: nibName, bundle: bundle);
         
         // Assumes UIView is top level and only object in CustomView.xib file
-        let rView: AnyObject = nib.instantiateWithOwner(owner, options: nil)[viewIndex];
+        let rView: AnyObject = nib.instantiate(withOwner: owner, options: nil)[viewIndex] as AnyObject;
         return rView;
     } //F.E.
     
-    func addBorder(color:UIColor, width:Int){
+    func addBorder(_ color:UIColor, width:Int){
         let layer:CALayer = self.layer;
-        layer.borderColor=color.CGColor
+        layer.borderColor=color.cgColor
         layer.borderWidth=(CGFloat(width)/CGFloat(2)) as CGFloat
     } //F.E.
     
@@ -46,17 +46,17 @@ extension UIView {
         self.addRoundedCorners(self.frame.size.width/2.0);
     } //F.E.
     
-    func addRoundedCorners(radius:CGFloat) {
+    func addRoundedCorners(_ radius:CGFloat) {
         let layer:CALayer = self.layer;
         layer.cornerRadius = radius
         layer.masksToBounds = true
     } //F.E.
     
    
-    func fadeIn(animated:Bool = true) {
+    func fadeIn(_ animated:Bool = true) {
         if (animated) {
             self.alpha=0.0
-            UIView.animateWithDuration(0.25, animations: { () -> Void in
+            UIView.animate(withDuration: 0.25, animations: { () -> Void in
                 self.alpha=1.0
             })
         } else {
@@ -64,22 +64,22 @@ extension UIView {
         }
     } //F.E.
     
-    func fadeOut(completion:((finished:Bool)->())?) {
+    func fadeOut(_ completion:((_ finished:Bool)->())?) {
         self.fadeOut(true, completion: completion);
     }
     
-    func fadeOut(animated:Bool, completion:((finished:Bool)->())?)
+    func fadeOut(_ animated:Bool, completion:((_ finished:Bool)->())?)
     {
         if (animated) {
             self.alpha = 1.0
-            UIView.animateWithDuration(0.25, animations: { () -> Void in
+            UIView.animate(withDuration: 0.25, animations: { () -> Void in
                 self.alpha=0.0;
-                }) { (finish:Bool) -> Void in
-                    completion?(finished: finish)
-            }
+                }, completion: { (finish:Bool) -> Void in
+                    completion?(finish)
+            }) 
         } else {
             self.alpha=0.0;
-            completion?(finished: true);
+            completion?(true);
         }
         
     } //F.E.
@@ -89,9 +89,9 @@ extension UIView {
         shake.duration = 0.1;
         shake.repeatCount = 2;
         shake.autoreverses = true;
-        shake.fromValue = NSValue(CGPoint: CGPoint(x: self.center.x - 5, y: self.center.y));
-        shake.toValue = NSValue(CGPoint: CGPoint(x: self.center.x + 5, y: self.center.y));
-        self.layer.addAnimation(shake, forKey: "position");
+        shake.fromValue = NSValue(cgPoint: CGPoint(x: self.center.x - 5, y: self.center.y));
+        shake.toValue = NSValue(cgPoint: CGPoint(x: self.center.x + 5, y: self.center.y));
+        self.layer.add(shake, forKey: "position");
     } //F.E.
     
     func removeAllSubviews()

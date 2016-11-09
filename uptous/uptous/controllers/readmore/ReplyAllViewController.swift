@@ -41,19 +41,19 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
         print("Feed item on Read More Page === \(data)")
         textView_comments.placeholder = placeHolderText
         textView_comments.text = placeHolderText
-        textView_comments.textColor = UIColor.lightGrayColor()
+        textView_comments.textColor = UIColor.lightGray
         textField_comments.placeholder = "Type comments here.."
         // Observer Keyboard
-        let center: NSNotificationCenter = NSNotificationCenter.defaultCenter()
-        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardWillHide(_:)), name: UIKeyboardDidHideNotification, object: nil)
-        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardDidChangeFrame(_:)), name: UIKeyboardDidChangeFrameNotification, object: nil)
+        let center: NotificationCenter = NotificationCenter.default
+        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
+        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardDidChangeFrame(_:)), name: NSNotification.Name.UIKeyboardDidChangeFrame, object: nil)
         
         let tapRecognizer = UITapGestureRecognizer(target: self , action: #selector(ReplyAllViewController.HideTextKeyboard(_:)))
         tableView.addGestureRecognizer(tapRecognizer)
        
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
+        let delayTime = DispatchTime.now() + Double(Int64(1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: delayTime) {
             self.updateData(self.data)
             self.fetchOldReplyList()
         }
@@ -61,75 +61,82 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
         Custom.fullCornerView(ownerView)
     }
     
-    override func viewWillAppear(animated: Bool) {
-        self.tableView.hidden = true
+    override func viewWillAppear(_ animated: Bool) {
+        self.tableView.isHidden = true
+        ActivityIndicator.hide()
         tableView.estimatedRowHeight = 110
         tableView.rowHeight = UITableViewAutomaticDimension
     }
     
     //MARK:- Reply Post
-    func postReply(msg: String) {
+    func postReply(_ msg: String) {
         let apiName = PostReplyAPI + ("\(data.newsItemId!)")
         ActivityIndicator.show()
         
         let parameters = ["contents": msg]
-        Alamofire.request(.POST, apiName, headers: appDelegate.loginHeaderCredentials,parameters: parameters)
-            .responseJSON { response in
-                ActivityIndicator.hide()
-                //if self.commentList.count > 0 {
-                    self.fetchOldReplyList()
-                //}
+        DataConnectionManager.requestPOSTURL(api: apiName, para: parameters , success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+            self.fetchOldReplyList()
+            
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+            self.fetchOldReplyList()
         }
+        
     }
     
     //Fetch Old Reply List
     func fetchOldReplyList() {
+        
         let apiName = FetchReplyAPI + ("\(data.newsItemId!)")
         ActivityIndicator.show()
         
-        Alamofire.request(.GET, apiName, headers: appDelegate.loginHeaderCredentials)
-            .responseJSON { response in
-               
-                if let JSON = response.result.value {
-                    ActivityIndicator.hide()
-                    print("JSON: \(JSON)")
-                    self.commentList = response.result.value as! NSArray
-                    if self.commentList.count > 0 {
-                        self.tableView.hidden = false
-                        self.tableView.reloadData()
-                    }
-                }else {
-                    ActivityIndicator.hide()
-                }
+        DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+            self.commentList = response as! NSArray
+            if self.commentList.count > 0 {
+                self.tableView.isHidden = false
+                self.tableView.reloadData()
+            }
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
 
-    
-    func HideTextKeyboard(sender: UITapGestureRecognizer?) {
+    func HideTextKeyboard(_ sender: UITapGestureRecognizer?) {
         //textField_comments.resignFirstResponder()
         placeHolderText = "Type comments here.."
         textView_comments.text = placeHolderText
-        textView_comments.textColor = UIColor.lightGrayColor()
+        textView_comments.textColor = UIColor.lightGray
         textView_comments.resignFirstResponder()
     }
        
-    func tableViewScrollToBottom(animated: Bool) {
+    func tableViewScrollToBottom(_ animated: Bool) {
         let delay = 0.1 * Double(NSEC_PER_SEC)
-        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        let time = DispatchTime.now() + Double(Int64(delay)) / Double(NSEC_PER_SEC)
         
-        dispatch_after(time, dispatch_get_main_queue(), {
+        DispatchQueue.main.asyncAfter(deadline: time, execute: {
             
             let numberOfRows = (self.commentList.count) - 2
             
             if numberOfRows > 0 {
-                let indexPath = NSIndexPath(forRow: 0, inSection: numberOfRows)
-                self.tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: animated)
+                let indexPath = IndexPath(row: 0, section: numberOfRows)
+                self.tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: animated)
             }
         })
     }
     
-    @IBAction func commentsSend_btnAction(sender: UIButton) {
-        if (textView_comments.text != "" ||  textView_comments.text != " ") && textView_comments.textColor == UIColor.blackColor() {
+    @IBAction func commentsSend_btnAction(_ sender: UIButton) {
+        if (textView_comments.text != "" ||  textView_comments.text != " ") && textView_comments.textColor == UIColor.black {
             postReply(textView_comments.text)
             textView_comments.text = ""
             
@@ -140,12 +147,12 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
     }
     
     // MARK: - UIKeyBoard Delegate
-    func keyboardWillShow(notification: NSNotification) {
-        let info:NSDictionary = notification.userInfo!
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
+    func keyboardWillShow(_ notification: Notification) {
+        let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
+        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         let keyboardHeight:CGFloat = keyboardSize.height
         
-        UIView.animateWithDuration(0.25, delay: 0.25, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIViewAnimationOptions(), animations: {
             
             self.commentsBoxBottomSpacing.constant = keyboardHeight
             
@@ -154,62 +161,62 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
         })
     }
     
-    func keyboardWillHide(notification: NSNotification) {
-        let info:NSDictionary = notification.userInfo!
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
+    func keyboardWillHide(_ notification: Notification) {
+        let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
+        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         let keyboardHeight:CGFloat = keyboardSize.height
         
         self.commentsBoxBottomSpacing.constant = keyboardHeight
-        UIView.animateWithDuration(0.35, animations: {
+        UIView.animate(withDuration: 0.35, animations: {
             self.commentsBoxBottomSpacing.constant = 0
             self.view.layoutIfNeeded()
             }, completion: nil)
     }
     
-    func keyboardDidChangeFrame(notification: NSNotification) {
-        let info:NSDictionary = notification.userInfo!
-        let keyboardSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+    func keyboardDidChangeFrame(_ notification: Notification) {
+        let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
+        let keyboardSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let keyboardHeight:CGFloat = keyboardSize.height
         
-        UIView.animateWithDuration(0.25, delay: 0.25, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIViewAnimationOptions(), animations: {
             
             self.commentsBoxBottomSpacing.constant = keyboardHeight
             }, completion: nil)
     }
     
     // MARK: - UITextFiled Delegate
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField_comments.resignFirstResponder()
         return true
     }
     
-    func attributedString(str: String) -> NSAttributedString? {
+    func attributedString(_ str: String) -> NSAttributedString? {
         let attributes = [
-            NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue
+            NSUnderlineStyleAttributeName : NSUnderlineStyle.styleSingle.rawValue
         ]
         let attributedString = NSAttributedString(string: str, attributes: attributes)
         return attributedString
     }
     
-    func updateData(data: Feed) {
+    func updateData(_ data: Feed) {
         if data.ownerPhotoUrl == "https://dsnn35vlkp0h4.cloudfront.net/images/blank_image.gif" {
-            ownerView.hidden = false
-            ownerPhotoImgView.hidden = true
-            let stringArray = data.ownerName?.componentsSeparatedByString(" ")
+            ownerView.isHidden = false
+            ownerPhotoImgView.isHidden = true
+            let stringArray = data.ownerName?.components(separatedBy: " ")
             let firstName = stringArray![0]
             let secondName = stringArray![1]
             let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
             
             ownerNameLbl.text = resultString
-            let color1 = Utility.hexStringToUIColor(data.ownerBackgroundColor!)
-            let color2 = Utility.hexStringToUIColor(data.ownerTextColor!)
+            let color1 = Utility.hexStringToUIColor(hex: data.ownerBackgroundColor!)
+            let color2 = Utility.hexStringToUIColor(hex: data.ownerTextColor!)
             ownerView.backgroundColor = color1
             ownerNameLbl.textColor = color2
             
             
         }else {
-            ownerView.hidden = true
-            ownerPhotoImgView.hidden = false
+            ownerView.isHidden = true
+            ownerPhotoImgView.isHidden = false
             if let avatarUrl = data.ownerPhotoUrl {
                 ownerPhotoImgView.setUserAvatar(avatarUrl)
             }
@@ -218,35 +225,35 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
         let attributedStr = NSMutableAttributedString()
         if data.communityName != "" {
             let attributedString1 = NSAttributedString(string: ("\(data.ownerName!) in: "), attributes: nil)
-            attributedStr.appendAttributedString(attributedString1)
-            attributedStr.appendAttributedString(attributedString(" \(data.communityName!)")!)
+            attributedStr.append(attributedString1)
+            attributedStr.append(attributedString(" \(data.communityName!)")!)
         }else{
             
             let attributedString1 = NSAttributedString(string: ("\(data.ownerName!)"), attributes: nil)
-            attributedStr.appendAttributedString(attributedString1)
+            attributedStr.append(attributedString1)
         }
         groupNameLbl.attributedText = attributedStr
         
-        let name = data.ownerName!.componentsSeparatedByString(" ")
+        let name = data.ownerName!.components(separatedBy: " ")
         msgNameLbl.text = ("\(name[0]) message")
         newsItemNameLbl.text = data.newsItemName
         webView.loadHTMLString(data.newsItemDescription!,baseURL: nil)
 
         //newsItemDescriptionLbl.text = data.newsItemDescription!.decodeHTML()
-        let replyName = data.ownerName?.componentsSeparatedByString(" ")[0]
-        replyToBtn.setTitle(("Reply to" + " " + replyName!), forState: .Normal)
+        let replyName = data.ownerName?.components(separatedBy: " ")[0]
+        replyToBtn.setTitle(("Reply to" + " " + replyName!), for: UIControlState())
         dateLbl.text = ("\(Custom.dayStringFromTime(data.createDate!))")
     }
     
     //MARK:- Mail Composer
-    @IBAction func sendEmail(sender: UIButton) {
+    @IBAction func sendEmail(_ sender: UIButton) {
         if MFMailComposeViewController.canSendMail() {
             let mail = MFMailComposeViewController()
             mail.mailComposeDelegate = self
             mail.setToRecipients([data.ownerEmail!])
             mail.setMessageBody("<p>You're so awesome!</p>", isHTML: true)
             
-            presentViewController(mail, animated: true, completion: nil)
+            present(mail, animated: true, completion: nil)
         } else {
             // show failure alert
             self.showSendMailErrorAlert()
@@ -259,107 +266,16 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
     }
     
     // MARK: MFMailComposeViewControllerDelegate Method
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-        controller.dismissViewControllerAnimated(true, completion: nil)
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true, completion: nil)
     }
     
-    func a() {
-        let apiName = ("https://www.uptous.com/api/comments/feed/1582824")
-        
-        let user = "asmithutu@gmail.com"
-        let password = "alpha123"
-        
-        let credentialData = "\(user):\(password)".dataUsingEncoding(NSUTF8StringEncoding)!
-        let base64Credentials = credentialData.base64EncodedStringWithOptions([])
-        
-        //let headers = ["Authorization": "Basic \(base64Credentials)"]
-        
-        var data = [String: AnyObject]()
-        data["contents"] = "Roshan Mishra"
-        
-        let headers = [
-            "Authorization": "Basic \(base64Credentials)",
-            "Accept": "application/x-www-form-urlencoded"
-        ]
-        let parameters = ["contents": "bar Roshan"]
-        
-        Alamofire.request(.POST, apiName, headers: headers,parameters: ["contents": "Roshan Mishra Testing 12345"])
-            .responseJSON { response in
-                print(response.request)  // original URL request
-                print(response.response) // URL response
-                print(response.data)     // server data
-                print(response.result)   // result of response serialization
-                
-                if let JSON = response.result.value {
-                    print("JSON: \(JSON)")
-                }
-        }
-        
-       /* Alamofire.request(.POST, apiName, headers: headers,parameters: parameters)
-            .responseJSON { response in
-                debugPrint(response)
-                print(response.request)  // original URL request
-                print(response.response) // URL response
-                print(response.data)     // server data
-                print(response.result)   // result of response serialization
-                
-                if let JSON = response.result.value {
-                    print("JSON: \(JSON)")
-                }
-
-        }*/
-        
-       /* let username = "asmithutu@gmail.com".stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-        let password = "alpha123".stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-        
-
-        let credentialData = "\(username):\(password)".dataUsingEncoding(NSUTF8StringEncoding)!
-        let base64Credentials = credentialData.base64EncodedStringWithOptions([])
-        
-        let headers = [
-            "Authorization": "Basic \(base64Credentials)"        ]
-        
-        Alamofire.request(.GET, apiName, headers: headers)
-            .responseJSON { response in
-                print(response.request)  // original URL request
-                print(response.response) // URL response
-                print(response.data)     // server data
-                print(response.result)   // result of response serialization
-                
-                if let JSON = response.result.value {
-                    print("JSON: \(JSON)")
-                }
-        }*/
-        
-        /*Alamofire.request(.POST, apiName, headers: headers,parameters: ["contents": "bar"])
-            .responseJSON { response in
-                print(response.request)  // original URL request
-                print(response.response) // URL response
-                print(response.data)     // server data
-                print(response.result)   // result of response serialization
-                
-                if let JSON = response.result.value {
-                    print("JSON: \(JSON)")
-                }
-        }*/
-        
-        /*Alamofire.request(.GET, apiName, parameters: ["foo": "bar"])
-            .responseJSON { response in
-                print(response.request)  // original URL request
-                print(response.response) // URL response
-                print(response.data)     // server data
-                print(response.result)   // result of response serialization
-                
-                if let JSON = response.result.value {
-                    print("JSON: \(JSON)")
-                }
-        }*/
-    }
+   
     
     //MARK: - Button Action
-    @IBAction func backBtnClick(sender: UIButton) {
+    @IBAction func backBtnClick(_ sender: UIButton) {
         ActivityIndicator.hide()
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -382,17 +298,17 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
 //MARK:- TableView
 extension ReplyAllViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.commentList.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("ReplyAllCell") as! ReplyAllCell
-        let data = commentList[indexPath.row] as? NSDictionary
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ReplyAllCell") as! ReplyAllCell
+        let data = commentList[(indexPath as NSIndexPath).row] as? NSDictionary
         print(Comment(info: data))
         cell.updateData(Comment(info: data!))
         return cell
@@ -403,29 +319,29 @@ extension ReplyAllViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension ReplyAllViewController: UITextViewDelegate {
     
-    func textViewDidBeginEditing(textView: UITextView) {
+    func textViewDidBeginEditing(_ textView: UITextView) {
         textView.selectedRange = NSMakeRange(0, 0)
-        if textView.textColor == UIColor.lightGrayColor() && textView.text != placeHolderText && isCommentEdit_1_replyEdit_2 == 0{
+        if textView.textColor == UIColor.lightGray && textView.text != placeHolderText && isCommentEdit_1_replyEdit_2 == 0{
             textView.text = nil
-            textView.textColor = UIColor.blackColor()
+            textView.textColor = UIColor.black
         }
         else{
             
         }
     }
     
-    func textViewDidEndEditing(textView: UITextView) {
+    func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
             textView.text = placeHolderText
-            textView.textColor = UIColor.lightGrayColor()
+            textView.textColor = UIColor.lightGray
         }
     }
     
-    func textViewDidChange(textView: UITextView) {
+    func textViewDidChange(_ textView: UITextView) {
         //self.textView_comments.textViewDidChange(textView)
     }
     
-    func textViewShouldBeginEditing(textView: UITextView) -> Bool {
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         
         if textView.text == "" {
             textView.text = nil
@@ -433,14 +349,14 @@ extension ReplyAllViewController: UITextViewDelegate {
         return true
     }
     
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-        if textView.textColor == UIColor.lightGrayColor() && textView.text == placeHolderText {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if textView.textColor == UIColor.lightGray && textView.text == placeHolderText {
             textView.text = nil
-            textView.textColor = UIColor.blackColor()
+            textView.textColor = UIColor.black
         }
-        if text == "" && textView_comments.text.characters.count == 1 && textView.textColor == UIColor.blackColor(){
+        if text == "" && textView_comments.text.characters.count == 1 && textView.textColor == UIColor.black{
             textView.text = placeHolderText
-            textView.textColor = UIColor.lightGrayColor()
+            textView.textColor = UIColor.lightGray
             textView.selectedRange = NSMakeRange(0, 0)
         }
         if text == "\n" {
@@ -459,7 +375,7 @@ extension ReplyAllViewController: UITextViewDelegate {
 }
 
 extension UIColor{
-    func HexToColor(hexString: String, alpha:CGFloat? = 1.0) -> UIColor {
+    func HexToColor(_ hexString: String, alpha:CGFloat? = 1.0) -> UIColor {
         // Convert hex string to an integer
         let hexint = Int(self.intFromHexString(hexString))
         let red = CGFloat((hexint & 0xff0000) >> 16) / 255.0
@@ -471,14 +387,14 @@ extension UIColor{
         return color
     }
     
-    func intFromHexString(hexStr: String) -> UInt32 {
+    func intFromHexString(_ hexStr: String) -> UInt32 {
         var hexInt: UInt32 = 0
         // Create scanner
-        let scanner: NSScanner = NSScanner(string: hexStr)
+        let scanner: Scanner = Scanner(string: hexStr)
         // Tell scanner to skip the # character
-        scanner.charactersToBeSkipped = NSCharacterSet(charactersInString: "#")
+        scanner.charactersToBeSkipped = CharacterSet(charactersIn: "#")
         // Scan hex value
-        scanner.scanHexInt(&hexInt)
+        scanner.scanHexInt32(&hexInt)
         return hexInt
     }
 }

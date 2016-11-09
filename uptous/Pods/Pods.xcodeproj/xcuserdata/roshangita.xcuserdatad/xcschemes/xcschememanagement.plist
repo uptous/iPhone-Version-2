@@ -9,21 +9,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Just.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>M13PDFKit-M13PDFKitResources.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>M13PDFKit.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -49,21 +34,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>SwiftString-SwiftString.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>SwiftString.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>TTOpenInAppActivity.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>TimeAgoInWords.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -72,27 +42,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0121BA2B9A770E93F20E8DEB393F1EB7</key>
+		<key>16142AF63CF8689D53A5F687364A92AB</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>07783D694331A3239B862DF2BCC8BF2D</key>
+		<key>1EAFB159BEF460E2BDADE9ADC840D412</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>5056C707EE63FCBCB465F1E387B9404D</key>
+		<key>2DD6DA56F1853E123F5A9CF613B3F34B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>59EC069B1E29F041E845E58D27757BF0</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>72F1470659244B2EEB2D680E3B5C7C49</key>
+		<key>3C6B08FA38DEA5C463F11AD751EE849B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -102,37 +67,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>84E275BB2858F8324A928F6C5C397990</key>
+		<key>DD7078B20F55969132BC1A985DA54CB1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>89037B992F13EB5159EF3A5BE463F882</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>932C2BBB5BD730E61475947CF8BAC7D4</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>A81C13C4B782DFFE94F91E42C52D55CF</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>A96DEE25D7AF10B7A039C6324721B897</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>B90E5173CFDB255C7C3DD2D9F2303A23</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>CF658A88E8561D9864067744094F7B54</key>
+		<key>DF7A8A09895D694F1C818258628BADE9</key>
 		<dict>
 			<key>primary</key>
 			<true/>

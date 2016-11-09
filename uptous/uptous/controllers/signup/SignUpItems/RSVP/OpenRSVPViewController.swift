@@ -45,24 +45,24 @@ class OpenRSVPViewController: GeneralViewController {
         
         textView_comments.placeholder = placeHolderText
         textView_comments.text = placeHolderText
-        textView_comments.textColor = UIColor.lightGrayColor()
+        textView_comments.textColor = UIColor.lightGray
         textField_comments.placeholder = "Type comments here.."
         // Observer Keyboard
-        let center: NSNotificationCenter = NSNotificationCenter.defaultCenter()
-        center.addObserver(self, selector: #selector(OpenRSVPViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        center.addObserver(self, selector: #selector(OpenRSVPViewController.keyboardWillHide(_:)), name: UIKeyboardDidHideNotification, object: nil)
-        center.addObserver(self, selector: #selector(OpenRSVPViewController.keyboardDidChangeFrame(_:)), name: UIKeyboardDidChangeFrameNotification, object: nil)
+        let center: NotificationCenter = NotificationCenter.default
+        center.addObserver(self, selector: #selector(OpenRSVPViewController.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        center.addObserver(self, selector: #selector(OpenRSVPViewController.keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
+        center.addObserver(self, selector: #selector(OpenRSVPViewController.keyboardDidChangeFrame(_:)), name: NSNotification.Name.UIKeyboardDidChangeFrame, object: nil)
         
         let tapRecognizer = UITapGestureRecognizer(target: self , action: #selector(OpenRSVPViewController.HideTextKeyboard(_:)))
         tableView.addGestureRecognizer(tapRecognizer)
         
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
-         dispatch_after(delayTime, dispatch_get_main_queue()) {
+        let delayTime = DispatchTime.now() + Double(Int64(1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+         DispatchQueue.main.asyncAfter(deadline: delayTime) {
             //self.updateData(self.data)
             //self.fetchItems()
          }
         
-        let imageData = NSData(contentsOfURL: NSBundle.mainBundle().URLForResource("smiley_test", withExtension: "gif")!)
+        let imageData = try? Data(contentsOf: Bundle.main.url(forResource: "smiley_test", withExtension: "gif")!)
         let advTimeGif = UIImage.gifImageWithData(imageData!)
         gifImageView.image = advTimeGif
         
@@ -72,26 +72,31 @@ class OpenRSVPViewController: GeneralViewController {
         self.tableView.reloadData()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         //self.tableView.hidden = true
+        ActivityIndicator.hide()
+
         tableView.estimatedRowHeight = 110
         tableView.rowHeight = UITableViewAutomaticDimension
     }
     
     //Post Comment
-    func postComment(msg: String,attendees: String) {
+    func postComment(_ msg: String,attendees: String) {
         //let opportunityID = result.objectForKey("id") as? String
         let apiName = SignupItems + ("\(sheetData.id!)") + ("/item/\(itemData.Id!)/Add")
         ActivityIndicator.show()
         
         let parameters = ["comment": msg,"numberOfAttendees": attendees]
-        
-        Alamofire.request(.POST, apiName, headers: appDelegate.loginHeaderCredentials,parameters: parameters)
-            .responseJSON { response in
-                ActivityIndicator.hide()
-                //if self.commentList.count > 0 {
-                self.fetchItems()
-                //}
+        DataConnectionManager.requestPOSTURL(api: apiName, para: parameters, success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+            self.fetchItems()
+            
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+            self.fetchItems()
         }
     }
     
@@ -100,41 +105,36 @@ class OpenRSVPViewController: GeneralViewController {
         let apiName = SignupItems + ("\(sheetData.id!)")
         ActivityIndicator.show()
         
-        Alamofire.request(.GET, apiName, headers: appDelegate.loginHeaderCredentials)
-            .responseJSON { response in
-                if let result = response.result.value {
-                    ActivityIndicator.hide()
-                    let datas = (result as? NSArray)!
-                    let dic = datas.objectAtIndex(0) as? NSDictionary
-                    let sheet = SignupSheet(info: dic)
-                    let item = (dic?.objectForKey("items")) as! NSArray
-                    let dic1 = item.objectAtIndex(0) as? NSDictionary
-                    
-//                    self.headingLbl.text = ("Join the \(sheet.name)")
-//                    self.rsvpLbl.text = "Yeah! You have just RSVP'd as joining the party!"
-//                    self.dateTimeLbl.text = ("\(Custom.dayStringFromTime1(sheet.createDate!))")
-//                    
-                    //attendeesTxtField.text = data.volunteers![0].objectForKey("phone") as? String ?? ""
-                    
-                    //self.itemsDatas = (dic1?.objectForKey("volunteers")) as! NSArray
-                    //self.tableView.reloadData()
-                }else {
-                    ActivityIndicator.hide()
-                }
+        DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+            let datas = (response as? NSArray)!
+            let dic = datas.object(at: 0) as? NSDictionary
+            let sheet = SignupSheet(info: dic)
+            let item = (dic?.object(forKey: "items")) as! NSArray
+            let dic1 = item.object(at: 0) as? NSDictionary
+            
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
     
     //MARK:- Keyboard
-    func HideTextKeyboard(sender: UITapGestureRecognizer?) {
+    func HideTextKeyboard(_ sender: UITapGestureRecognizer?) {
         //textField_comments.resignFirstResponder()
         placeHolderText = "Type comments here.."
         textView_comments.text = placeHolderText
-        textView_comments.textColor = UIColor.lightGrayColor()
+        textView_comments.textColor = UIColor.lightGray
         textView_comments.resignFirstResponder()
     }
     
-    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         
         // Check offset and load more feeds
         let currentOffset = scrollView.contentOffset.y
@@ -149,24 +149,24 @@ class OpenRSVPViewController: GeneralViewController {
         }
     }
     
-    func tableViewScrollToBottom(animated: Bool) {
+    func tableViewScrollToBottom(_ animated: Bool) {
         
         let delay = 0.1 * Double(NSEC_PER_SEC)
-        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        let time = DispatchTime.now() + Double(Int64(delay)) / Double(NSEC_PER_SEC)
         
-        dispatch_after(time, dispatch_get_main_queue(), {
+        DispatchQueue.main.asyncAfter(deadline: time, execute: {
             
             let numberOfSections = self.tableView.numberOfSections
-            let numberOfRows = (self.list.count) - self.tableView.numberOfRowsInSection(numberOfSections-1)
+            let numberOfRows = (self.list.count) - self.tableView.numberOfRows(inSection: numberOfSections-1)
             if numberOfRows > 0 {
-                let indexPath = NSIndexPath(forRow: 0, inSection: numberOfRows)
-                self.tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: animated)
+                let indexPath = IndexPath(row: 0, section: numberOfRows)
+                self.tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: animated)
             }
         })
     }
     
-    @IBAction func commentsSend_btnAction(sender: UIButton) {
-        if (textView_comments.text != "" || textView_comments.text != " ") && textView_comments.textColor == UIColor.blackColor() {
+    @IBAction func commentsSend_btnAction(_ sender: UIButton) {
+        if (textView_comments.text != "" || textView_comments.text != " ") && textView_comments.textColor == UIColor.black {
             if attendeesTxtField.text == "" || attendeesTxtField.text == nil {
                 BaseUIView.toast("Please enter Attendees.")
                 attendeesTxtField.becomeFirstResponder()
@@ -186,12 +186,12 @@ class OpenRSVPViewController: GeneralViewController {
     }
     
     // MARK: - UIKeyBoard Delegate
-    func keyboardWillShow(notification: NSNotification) {
-        let info:NSDictionary = notification.userInfo!
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
+    func keyboardWillShow(_ notification: Notification) {
+        let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
+        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         let keyboardHeight:CGFloat = keyboardSize.height
         
-        UIView.animateWithDuration(0.25, delay: 0.25, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIViewAnimationOptions(), animations: {
             
             self.commentsBoxBottomSpacing.constant = keyboardHeight
             
@@ -200,42 +200,42 @@ class OpenRSVPViewController: GeneralViewController {
         })
     }
     
-    func keyboardWillHide(notification: NSNotification) {
-        let info:NSDictionary = notification.userInfo!
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
+    func keyboardWillHide(_ notification: Notification) {
+        let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
+        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         let keyboardHeight:CGFloat = keyboardSize.height
         
         self.commentsBoxBottomSpacing.constant = keyboardHeight
-        UIView.animateWithDuration(0.35, animations: {
+        UIView.animate(withDuration: 0.35, animations: {
             self.commentsBoxBottomSpacing.constant = 0
             self.view.layoutIfNeeded()
             }, completion: nil)
         
     }
     
-    func keyboardDidChangeFrame(notification: NSNotification) {
+    func keyboardDidChangeFrame(_ notification: Notification) {
         
-        let info:NSDictionary = notification.userInfo!
-        let keyboardSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+        let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
+        let keyboardSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         
         let keyboardHeight:CGFloat = keyboardSize.height
         
         
-        UIView.animateWithDuration(0.25, delay: 0.25, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIViewAnimationOptions(), animations: {
             
             self.commentsBoxBottomSpacing.constant = keyboardHeight
             }, completion: nil)
     }
     
     // MARK: - UITextFiled Delegate
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField_comments.resignFirstResponder()
         return true
     }
     
     //MARK: - Button Action
-    @IBAction func backBtnClick(sender: UIButton) {
-        self.navigationController?.popViewControllerAnimated(true)
+    @IBAction func backBtnClick(_ sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
     }
     
     override func didReceiveMemoryWarning() {
@@ -248,19 +248,19 @@ class OpenRSVPViewController: GeneralViewController {
 //MARK:- TableView
 extension OpenRSVPViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return self.volunteerData.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("RSVPItemCell") as! RSVPItemCell
-        let data = self.volunteerData[indexPath.row] as? NSDictionary
+        let cell = tableView.dequeueReusableCell(withIdentifier: "RSVPItemCell") as! RSVPItemCell
+        let data = self.volunteerData[(indexPath as NSIndexPath).row] as? NSDictionary
         cell.updateData(data!)
         
         return cell
@@ -272,30 +272,30 @@ extension OpenRSVPViewController: UITableViewDelegate, UITableViewDataSource {
 // MARK: - Extensions for UITextView
 extension OpenRSVPViewController: UITextViewDelegate {
     
-    func textViewDidBeginEditing(textView: UITextView) {
+    func textViewDidBeginEditing(_ textView: UITextView) {
         
         textView.selectedRange = NSMakeRange(0, 0)
-        if textView.textColor == UIColor.lightGrayColor() && textView.text != placeHolderText && isCommentEdit_1_replyEdit_2 == 0{
+        if textView.textColor == UIColor.lightGray && textView.text != placeHolderText && isCommentEdit_1_replyEdit_2 == 0{
             textView.text = nil
-            textView.textColor = UIColor.blackColor()
+            textView.textColor = UIColor.black
         }
         else{
             
         }
     }
     
-    func textViewDidEndEditing(textView: UITextView) {
+    func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
             textView.text = placeHolderText
-            textView.textColor = UIColor.lightGrayColor()
+            textView.textColor = UIColor.lightGray
         }
     }
     
-    func textViewDidChange(textView: UITextView) {
+    func textViewDidChange(_ textView: UITextView) {
         //self.textView_comments.textViewDidChange(textView)
     }
     
-    func textViewShouldBeginEditing(textView: UITextView) -> Bool {
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         
         if textView.text == "Add caption tag another user with @username..." {
             textView.text = nil
@@ -303,15 +303,15 @@ extension OpenRSVPViewController: UITextViewDelegate {
         return true
     }
     
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
-        if textView.textColor == UIColor.lightGrayColor() && textView.text == placeHolderText {
+        if textView.textColor == UIColor.lightGray && textView.text == placeHolderText {
             textView.text = nil
-            textView.textColor = UIColor.blackColor()
+            textView.textColor = UIColor.black
         }
-        if text == "" && textView_comments.text.characters.count == 1 && textView.textColor == UIColor.blackColor(){
+        if text == "" && textView_comments.text.characters.count == 1 && textView.textColor == UIColor.black{
             textView.text = placeHolderText
-            textView.textColor = UIColor.lightGrayColor()
+            textView.textColor = UIColor.lightGray
             textView.selectedRange = NSMakeRange(0, 0)
         }
         if text == "\n" {

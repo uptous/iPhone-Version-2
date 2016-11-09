@@ -20,16 +20,16 @@ class ReadOnlyCommentCell: UITableViewCell {
         Custom.cornerView(cellView)
     }
     
-    func updateView(data: NSDictionary) {
+    func updateView(_ data: NSDictionary) {
        
-        commentDescriptionLbl.text = data.objectForKey("phone") as? String ?? "No Comment"
-         nameLbl.text = data.objectForKey("firstName") as? String
-        let eventDate = data.objectForKey("dateTime") as? String ?? ""
+        commentDescriptionLbl.text = data.object(forKey: "phone") as? String ?? "No Comment"
+         nameLbl.text = data.object(forKey: "firstName") as? String
+        let eventDate = data.object(forKey: "dateTime") as? String ?? ""
         dateLbl.text = eventDate
     }
 
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

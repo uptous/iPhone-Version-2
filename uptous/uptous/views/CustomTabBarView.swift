@@ -28,38 +28,38 @@ class CustomTabBarView: UIView {
     var calendarTapHandler: ((CustomTabBarView)->())?
     
     override func awakeFromNib() {
-        newsFeedBtn1.hidden = false
-        contactsBtn1.hidden = true
-        signupBtn1.hidden = true
-        libraryBtn1.hidden = true
-        calendarBtn1.hidden = true
+        newsFeedBtn1.isHidden = false
+        contactsBtn1.isHidden = true
+        signupBtn1.isHidden = true
+        libraryBtn1.isHidden = true
+        calendarBtn1.isHidden = true
     }
     
-    @IBAction func newsFeedBtnClick(sender: UIButton) {
+    @IBAction func newsFeedBtnClick(_ sender: UIButton) {
         newsFeedTapHandler?(self)
     }
     
-    @IBAction func contactsBtnClick(sender: UIButton) {
+    @IBAction func contactsBtnClick(_ sender: UIButton) {
         contactsTapHandler?(self)
     }
     
-    @IBAction func signupBtnClick(sender: UIButton) {
+    @IBAction func signupBtnClick(_ sender: UIButton) {
         signupTapHandler?(self)
     }
     
-    @IBAction func libraryBtnClick(sender: UIButton) {
+    @IBAction func libraryBtnClick(_ sender: UIButton) {
         libraryTapHandler?(self)
     }
     
-    @IBAction func calendarBtnClick(sender: UIButton) {
+    @IBAction func calendarBtnClick(_ sender: UIButton) {
         calendarTapHandler?(self)
     }
     
     func deselectButton(){
-        newsFeedBtn.setImage(UIImage(named: "tabbar1"), forState: .Normal)
-        contactsBtn.setImage(UIImage(named: "tabbar2"), forState: .Normal)
-        signupBtn.setImage(UIImage(named: "tabbar3"), forState: .Normal)
-        libraryBtn.setImage(UIImage(named: "tabbar4"), forState: .Normal)
-        calendarBtn.setImage(UIImage(named: "tabbar5"), forState: .Normal)
+        newsFeedBtn.setImage(UIImage(named: "tabbar1"), for: UIControlState())
+        contactsBtn.setImage(UIImage(named: "tabbar2"), for: UIControlState())
+        signupBtn.setImage(UIImage(named: "tabbar3"), for: UIControlState())
+        libraryBtn.setImage(UIImage(named: "tabbar4"), for: UIControlState())
+        calendarBtn.setImage(UIImage(named: "tabbar5"), for: UIControlState())
     }
 }

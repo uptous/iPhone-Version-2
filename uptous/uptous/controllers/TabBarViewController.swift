@@ -15,9 +15,9 @@ class TabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.tabBar.hidden = true
-        tabbarView =  NSBundle.mainBundle().loadNibNamed("CustomTabBarView", owner: nil, options: nil).first! as? CustomTabBarView
-        tabbarView?.frame = CGRectMake(0, CGRectGetHeight(self.view.frame) - 50, CGRectGetWidth(self.view.frame), 50)
+        self.tabBar.isHidden = true
+        tabbarView =  Bundle.main.loadNibNamed("CustomTabBarView", owner: nil, options: nil)?.first! as? CustomTabBarView
+        tabbarView?.frame = CGRect(x: 0, y: self.view.frame.height - 50, width: self.view.frame.width, height: 50)
         self.view.addSubview(tabbarView!)
         //self.selectedIndex = 0
         
@@ -27,13 +27,13 @@ class TabBarViewController: UITabBarController {
             self.selectedIndex = 0
             
             firstTabBar.deselectButton()
-            firstTabBar.newsFeedBtn.selected = true
+            firstTabBar.newsFeedBtn.isSelected = true
             
-            firstTabBar.newsFeedBtn1.hidden = false
-            firstTabBar.contactsBtn1.hidden = true
-            firstTabBar.signupBtn1.hidden = true
-            firstTabBar.libraryBtn1.hidden = true
-            firstTabBar.calendarBtn1.hidden = true
+            firstTabBar.newsFeedBtn1.isHidden = false
+            firstTabBar.contactsBtn1.isHidden = true
+            firstTabBar.signupBtn1.isHidden = true
+            firstTabBar.libraryBtn1.isHidden = true
+            firstTabBar.calendarBtn1.isHidden = true
             
             /*let vc = self.viewControllers![0] as! MyUpToUsFeedViewController
             vc.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)
@@ -48,12 +48,12 @@ class TabBarViewController: UITabBarController {
             self.selectedIndex = 1
             
             secondTabBar.deselectButton()
-            secondTabBar.contactsBtn.selected = true
-            secondTabBar.newsFeedBtn1.hidden = true
-            secondTabBar.contactsBtn1.hidden = false
-            secondTabBar.signupBtn1.hidden = true
-            secondTabBar.libraryBtn1.hidden = true
-            secondTabBar.calendarBtn1.hidden = true
+            secondTabBar.contactsBtn.isSelected = true
+            secondTabBar.newsFeedBtn1.isHidden = true
+            secondTabBar.contactsBtn1.isHidden = false
+            secondTabBar.signupBtn1.isHidden = true
+            secondTabBar.libraryBtn1.isHidden = true
+            secondTabBar.calendarBtn1.isHidden = true
         }
         
         tabbarView!.signupTapHandler = {
@@ -61,12 +61,12 @@ class TabBarViewController: UITabBarController {
             self.selectedIndex = 2
             
             thirdTabBar.deselectButton()
-            thirdTabBar.signupBtn.selected = true
-            thirdTabBar.newsFeedBtn1.hidden = true
-            thirdTabBar.contactsBtn1.hidden = true
-            thirdTabBar.signupBtn1.hidden = false
-            thirdTabBar.libraryBtn1.hidden = true
-            thirdTabBar.calendarBtn1.hidden = true
+            thirdTabBar.signupBtn.isSelected = true
+            thirdTabBar.newsFeedBtn1.isHidden = true
+            thirdTabBar.contactsBtn1.isHidden = true
+            thirdTabBar.signupBtn1.isHidden = false
+            thirdTabBar.libraryBtn1.isHidden = true
+            thirdTabBar.calendarBtn1.isHidden = true
             
 //            let vc = self.viewControllers![2] as! MyUpToUsSignUpViewController
 //            vc.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)
@@ -81,13 +81,13 @@ class TabBarViewController: UITabBarController {
             self.selectedIndex = 3
             
             fourthTabBar.deselectButton()
-            fourthTabBar.libraryBtn.selected = true
+            fourthTabBar.libraryBtn.isSelected = true
             
-            fourthTabBar.newsFeedBtn1.hidden = true
-            fourthTabBar.contactsBtn1.hidden = true
-            fourthTabBar.signupBtn1.hidden = true
-            fourthTabBar.libraryBtn1.hidden = false
-            fourthTabBar.calendarBtn1.hidden = true
+            fourthTabBar.newsFeedBtn1.isHidden = true
+            fourthTabBar.contactsBtn1.isHidden = true
+            fourthTabBar.signupBtn1.isHidden = true
+            fourthTabBar.libraryBtn1.isHidden = false
+            fourthTabBar.calendarBtn1.isHidden = true
         }
         
         tabbarView!.calendarTapHandler = {
@@ -95,13 +95,13 @@ class TabBarViewController: UITabBarController {
             self.selectedIndex = 4
             
            fifthTabBar.deselectButton()
-           fifthTabBar.calendarBtn.selected = true
+           fifthTabBar.calendarBtn.isSelected = true
             
-            fifthTabBar.newsFeedBtn1.hidden = true
-            fifthTabBar.contactsBtn1.hidden = true
-            fifthTabBar.signupBtn1.hidden = true
-            fifthTabBar.libraryBtn1.hidden = true
-            fifthTabBar.calendarBtn1.hidden = false
+            fifthTabBar.newsFeedBtn1.isHidden = true
+            fifthTabBar.contactsBtn1.isHidden = true
+            fifthTabBar.signupBtn1.isHidden = true
+            fifthTabBar.libraryBtn1.isHidden = true
+            fifthTabBar.calendarBtn1.isHidden = false
         }
     }
 

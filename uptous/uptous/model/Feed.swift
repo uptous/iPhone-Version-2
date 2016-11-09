@@ -35,29 +35,29 @@ class Feed: NSObject {
     init(info: NSDictionary?) {
         super.init()
         
-        self.feedId = info?.objectForKey("feedId") as? Int ?? 0
-        self.communityId = info?.objectForKey("communityId") as? Int ?? 0
-        self.ownerId = info?.objectForKey("ownerId") as? Int ?? 0
-        self.ownerName = info?.objectForKey("ownerName") as? String ?? ""
-        self.ownerPhotoUrl = info?.objectForKey("ownerPhotoUrl") as? String ?? ""
-        self.ownerBackgroundColor = info?.objectForKey("ownerBackgroundColor") as? String ?? ""
-        self.ownerTextColor = info?.objectForKey("ownerTextColor") as? String ?? ""
-        self.createDate = info?.objectForKey("createDate") as? Double ?? 0
-        self.modifiedDate = info?.objectForKey("modifiedDate") as? String ?? ""
-        self.communityName = info?.objectForKey("communityName") as? String ?? ""
-        self.communityLogoUrl = info?.objectForKey("communityLogoUrl") as? String ?? ""
-        self.communityBackgroundColor = info?.objectForKey("communityBackgroundColor") as? String ?? ""
-        self.communityTextColor = info?.objectForKey("communityTextColor") as? String ?? ""
-        self.communityName = info?.objectForKey("communityName") as? String ?? ""
-        self.newsType = info?.objectForKey("newsType") as? String ?? ""
-        self.newsItemId = info?.objectForKey("newsItemId") as? Int ?? 0
-        self.newsItemIndex = info?.objectForKey("newsItemIndex") as? String ?? ""
-        self.newsItemName = info?.objectForKey("newsItemName") as? String ?? ""
-        self.newsItemDescription = info?.objectForKey("newsItemDescription") as? String ?? ""
-        self.newsItemUrl = info?.objectForKey("newsItemUrl") as? String ?? ""
-        self.newsItemPhoto = info?.objectForKey("newsItemPhoto") as? String ?? ""
-        self.ownerEmail = info?.objectForKey("ownerEmail") as? String ?? ""
-        self.comments = info?.objectForKey("comments") as? NSArray ?? []
+        self.feedId = info?.object(forKey: "feedId") as? Int ?? 0
+        self.communityId = info?.object(forKey: "communityId") as? Int ?? 0
+        self.ownerId = info?.object(forKey: "ownerId") as? Int ?? 0
+        self.ownerName = info?.object(forKey: "ownerName") as? String ?? ""
+        self.ownerPhotoUrl = info?.object(forKey: "ownerPhotoUrl") as? String ?? ""
+        self.ownerBackgroundColor = info?.object(forKey: "ownerBackgroundColor") as? String ?? ""
+        self.ownerTextColor = info?.object(forKey: "ownerTextColor") as? String ?? ""
+        self.createDate = info?.object(forKey: "createDate") as? Double ?? 0
+        self.modifiedDate = info?.object(forKey: "modifiedDate") as? String ?? ""
+        self.communityName = info?.object(forKey: "communityName") as? String ?? ""
+        self.communityLogoUrl = info?.object(forKey: "communityLogoUrl") as? String ?? ""
+        self.communityBackgroundColor = info?.object(forKey: "communityBackgroundColor") as? String ?? ""
+        self.communityTextColor = info?.object(forKey: "communityTextColor") as? String ?? ""
+        self.communityName = info?.object(forKey: "communityName") as? String ?? ""
+        self.newsType = info?.object(forKey: "newsType") as? String ?? ""
+        self.newsItemId = info?.object(forKey: "newsItemId") as? Int ?? 0
+        self.newsItemIndex = info?.object(forKey: "newsItemIndex") as? String ?? ""
+        self.newsItemName = info?.object(forKey: "newsItemName") as? String ?? ""
+        self.newsItemDescription = info?.object(forKey: "newsItemDescription") as? String ?? ""
+        self.newsItemUrl = info?.object(forKey: "newsItemUrl") as? String ?? ""
+        self.newsItemPhoto = info?.object(forKey: "newsItemPhoto") as? String ?? ""
+        self.ownerEmail = info?.object(forKey: "ownerEmail") as? String ?? ""
+        self.comments = info?.object(forKey: "comments") as? NSArray ?? []
         
     }
 }

@@ -6,7 +6,5 @@
 #import "HPGrowingTextView.h"
 #import "HPTextViewInternal.h"
 #import "NSDate+NVTimeAgo.h" 
-#import <M13PDFKit/PDFKDocument.h>
-#import <M13PDFKit/PDFKBasicPDFViewer.h>
 
 

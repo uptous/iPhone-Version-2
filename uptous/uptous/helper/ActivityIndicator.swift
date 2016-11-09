@@ -15,7 +15,7 @@ class ActivityIndicator: NSObject {
        RappleActivityIndicatorView.startAnimatingWithLabel("Loading...", attributes: RappleModernAttributes)
     }
 
-    class func showWithText(text: String) {
+    class func showWithText(_ text: String) {
         RappleActivityIndicatorView.startAnimatingWithLabel(text, attributes: RappleModernAttributes)
     }
     

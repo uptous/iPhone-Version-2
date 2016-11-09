@@ -54,13 +54,13 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         
         textView_comments.placeholder = placeHolderText
         textView_comments.text = placeHolderText
-        textView_comments.textColor = UIColor.lightGrayColor()
+        textView_comments.textColor = UIColor.lightGray
         textField_comments.placeholder = "Type comments here.."
         // Observer Keyboard
-        let center: NSNotificationCenter = NSNotificationCenter.defaultCenter()
-        center.addObserver(self, selector: #selector(DetailsSignUpDriverViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        center.addObserver(self, selector: #selector(DetailsSignUpDriverViewController.keyboardWillHide(_:)), name: UIKeyboardDidHideNotification, object: nil)
-        center.addObserver(self, selector: #selector(DetailsSignUpDriverViewController.keyboardDidChangeFrame(_:)), name: UIKeyboardDidChangeFrameNotification, object: nil)
+        let center: NotificationCenter = NotificationCenter.default
+        center.addObserver(self, selector: #selector(DetailsSignUpDriverViewController.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        center.addObserver(self, selector: #selector(DetailsSignUpDriverViewController.keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
+        center.addObserver(self, selector: #selector(DetailsSignUpDriverViewController.keyboardDidChangeFrame(_:)), name: NSNotification.Name.UIKeyboardDidChangeFrame, object: nil)
         
         let tapRecognizer = UITapGestureRecognizer(target: self , action: #selector(DetailsSignUpDriverViewController.HideTextKeyboard(_:)))
         tableView.addGestureRecognizer(tapRecognizer)
@@ -75,79 +75,114 @@ class DetailsSignUpDriverViewController: GeneralViewController {
             //self.fetchCommentList()
         }*/
         
-        let imageData = NSData(contentsOfURL: NSBundle.mainBundle().URLForResource("smiley_test", withExtension: "gif")!)
+        let imageData = try? Data(contentsOf: Bundle.main.url(forResource: "smiley_test", withExtension: "gif")!)
         let advTimeGif = UIImage.gifImageWithData(imageData!)
         gifImageView.image = advTimeGif
     }
     
-    override func viewWillAppear(animated: Bool) {
-        self.tableView.hidden = true
+    override func viewWillAppear(_ animated: Bool) {
+        self.tableView.isHidden = true
+        ActivityIndicator.hide()
+
         tableView.estimatedRowHeight = 110
         tableView.rowHeight = UITableViewAutomaticDimension
     }
     
     //MARK:- Delete 
-    @IBAction func deleteButtonClick(sender: UIButton) {
-        let alertView = UIAlertController(title: "UpToUs", message: "are you sure you want to delete this record?", preferredStyle: .Alert)
-        alertView.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { (alertAction) -> Void in
+    @IBAction func deleteButtonClick(_ sender: UIButton) {
+        let alertView = UIAlertController(title: "UpToUs", message: "Are you sure that you want to delete your assignment?", preferredStyle: .alert)
+        alertView.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (alertAction) -> Void in
             self.delete()
         }))
-        alertView.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-        presentViewController(alertView, animated: true, completion: nil)
+        alertView.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alertView, animated: true, completion: nil)
     }
     
     func delete() {
         let apiName = SignupItems + ("\(sheetData.id!)") + ("/item/\(selectedItems.Id!)/Del")
         ActivityIndicator.show()
-        
-        Alamofire.request(.POST, apiName, headers: appDelegate.loginHeaderCredentials,parameters: nil)
-            .responseJSON { response in
-                ActivityIndicator.hide()
-                print(response)
-                let result = response as? NSDictionary
-                print(result)
-                //if self.commentList.count > 0 {
-                    //self.fetchItems()
-                //}
+        DataConnectionManager.requestPOSTURL(api: apiName, para: ["":""], success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+            //self.fetchItems()
+            self.navigationController?.popViewController(animated: true)
+            
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+            self.navigationController?.popViewController(animated: true)
+
         }
 
     }
     
     //Post Comment
-    func postComment(msg: String,phone: String) {
+    func postComment(_ msg: String,phone: String) {
         let apiName = SignupItems + ("\(sheetData.id!)") + ("/item/\(selectedItems.Id!)/Add")
         ActivityIndicator.show()
         let parameters = ["comment": msg,"phone": phone]
         
-        Alamofire.request(.POST, apiName, headers: appDelegate.loginHeaderCredentials,parameters: parameters)
-            .responseJSON { response in
-                ActivityIndicator.hide()
-                print(response)
-                let result = response as? NSDictionary
-                //if self.commentList.count > 0 {
-                self.fetchItems()
-                //}
+        DataConnectionManager.requestPOSTURL(api: apiName, para: parameters, success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+            self.fetchItems()
+            
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+            self.fetchItems()
         }
+
     }
     
     func fetchItems() {
         let apiName = SignupItems + ("\(sheetData.id!)")
         ActivityIndicator.show()
         
-        Alamofire.request(.GET, apiName, headers: appDelegate.loginHeaderCredentials)
+        DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+            let datas  = (response as? NSArray)!
+            let dic = datas.object(at: 0) as? NSDictionary
+            //self.updateData(SignupSheet(info: dic))
+            let data = (dic?.object(forKey: "items")) as! NSArray
+            
+            for index in 0..<data.count {
+                let dic = data.object(at: index) as? NSDictionary
+                if dic?.object(forKey: "id") as? Int == self.selectedItems.Id {
+                    print(dic?.object(forKey: "volunteers"))
+                    self.itemsDatas = dic?.object(forKey: "volunteers") as! NSArray
+                    break
+                }
+            }
+            print("self.voluniteerdDatas==\(self.itemsDatas.count)")
+            
+            self.tableView.reloadData()
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+
+        /*Alamofire.request(.GET, apiName, headers: appDelegate.loginHeaderCredentials)
             .responseJSON { response in
                 if let result = response.result.value {
                     ActivityIndicator.hide()
                     let datas  = (result as? NSArray)!
-                    let dic = datas.objectAtIndex(0) as? NSDictionary
+                    let dic = datas.object(at: 0) as? NSDictionary
                     //self.updateData(SignupSheet(info: dic))
-                    let data = (dic?.objectForKey("items")) as! NSArray
+                    let data = (dic?.object(forKey: "items")) as! NSArray
                     
                     for index in 0..<data.count {
-                        let dic = data.objectAtIndex(index) as? NSDictionary
-                        if dic?.objectForKey("id") as? Int == self.selectedItems.Id {
-                            print(dic?.objectForKey("volunteers"))
-                            self.itemsDatas = dic?.objectForKey("volunteers") as! NSArray
+                        let dic = data.object(at: index) as? NSDictionary
+                        if dic?.object(forKey: "id") as? Int == self.selectedItems.Id {
+                            print(dic?.object(forKey: "volunteers"))
+                            self.itemsDatas = dic?.object(forKey: "volunteers") as! NSArray
                             break
                         }
                     }
@@ -157,7 +192,7 @@ class DetailsSignUpDriverViewController: GeneralViewController {
                 }else {
                     ActivityIndicator.hide()
                 }
-        }
+        }*/
     }
 
     
@@ -185,16 +220,16 @@ class DetailsSignUpDriverViewController: GeneralViewController {
 
     
     //MARK:- Keyboard
-    func HideTextKeyboard(sender: UITapGestureRecognizer?) {
+    func HideTextKeyboard(_ sender: UITapGestureRecognizer?) {
         //textField_comments.resignFirstResponder()
         
         placeHolderText = "Type comments here.."
         textView_comments.text = placeHolderText
-        textView_comments.textColor = UIColor.lightGrayColor()
+        textView_comments.textColor = UIColor.lightGray
         textView_comments.resignFirstResponder()
     }
     
-    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         
         // Check offset and load more feeds
         let currentOffset = scrollView.contentOffset.y
@@ -209,45 +244,50 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         }
     }
     
-    func tableViewScrollToBottom(animated: Bool) {
+    func tableViewScrollToBottom(_ animated: Bool) {
         
         let delay = 0.1 * Double(NSEC_PER_SEC)
-        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        let time = DispatchTime.now() + Double(Int64(delay)) / Double(NSEC_PER_SEC)
         
-        dispatch_after(time, dispatch_get_main_queue(), {
+        DispatchQueue.main.asyncAfter(deadline: time, execute: {
             
             let numberOfSections = self.tableView.numberOfSections
-            let numberOfRows = (self.list.count) - self.tableView.numberOfRowsInSection(numberOfSections-1)
+            let numberOfRows = (self.list.count) - self.tableView.numberOfRows(inSection: numberOfSections-1)
             if numberOfRows > 0 {
-                let indexPath = NSIndexPath(forRow: 0, inSection: numberOfRows)
-                self.tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: animated)
+                let indexPath = IndexPath(row: 0, section: numberOfRows)
+                self.tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: animated)
             }
         })
     }
     
-    @IBAction func commentsSend_btnAction(sender: UIButton) {
-        if (textView_comments.text != "" ||  textView_comments.text != " ") && textView_comments.textColor == UIColor.blackColor() {
+    @IBAction func commentsSend_btnAction(_ sender: UIButton) {
+        postComment(textView_comments.text, phone: phoneTxtField.text!)
+        textView_comments.text = ""
+        phoneTxtField.text = ""
+        
+       /* if (textView_comments.text != "" ||  textView_comments.text != " ") && textView_comments.textColor == UIColor.black {
             
             if phoneTxtField.text == "" || phoneTxtField.text == nil {
                 BaseUIView.toast("Please enter Phone Number.")
             }else {
                 postComment(textView_comments.text, phone: phoneTxtField.text!)
                 textView_comments.text = ""
+                phoneTxtField.text == ""
             }
             
         }else {
             BaseUIView.toast("Please enter text")
         }
-        return
+        return*/
     }
     
     // MARK: - UIKeyBoard Delegate
-    func keyboardWillShow(notification: NSNotification) {
-        let info:NSDictionary = notification.userInfo!
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
+    func keyboardWillShow(_ notification: Notification) {
+        let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
+        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         let keyboardHeight:CGFloat = keyboardSize.height
         
-        UIView.animateWithDuration(0.25, delay: 0.25, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIViewAnimationOptions(), animations: {
             
             self.commentsBoxBottomSpacing.constant = keyboardHeight
             
@@ -256,29 +296,29 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         })
     }
     
-    func keyboardWillHide(notification: NSNotification) {
-        let info:NSDictionary = notification.userInfo!
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
+    func keyboardWillHide(_ notification: Notification) {
+        let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
+        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         
         let keyboardHeight:CGFloat = keyboardSize.height
         
         self.commentsBoxBottomSpacing.constant = keyboardHeight
-        UIView.animateWithDuration(0.35, animations: {
+        UIView.animate(withDuration: 0.35, animations: {
             self.commentsBoxBottomSpacing.constant = 0
             self.view.layoutIfNeeded()
             }, completion: nil)
         
     }
     
-    func keyboardDidChangeFrame(notification: NSNotification) {
+    func keyboardDidChangeFrame(_ notification: Notification) {
         
-        let info:NSDictionary = notification.userInfo!
-        let keyboardSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+        let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
+        let keyboardSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         
         let keyboardHeight:CGFloat = keyboardSize.height
         
         
-        UIView.animateWithDuration(0.25, delay: 0.25, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIViewAnimationOptions(), animations: {
             
             self.commentsBoxBottomSpacing.constant = keyboardHeight
             }, completion: nil)
@@ -288,8 +328,8 @@ class DetailsSignUpDriverViewController: GeneralViewController {
     
     
     //MARK: - Button Action
-    @IBAction func back(sender: UIButton) {
-        self.navigationController?.popViewControllerAnimated(true)
+    @IBAction func back(_ sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -302,19 +342,19 @@ class DetailsSignUpDriverViewController: GeneralViewController {
 //MARK:- TableView
 extension DetailsSignUpDriverViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return self.itemsDatas.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("DriverItemCell") as! DriverItemCell
-        let data = self.itemsDatas[indexPath.row] as? NSDictionary
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DriverItemCell") as! DriverItemCell
+        let data = self.itemsDatas[(indexPath as NSIndexPath).row] as? NSDictionary
         print(data)
         cell.updateData(data!)
         
@@ -325,11 +365,11 @@ extension DetailsSignUpDriverViewController: UITableViewDelegate, UITableViewDat
 // MARK: - Extensions for UITextField
 extension DetailsSignUpDriverViewController: UITextFieldDelegate {
     
-    func textFieldDidEndEditing(textField: UITextField) {
+    func textFieldDidEndEditing(_ textField: UITextField) {
         textField.resignFirstResponder()
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         //textField_comments.resignFirstResponder()
         textField.resignFirstResponder()
         return true
@@ -340,30 +380,30 @@ extension DetailsSignUpDriverViewController: UITextFieldDelegate {
 // MARK: - Extensions for UITextView
 extension DetailsSignUpDriverViewController: UITextViewDelegate {
     
-    func textViewDidBeginEditing(textView: UITextView) {
+    func textViewDidBeginEditing(_ textView: UITextView) {
         
         textView.selectedRange = NSMakeRange(0, 0)
-        if textView.textColor == UIColor.lightGrayColor() && textView.text != placeHolderText && isCommentEdit_1_replyEdit_2 == 0{
+        if textView.textColor == UIColor.lightGray && textView.text != placeHolderText && isCommentEdit_1_replyEdit_2 == 0{
             textView.text = nil
-            textView.textColor = UIColor.blackColor()
+            textView.textColor = UIColor.black
         }
         else{
             
         }
     }
     
-    func textViewDidEndEditing(textView: UITextView) {
+    func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
             textView.text = placeHolderText
-            textView.textColor = UIColor.lightGrayColor()
+            textView.textColor = UIColor.lightGray
         }
     }
     
-    func textViewDidChange(textView: UITextView) {
+    func textViewDidChange(_ textView: UITextView) {
         //self.textView_comments.textViewDidChange(textView)
     }
     
-    func textViewShouldBeginEditing(textView: UITextView) -> Bool {
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         
         if textView.text == "Add caption tag another user with @username..." {
             textView.text = nil
@@ -371,15 +411,15 @@ extension DetailsSignUpDriverViewController: UITextViewDelegate {
         return true
     }
     
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
-        if textView.textColor == UIColor.lightGrayColor() && textView.text == placeHolderText {
+        if textView.textColor == UIColor.lightGray && textView.text == placeHolderText {
             textView.text = nil
-            textView.textColor = UIColor.blackColor()
+            textView.textColor = UIColor.black
         }
-        if text == "" && textView_comments.text.characters.count == 1 && textView.textColor == UIColor.blackColor(){
+        if text == "" && textView_comments.text.characters.count == 1 && textView.textColor == UIColor.black{
             textView.text = placeHolderText
-            textView.textColor = UIColor.lightGrayColor()
+            textView.textColor = UIColor.lightGray
             textView.selectedRange = NSMakeRange(0, 0)
         }
         if text == "\n" {

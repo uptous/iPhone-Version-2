@@ -40,31 +40,31 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     var newsList = NSArray()
     var searchedArray = [Feed]()
     var refreshControl: UIRefreshControl!
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     
 
-    private struct photosCellConstants {
+    fileprivate struct photosCellConstants {
         static var cellIdentifier:String = "PhotosCell"
         static var rowHeight:CGFloat! = 450
     }
     
-    private struct fileCellConstants {
+    fileprivate struct fileCellConstants {
         static var cellIdentifier:String = "FileCell"
         static var rowHeight:CGFloat! = 275
     }
     
-    private struct announcementCellConstants {
+    fileprivate struct announcementCellConstants {
         static var cellIdentifier:String = "AnnouncementCell"
         static var rowHeight:CGFloat! = 310
     }
     
-    private struct opportunityCellConstants {
+    fileprivate struct opportunityCellConstants {
         static var cellIdentifier:String = "OpportunityCell"
         static var rowHeight:CGFloat! = 270
         
     }
     
-    private struct  personalThreadsCellConstants {
+    fileprivate struct  personalThreadsCellConstants {
         static var cellIdentifier:String = "PrivateThreadsCell"
         static var rowHeight:CGFloat! = 310
     }
@@ -80,82 +80,78 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
 
         //MARK:- For UI Design Notification
         let photosNib = UINib(nibName: "PhotosCell", bundle: nil)
-        tableView.registerNib(photosNib, forCellReuseIdentifier: photosCellConstants.cellIdentifier as String)
+        tableView.register(photosNib, forCellReuseIdentifier: photosCellConstants.cellIdentifier as String)
         
         let fileNib = UINib(nibName: "FileCell", bundle: nil)
-        tableView.registerNib(fileNib, forCellReuseIdentifier: fileCellConstants.cellIdentifier as String)
+        tableView.register(fileNib, forCellReuseIdentifier: fileCellConstants.cellIdentifier as String)
         
         let announcementNib = UINib(nibName: "AnnouncementCell", bundle: nil)
-        tableView.registerNib(announcementNib, forCellReuseIdentifier: announcementCellConstants.cellIdentifier as String)
+        tableView.register(announcementNib, forCellReuseIdentifier: announcementCellConstants.cellIdentifier as String)
         
         let opportunityNib = UINib(nibName: "OpportunityCell", bundle: nil)
-        tableView.registerNib(opportunityNib, forCellReuseIdentifier: opportunityCellConstants.cellIdentifier as String)
+        tableView.register(opportunityNib, forCellReuseIdentifier: opportunityCellConstants.cellIdentifier as String)
         
         let personalThreadNib = UINib(nibName: "PrivateThreadsCell", bundle: nil)
-        tableView.registerNib(personalThreadNib, forCellReuseIdentifier: personalThreadsCellConstants.cellIdentifier as String)
-        
-        refreshControl = UIRefreshControl()
-        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        refreshControl.addTarget(self, action: #selector(MyUpToUsFeedViewController.refresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        tableView.addSubview(refreshControl)
+        tableView.register(personalThreadNib, forCellReuseIdentifier: personalThreadsCellConstants.cellIdentifier as String)
         
         //Fetch Feed Items
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
+        let delayTime = DispatchTime.now() + Double(Int64(1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: delayTime) {
+           
             self.getFeedList()
             self.checkNewFeed()
         }
     }
     
     func checkNewFeed() {
-        Alamofire.request(.GET, FeedUpdateAPI, headers: appDelegate.loginHeaderCredentials)
-            .responseJSON { response in
-               if let JSON = response.result.value {
-                    let data = JSON as? NSDictionary
-                    self.defaults.setObject(data?.objectForKey("lastItemTime"), forKey: "LastModified")
-                }
+        DataConnectionManager.requestGETURL(api: FeedUpdateAPI, para: ["":""], success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+            let data = response as? NSDictionary
+            self.defaults.set(data?.object(forKey: "lastItemTime"), forKey: "LastModified")
+            
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
         }
-    }
+     }
     
     func onTimerTick() {
-        Alamofire.request(.GET, FeedUpdateAPI, headers: appDelegate.loginHeaderCredentials)
-            .responseJSON { response in
-                if let JSON = response.result.value {
-                    let data = JSON as? NSDictionary
-                    if data?.objectForKey("lastItemTime") as! NSNumber != self.defaults.objectForKey("LastModified") as! NSNumber {
-                        self.getFeedList()
-                    }
-                }
+        DataConnectionManager.requestGETURL(api: FeedUpdateAPI, para: ["":""], success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+            let data = response as? NSDictionary
+            if data?.object(forKey: "lastItemTime") as? NSNumber != self.defaults.object(forKey: "LastModified") as? NSNumber {
+                self.getFeedList1()
+            }
+
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
         }
     }
     
-    
-    //MARK:- Refreshing
-    func refresh(sender:AnyObject) {
-        // Updating your data here...
-        self.tableView.reloadData()
-        self.refreshControl?.endRefreshing()
-    }
-    
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        messageBtn.hidden = true
-        pictureBtn.hidden = true
-        directBtn.hidden = true
+        messageBtn.isHidden = true
+        pictureBtn.isHidden = true
+        directBtn.isHidden = true
         
         //Schedule For New Feed
-        NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(MyUpToUsFeedViewController.onTimerTick), userInfo: nil, repeats: false)
+        Timer.scheduledTimer(timeInterval: 0, target: self, selector: #selector(MyUpToUsFeedViewController.onTimerTick), userInfo: nil, repeats: false)
     }
     
     //MARK:- Mail Composer
-    func sendEmail(data: Feed) {
+    func sendEmail(_ data: Feed) {
         if MFMailComposeViewController.canSendMail() {
             let mail = MFMailComposeViewController()
             mail.mailComposeDelegate = self
             mail.setToRecipients([data.ownerEmail!])
             mail.setMessageBody("<p>You're so awesome!</p>", isHTML: true)
             
-            presentViewController(mail, animated: true, completion: nil)
+            present(mail, animated: true, completion: nil)
         } else {
             // show failure alert
             self.showSendMailErrorAlert()
@@ -169,217 +165,285 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     }
     
     // MARK: MFMailComposeViewControllerDelegate Method
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-        controller.dismissViewControllerAnimated(true, completion: nil)
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+    
+    func getFeedList1() {
+        DataConnectionManager.requestGETURL(api: FeedAPI, para: ["":""], success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+             self.newsTypeList.removeAll()
+            self.newsList = response as! NSArray
+            
+            for i in 0 ..< self.newsList.count {
+                let result = self.newsList.object(at: i) as? NSDictionary
+                let data = Feed(info: result)
+                if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" {
+                    self.newsTypeList.append(data)
+                }
+            }
+            if self.newsTypeList.count > 0 {
+                self.tableView.reloadData()
+            }
+            
+            
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+
     }
 
+
     func getFeedList() {
-        self.newsTypeList.removeAll()
         ActivityIndicator.show()
-        Alamofire.request(.GET, FeedAPI, headers: appDelegate.loginHeaderCredentials)
-            .responseJSON { response in
-                ActivityIndicator.hide()
-                if let JSON = response.result.value {
-                    self.newsList = JSON as! NSArray
-                    
-                    for i in 0 ..< self.newsList.count {
-                        let result = self.newsList.objectAtIndex(i) as? NSDictionary
-                        let data = Feed(info: result)
-                        if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" {
-                            self.newsTypeList.append(data)
-                        }
-                    }
-                    if self.newsTypeList.count > 0 {
-                        self.tableView.reloadData()
-                    }
+        DataConnectionManager.requestGETURL(api: FeedAPI, para: ["":""], success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+             self.newsTypeList.removeAll()
+            self.newsList = response as! NSArray
+            
+            for i in 0 ..< self.newsList.count {
+                let result = self.newsList.object(at: i) as? NSDictionary
+                let data = Feed(info: result)
+                if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" {
+                    self.newsTypeList.append(data)
                 }
-                print("self.newsTypeList=>\(self.newsTypeList.count)")
-                print("self.newsTypeList=>\(self.newsTypeList)")
+            }
+            if self.newsTypeList.count > 0 {
+                self.tableView.reloadData()
+            }
+            
+            
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
 
     //MARK: PhotoCell Delegate
-    func photoReplyTo(sender: NSInteger) {
+    func photoReplyTo(_ sender: NSInteger) {
         let data = newsTypeList[sender]
         sendEmail(data)
     }
     
-    func photoComment(sender: NSInteger) {
+    func photoComment(_ sender: NSInteger) {
         let data = newsTypeList[sender]
-        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ReadMoreViewController") as! ReadMoreViewController
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReadMoreViewController") as! ReadMoreViewController
         controller.data = data
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
-    func photoComment1(sender: NSInteger) {
+    func photoComment1(_ sender: NSInteger) {
         let data = newsTypeList[sender]
-        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ReadMoreViewController") as! ReadMoreViewController
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReadMoreViewController") as! ReadMoreViewController
         controller.data = data
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
-    func readMore(sender: NSInteger) {
+    func readMore(_ sender: NSInteger) {
         let data = newsTypeList[sender]
         print(data)
         
-        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ReadMoreViewController") as! ReadMoreViewController
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReadMoreViewController") as! ReadMoreViewController
         controller.data = data
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
     //MARK: AnnouncementCell Delegate
-    func announcementReplyTo(sender: NSInteger) {
+    func announcementReplyTo(_ sender: NSInteger) {
         let data = newsTypeList[sender]
         sendEmail(data)
     }
     
-    func announcementReplyAll(sender: NSInteger) {
+    func announcementReplyAll(_ sender: NSInteger) {
         let data = newsTypeList[sender]
         print(data)
         
-        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ReplyAllViewController") as! ReplyAllViewController
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReplyAllViewController") as! ReplyAllViewController
         controller.data = data
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
-    func announcementPost(sender: NSInteger) {
+    func announcementPost(_ sender: NSInteger) {
         let data = newsTypeList[sender]
         print(data)
         
-        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ReplyAllViewController") as! ReplyAllViewController
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReplyAllViewController") as! ReplyAllViewController
         controller.data = data
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
     //MARK: Private Thread Delegate
-    func privateThreadReplyTo(sender: NSInteger) {
+    func privateThreadReplyTo(_ sender: NSInteger) {
         let data = newsTypeList[sender]
         sendEmail(data)
     }
     
-    func privateThreadReplyAll(sender: NSInteger) {
+    func privateThreadReplyAll(_ sender: NSInteger) {
         let data = newsTypeList[sender]
         
-        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ReplyAllViewController") as! ReplyAllViewController
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReplyAllViewController") as! ReplyAllViewController
         controller.data = data
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
-    func privateThreadComment(sender: NSInteger) {
+    func privateThreadComment(_ sender: NSInteger) {
         let data = newsTypeList[sender]
         
-        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ReplyAllViewController") as! ReplyAllViewController
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReplyAllViewController") as! ReplyAllViewController
         controller.data = data
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
     //MARK: Opportunity Delegate
-    func opportunityReplyTo(sender: NSInteger) {
+    func opportunityReplyTo(_ sender: NSInteger) {
         let data = newsTypeList[sender]
         sendEmail(data)
-
     }
     
-    func opportunityComment(sender: NSInteger) {
+    func opportunityComment(_ sender: NSInteger) {
         let data = newsTypeList[sender]
-        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("CommentViewController") as! CommentViewController
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "CommentViewController") as! CommentViewController
         controller.data = data
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
-    func opportunityComment1(sender: NSInteger) {
+    func opportunityComment1(_ sender: NSInteger) {
         let data = newsTypeList[sender]
-        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("CommentViewController") as! CommentViewController
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "CommentViewController") as! CommentViewController
         controller.data = data
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
+    
+    func openSignUpPage(_ sender: NSInteger) {
+        
+        let event = newsTypeList[sender]
+        
+        let apiName = SignupItems + ("\(event.newsItemId!)")
+        DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+            let driverDatas = (response as? NSArray)!
+            let dic = driverDatas.object(at: 0) as? NSDictionary
+            let type = dic?.object(forKey: "type") as! String
+            self.signupType(newsType: type, event: event)
+            
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+//            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
+//            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+//            self.present(alert, animated: true, completion: nil)
+        }
+        
+    }
+    
+    func signupType(newsType: String,event: Feed) {
+        if (newsType == "Drivers") {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpDriverViewController") as! SignUpDriverViewController
+            controller.data1 = event
+            self.navigationController?.pushViewController(controller, animated: true)
+            
+        }else if (newsType == "RSVP" || event.newsType! == "Vote") {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpRSVPViewController") as! SignUpRSVPViewController
+            controller.data1 = event
+            self.navigationController?.pushViewController(controller, animated: true)
+            
+        }else if (newsType == "Ongoing") {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "OnGoingSignUpsViewController") as! OnGoingSignUpsViewController
+            controller.data1 = event
+            self.navigationController?.pushViewController(controller, animated: true)
+            
+        }else if (newsType == "Shifts" || event.newsType! == "Snack" || event.newsType! == "Games") {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "ShiftsSigUpsViewController") as! ShiftsSigUpsViewController
+            controller.data1 = event
+            self.navigationController?.pushViewController(controller, animated: true)
+            
+        }else if (newsType == "Volunteer" || event.newsType! == "Potluck" || event.newsType! == "Wish List") {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpOpenViewController") as! SignUpOpenViewController
+            controller.data1 = event
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
+    }
+    
     
     //MARK: File Delegate
-    func fileReplyTo(sender: NSInteger) {
+    func fileReplyTo(_ sender: NSInteger) {
         let data = newsTypeList[sender]
         sendEmail(data)
     }
     
-    func fileComment(sender: NSInteger) {
+    func fileComment(_ sender: NSInteger) {
         let data = newsTypeList[sender]
         
-        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("CommentViewController") as! CommentViewController
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "CommentViewController") as! CommentViewController
         controller.data = data
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
-    func commentBtn(sender: NSInteger) {
+    func commentBtn(_ sender: NSInteger) {
         let data = newsTypeList[sender]
         
-        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("CommentViewController") as! CommentViewController
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "CommentViewController") as! CommentViewController
         controller.data = data
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
     //MARK:- PDF Download
-    func downloadPDF(sender: NSInteger) {
+    func downloadPDF(_ sender: NSInteger) {
         let data = newsTypeList[sender]
         
-        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("PDFViewerViewController") as! PDFViewerViewController
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "PDFViewerViewController") as! PDFViewerViewController
         controller.data = data
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
         
         
-        /*ActivityIndicator.show()
-        
-        var localPath: NSURL?
-        Alamofire.download(.GET,
-            url!,
-            destination: { (temporaryURL, response) in
-                let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
-                let pathComponent = response.suggestedFilename
-                
-                localPath = directoryURL.URLByAppendingPathComponent(pathComponent!)
-                return localPath!
-        })
-            .response { (request, response, _, error) in
-                print(response)
-                ActivityIndicator.hide()
-                let alert = UIAlertController(title: "Alert", message: "File Downloaded", preferredStyle: UIAlertControllerStyle.Alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-                self.presentViewController(alert, animated: true, completion: nil)
-                //print("Downloaded file to \(localPath!)")
-        }*/
     }
     
     
     
     //MARK:- Post Button
-    @IBAction func postButtonClick(sender: UIButton) {
+    @IBAction func postButtonClick(_ sender: UIButton) {
         if isButtonSelected == true {
-            postBtn.setImage(UIImage(named: "post-selected"), forState: .Normal)
+            postBtn.setImage(UIImage(named: "post-selected"), for: UIControlState())
             isButtonSelected = false
-            UIView.animateWithDuration(1.0) {
+            UIView.animate(withDuration: 1.0, animations: {
                 
-            }
-            UIView.animateWithDuration(0.15, animations: {
+            }) 
+            UIView.animate(withDuration: 0.15, animations: {
                 self.pictureBtn.center = self.postBtn.center
                 self.pictureBtn.center = self.postBtn.center
                 self.directBtn.center = self.postBtn.center
                 }, completion: { (completed) in
-                    self.messageBtn.hidden = true
-                    self.pictureBtn.hidden = true
-                    self.directBtn.hidden = true
+                    self.messageBtn.isHidden = true
+                    self.pictureBtn.isHidden = true
+                    self.directBtn.isHidden = true
                     
             })
         } else {
-            postBtn.setImage(UIImage(named: "post-unselected"), forState: .Normal)
+            postBtn.setImage(UIImage(named: "post-unselected"), for: UIControlState())
             isButtonSelected = true
-            messageBtn.hidden = false
-            pictureBtn.hidden = false
-            directBtn.hidden = false
+            messageBtn.isHidden = false
+            pictureBtn.isHidden = false
+            directBtn.isHidden = false
             let radius : CGFloat = 200.0
             
             let button2Center = CGPoint(x: postBtn.center.x + radius * sin(-CGFloat(160.degreesToRadians)), y:  postBtn.center.y + radius * cos(-CGFloat(160.degreesToRadians)))
             let button3Center = CGPoint(x: postBtn.center.x + radius * sin(-CGFloat(130.degreesToRadians)), y:  postBtn.center.y + radius * cos(-CGFloat(130.degreesToRadians)))
             let button4Center = CGPoint(x: postBtn.center.x + radius * sin(-CGFloat(100.degreesToRadians)), y:  postBtn.center.y + radius * cos(-CGFloat(100.degreesToRadians)))
 
-            UIView.animateWithDuration(0.35, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.0, options: .CurveEaseOut, animations: {
+            UIView.animate(withDuration: 0.35, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.0, options: .curveEaseOut, animations: {
                 self.messageBtn.center = button2Center
                 self.pictureBtn.center = button3Center
                 self.directBtn.center = button4Center
@@ -389,15 +453,15 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }
     }
     
-    @IBAction func messageBtnClick(sender: UIButton) {
+    @IBAction func messageBtnClick(_ sender: UIButton) {
     
     }
     
-    @IBAction func pictureBtnClick(sender: UIButton) {
+    @IBAction func pictureBtnClick(_ sender: UIButton) {
         
     }
     
-    @IBAction func directBtnClick(sender: UIButton) {
+    @IBAction func directBtnClick(_ sender: UIButton) {
         
     }
     
@@ -432,11 +496,11 @@ extension DoubleConvertible {
 //MARK:- TableView Delegate
 extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate {
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if filterStatus == true {
             return self.searchedArray.count
         }else{
@@ -445,23 +509,23 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
         //return self.newsTypeList.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let data: Feed!
         
         if filterStatus == true {
-            data = searchedArray[indexPath.row]
+            data = searchedArray[(indexPath as NSIndexPath).row]
         }else{
-            data = newsTypeList[indexPath.row]
+            data = newsTypeList[(indexPath as NSIndexPath).row]
         }
         switch feedNewsType(rawValue: data.newsType!)! {
            
             case .Photos :
-                let cell: PhotosCell = tableView.dequeueReusableCellWithIdentifier(photosCellConstants.cellIdentifier ) as! PhotosCell
-                cell.commentBtn.tag = indexPath.row
-                cell.comment1Btn.tag = indexPath.row
-                cell.replyToBtn.tag = indexPath.row
-                cell.readMoreBtn.tag = indexPath.row
+                let cell: PhotosCell = tableView.dequeueReusableCell(withIdentifier: photosCellConstants.cellIdentifier ) as! PhotosCell
+                cell.commentBtn.tag = (indexPath as NSIndexPath).row
+                cell.comment1Btn.tag = (indexPath as NSIndexPath).row
+                cell.replyToBtn.tag = (indexPath as NSIndexPath).row
+                cell.readMoreBtn.tag = (indexPath as NSIndexPath).row
                 cell.delegate = self
                 
                 cell.updateData(data)
@@ -469,11 +533,11 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
                 return cell
             
         case .File :
-            let cell: FileCell = tableView.dequeueReusableCellWithIdentifier(fileCellConstants.cellIdentifier ) as! FileCell
-            cell.commentBtn.tag = indexPath.row
-            cell.comment1Btn.tag = indexPath.row
-            cell.replyToBtn.tag = indexPath.row
-            cell.pdfDownloadBtn.tag = indexPath.row
+            let cell: FileCell = tableView.dequeueReusableCell(withIdentifier: fileCellConstants.cellIdentifier ) as! FileCell
+            cell.commentBtn.tag = (indexPath as NSIndexPath).row
+            cell.comment1Btn.tag = (indexPath as NSIndexPath).row
+            cell.replyToBtn.tag = (indexPath as NSIndexPath).row
+            cell.pdfDownloadBtn.tag = (indexPath as NSIndexPath).row
             cell.delegate = self
 
             cell.updateData(data)
@@ -481,10 +545,10 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
             return cell
             
         case .Announcement :
-            let cell: AnnouncementCell = tableView.dequeueReusableCellWithIdentifier(announcementCellConstants.cellIdentifier ) as! AnnouncementCell
-            cell.replyAllBtn.tag = indexPath.row
-            cell.postBtn.tag = indexPath.row
-            cell.replyToBtn.tag = indexPath.row
+            let cell: AnnouncementCell = tableView.dequeueReusableCell(withIdentifier: announcementCellConstants.cellIdentifier ) as! AnnouncementCell
+            cell.replyAllBtn.tag = (indexPath as NSIndexPath).row
+            cell.postBtn.tag = (indexPath as NSIndexPath).row
+            cell.replyToBtn.tag = (indexPath as NSIndexPath).row
             cell.delegate = self
 
             cell.updateData(data)
@@ -492,10 +556,10 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
             return cell
             
         case .Opportunity :
-            let cell: OpportunityCell = tableView.dequeueReusableCellWithIdentifier(opportunityCellConstants.cellIdentifier ) as! OpportunityCell
-            cell.commentBtn.tag = indexPath.row
-            cell.comment1Btn.tag = indexPath.row
-            cell.replyToBtn.tag = indexPath.row
+            let cell: OpportunityCell = tableView.dequeueReusableCell(withIdentifier: opportunityCellConstants.cellIdentifier ) as! OpportunityCell
+            cell.commentBtn.tag = (indexPath as NSIndexPath).row
+            cell.comment1Btn.tag = (indexPath as NSIndexPath).row
+            cell.replyToBtn.tag = (indexPath as NSIndexPath).row
             cell.delegate = self
 
             cell.updateData(data)
@@ -503,10 +567,10 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
             return cell
             
         case .PrivateThreads :
-            let cell: PrivateThreadsCell = tableView.dequeueReusableCellWithIdentifier(personalThreadsCellConstants.cellIdentifier ) as! PrivateThreadsCell
-            cell.replyAllBtn.tag = indexPath.row
-            cell.replyToBtn.tag = indexPath.row
-            cell.commentBtn.tag = indexPath.row
+            let cell: PrivateThreadsCell = tableView.dequeueReusableCell(withIdentifier: personalThreadsCellConstants.cellIdentifier ) as! PrivateThreadsCell
+            cell.replyAllBtn.tag = (indexPath as NSIndexPath).row
+            cell.replyToBtn.tag = (indexPath as NSIndexPath).row
+            cell.commentBtn.tag = (indexPath as NSIndexPath).row
             cell.delegate = self
 
             cell.updateData(data)
@@ -515,7 +579,7 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
         }
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let data: Feed!
         /*if filterStatus == true {
             data = searchedArray[indexPath.row]
@@ -537,9 +601,9 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
         }*/
         
         if filterStatus == true {
-            data = searchedArray[indexPath.row]
+            data = searchedArray[(indexPath as NSIndexPath).row]
         }else{
-            data = newsTypeList[indexPath.row]
+            data = newsTypeList[(indexPath as NSIndexPath).row]
         }
         switch feedNewsType(rawValue: data.newsType!)! {
             
@@ -563,7 +627,7 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
         
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         /*let data = newsTypeList[indexPath.row]
         switch feedNewsType(rawValue: data.newsType!)! {
@@ -599,12 +663,12 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
 
 //MARK:- TextField Delegate
 extension MyUpToUsFeedViewController: UITextFieldDelegate {
-    func getFilteredFilter(text: String){
+    func getFilteredFilter(_ text: String){
         searchedArray.removeAll()
         let namePredicate =
             NSPredicate(format: "SELF.newsType beginswith[c] %@", text)
         
-        searchedArray = self.newsTypeList.filter { namePredicate.evaluateWithObject($0) }
+        searchedArray = self.newsTypeList.filter { namePredicate.evaluate(with: $0) }
         print("names = ,\(searchedArray)")
         if searchedArray.count > 0 {
             filterStatus = true
@@ -626,15 +690,15 @@ extension MyUpToUsFeedViewController: UITextFieldDelegate {
         tableView.reloadData()
     }
 
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         var subString: NSString = searchTextField.text! as NSString
-        subString = subString.stringByReplacingCharactersInRange(range, withString: string)
+        subString = subString.replacingCharacters(in: range, with: string) as NSString
         print(subString)
         getFilteredFilter(subString as String)
         return true
     }
 
-    func textFieldDidBeginEditing(textField: UITextField) {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
         searchedArray.removeAll()
         tableView.reloadData()
     
@@ -661,7 +725,7 @@ extension MyUpToUsFeedViewController: UITextFieldDelegate {
      }*/
   }
 
-func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
     return true
 }
 

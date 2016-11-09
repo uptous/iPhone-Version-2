@@ -37,13 +37,13 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         super.viewDidLoad()
         textView_comments.placeholder = placeHolderText
         textView_comments.text = placeHolderText
-        textView_comments.textColor = UIColor.lightGrayColor()
+        textView_comments.textColor = UIColor.lightGray
         textField_comments.placeholder = "Type comments here.."
         // Observer Keyboard
-        let center: NSNotificationCenter = NSNotificationCenter.defaultCenter()
-        center.addObserver(self, selector: #selector(ItemDetailsEditingMsgViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        center.addObserver(self, selector: #selector(ItemDetailsEditingMsgViewController.keyboardWillHide(_:)), name: UIKeyboardDidHideNotification, object: nil)
-        center.addObserver(self, selector: #selector(ItemDetailsEditingMsgViewController.keyboardDidChangeFrame(_:)), name: UIKeyboardDidChangeFrameNotification, object: nil)
+        let center: NotificationCenter = NotificationCenter.default
+        center.addObserver(self, selector: #selector(ItemDetailsEditingMsgViewController.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        center.addObserver(self, selector: #selector(ItemDetailsEditingMsgViewController.keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
+        center.addObserver(self, selector: #selector(ItemDetailsEditingMsgViewController.keyboardDidChangeFrame(_:)), name: NSNotification.Name.UIKeyboardDidChangeFrame, object: nil)
         let tapRecognizer = UITapGestureRecognizer(target: self , action: #selector(ItemDetailsEditingMsgViewController.HideTextKeyboard(_:)))
         tableView.addGestureRecognizer(tapRecognizer)
         
@@ -58,23 +58,19 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         eventDateLbl.text = ("\(Custom.dayStringFromTime1(selectedItems.dateTime!))")
         
         
-        let x = selectedItems.volunteerCount!
+        let x = selectedItems.numVolunteers! - selectedItems.volunteerCount!
         let y = selectedItems.numVolunteers!
         if y == 0 {
-            
             spotLbl.text = "More spots are open"
 
         }else {
             let text = ("\(x) out of ") + ("\(y) spots open")
             spotLbl.text = text
-
         }
-        
-        
         
     }
     
-    func updateData(data: Items) {
+    func updateData(_ data: Items) {
         let attributedStr = NSMutableAttributedString()
 
         //msgLbl.text = data.notes
@@ -92,58 +88,67 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
     }
     
     
-    @IBAction func back(sender: UIButton) {
-        self.navigationController?.popViewControllerAnimated(true)
+    @IBAction func back(_ sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         tableView.estimatedRowHeight = 110
+        ActivityIndicator.hide()
+
         tableView.rowHeight = UITableViewAutomaticDimension
         self.fetchItems()
     }
     
     //MARK:- Delete
-    @IBAction func deleteButtonClick(sender: UIButton) {
-        let alertView = UIAlertController(title: "UpToUs", message: "are you sure you want to delete this record?", preferredStyle: .Alert)
-        alertView.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { (alertAction) -> Void in
+    @IBAction func deleteButtonClick(_ sender: UIButton) {
+        let alertView = UIAlertController(title: "UpToUs", message: "Are you sure that you want to delete your assignment?", preferredStyle: .alert)
+        alertView.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (alertAction) -> Void in
             self.delete()
         }))
-        alertView.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-        presentViewController(alertView, animated: true, completion: nil)
+        alertView.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alertView, animated: true, completion: nil)
     }
     
     func delete() {
         let apiName = SignupItems + ("\(data.id!)") + ("/item/\(selectedItems.Id!)/Del")
         ActivityIndicator.show()
         
-        Alamofire.request(.POST, apiName, headers: appDelegate.loginHeaderCredentials,parameters: nil)
-            .responseJSON { response in
-                ActivityIndicator.hide()
-                self.navigationController?.popViewControllerAnimated(true)
+        DataConnectionManager.requestPOSTURL(api: apiName, para: ["":""] , success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+            self.navigationController?.popViewController(animated: true)
+            
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+            self.navigationController?.popViewController(animated: true)
         }
         
     }
 
     
     //Post Comment
-    func postComment(msg: String) {
+    func postComment(_ msg: String) {
         //let opportunityID = selectedItems.Id
         let apiName = SignupItems + ("\(data.id!)") + ("/item/\(selectedItems.Id!)/Add")
         print(apiName)
         ActivityIndicator.show()
         let parameters = ["comment": msg]
         
-        Alamofire.request(.POST, apiName, headers: appDelegate.loginHeaderCredentials,parameters: parameters)
-            .responseJSON { response in
-                ActivityIndicator.hide()
-                print(response)
-                let result = response as? NSDictionary
-//                if (result?.objectForKey("status"))! as! String == "0"{
-//                    
-//                }
-                //if self.commentList.count > 0 {
-                self.fetchItems()
-                //}
+        DataConnectionManager.requestPOSTURL(api: apiName, para: parameters, success: {
+            (response) -> Void in
+            print(response)
+            self.fetchItems()
+            self.navigationController?.popViewController(animated: true)
+            
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
 
@@ -153,20 +158,50 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         let apiName = SignupItems + ("\(data.id!)")
         ActivityIndicator.show()
         
-        Alamofire.request(.GET, apiName, headers: appDelegate.loginHeaderCredentials)
+        DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+            self.driverDatas = (response as? NSArray)!
+            let dic = self.driverDatas.object(at: 0) as? NSDictionary
+            //self.updateData(SignupSheet(info: dic))
+            let data = (dic?.object(forKey: "items")) as! NSArray
+            
+            for index in 0..<data.count {
+                let dic = data.object(at: index) as? NSDictionary
+                if dic?.object(forKey: "id") as? Int == self.selectedItems.Id {
+                    print(dic?.object(forKey: "volunteers"))
+                    self.voluniteerdDatas = dic?.object(forKey: "volunteers") as! NSArray
+                    break
+                }
+            }
+            print("self.voluniteerdDatas==\(self.voluniteerdDatas.count)")
+            
+            self.tableView.reloadData()
+            
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+
+        
+       /* Alamofire.request(.GET, apiName, headers: appDelegate.loginHeaderCredentials)
             .responseJSON { response in
                 if let result = response.result.value {
                     ActivityIndicator.hide()
                     self.driverDatas = (result as? NSArray)!
-                    let dic = self.driverDatas.objectAtIndex(0) as? NSDictionary
+                    let dic = self.driverDatas.object(at: 0) as? NSDictionary
                     //self.updateData(SignupSheet(info: dic))
-                    let data = (dic?.objectForKey("items")) as! NSArray
+                    let data = (dic?.object(forKey: "items")) as! NSArray
                    
                     for index in 0..<data.count {
-                        let dic = data.objectAtIndex(index) as? NSDictionary
-                         if dic?.objectForKey("id") as? Int == self.selectedItems.Id {
-                            print(dic?.objectForKey("volunteers"))
-                            self.voluniteerdDatas = dic?.objectForKey("volunteers") as! NSArray
+                        let dic = data.object(at: index) as? NSDictionary
+                         if dic?.object(forKey: "id") as? Int == self.selectedItems.Id {
+                            print(dic?.object(forKey: "volunteers"))
+                            self.voluniteerdDatas = dic?.object(forKey: "volunteers") as! NSArray
                             break
                         }
                     }
@@ -176,20 +211,20 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
                 }else {
                     ActivityIndicator.hide()
                 }
-        }
+        }*/
     }
     
     //***************Comment***************
     
     //MARK:- Keyboard
-    func HideTextKeyboard(sender: UITapGestureRecognizer?) {
+    func HideTextKeyboard(_ sender: UITapGestureRecognizer?) {
         placeHolderText = "Type comments here.."
         textView_comments.text = placeHolderText
-        textView_comments.textColor = UIColor.lightGrayColor()
+        textView_comments.textColor = UIColor.lightGray
         textView_comments.resignFirstResponder()
     }
     
-    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         
         // Check offset and load more feeds
         let currentOffset = scrollView.contentOffset.y
@@ -204,24 +239,24 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         }
     }
     
-    func tableViewScrollToBottom(animated: Bool) {
+    func tableViewScrollToBottom(_ animated: Bool) {
         
         let delay = 0.1 * Double(NSEC_PER_SEC)
-        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        let time = DispatchTime.now() + Double(Int64(delay)) / Double(NSEC_PER_SEC)
         
-        dispatch_after(time, dispatch_get_main_queue(), {
+        DispatchQueue.main.asyncAfter(deadline: time, execute: {
             
             let numberOfSections = self.tableView.numberOfSections
-            let numberOfRows = (self.voluniteerdDatas.count) - self.tableView.numberOfRowsInSection(numberOfSections-1)
+            let numberOfRows = (self.voluniteerdDatas.count) - self.tableView.numberOfRows(inSection: numberOfSections-1)
             if numberOfRows > 0 {
-                let indexPath = NSIndexPath(forRow: 0, inSection: numberOfRows)
-                self.tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: animated)
+                let indexPath = IndexPath(row: 0, section: numberOfRows)
+                self.tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: animated)
             }
         })
     }
     
-    @IBAction func commentsSend_btnAction(sender: UIButton) {
-        if (textView_comments.text != "" ||  textView_comments.text != " ") && textView_comments.textColor == UIColor.blackColor() {
+    @IBAction func commentsSend_btnAction(_ sender: UIButton) {
+        if (textView_comments.text != "" ||  textView_comments.text != " ") && textView_comments.textColor == UIColor.black {
             postComment(textView_comments.text)
             textView_comments.text = ""
             textView_comments.resignFirstResponder()
@@ -233,12 +268,12 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
     }
     
     // MARK: - UIKeyBoard Delegate
-    func keyboardWillShow(notification: NSNotification) {
-        let info:NSDictionary = notification.userInfo!
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
+    func keyboardWillShow(_ notification: Notification) {
+        let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
+        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         let keyboardHeight:CGFloat = keyboardSize.height
         
-        UIView.animateWithDuration(0.25, delay: 0.25, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIViewAnimationOptions(), animations: {
             
             self.commentsBoxBottomSpacing.constant = keyboardHeight
             
@@ -247,36 +282,36 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         })
     }
     
-    func keyboardWillHide(notification: NSNotification) {
-        let info:NSDictionary = notification.userInfo!
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
+    func keyboardWillHide(_ notification: Notification) {
+        let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
+        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         
         let keyboardHeight:CGFloat = keyboardSize.height
         
         self.commentsBoxBottomSpacing.constant = keyboardHeight
-        UIView.animateWithDuration(0.35, animations: {
+        UIView.animate(withDuration: 0.35, animations: {
             self.commentsBoxBottomSpacing.constant = 0
             self.view.layoutIfNeeded()
             }, completion: nil)
         
     }
     
-    func keyboardDidChangeFrame(notification: NSNotification) {
+    func keyboardDidChangeFrame(_ notification: Notification) {
         
-        let info:NSDictionary = notification.userInfo!
-        let keyboardSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+        let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
+        let keyboardSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         
         let keyboardHeight:CGFloat = keyboardSize.height
         
         
-        UIView.animateWithDuration(0.25, delay: 0.25, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIViewAnimationOptions(), animations: {
             
             self.commentsBoxBottomSpacing.constant = keyboardHeight
             }, completion: nil)
     }
     
     // MARK: - UITextFiled Delegate
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField_comments.resignFirstResponder()
         return true
     }
@@ -291,17 +326,17 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
 //MARK:- TableView
 extension ItemDetailsEditingMsgViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.voluniteerdDatas.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("ItemDetailsMsgCell") as! ItemDetailsMsgCell
-        let data = self.voluniteerdDatas[indexPath.row] as? NSDictionary
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailsMsgCell") as! ItemDetailsMsgCell
+        let data = self.voluniteerdDatas[(indexPath as NSIndexPath).row] as? NSDictionary
         cell.updateData(data!)
         return cell
     }
@@ -310,30 +345,30 @@ extension ItemDetailsEditingMsgViewController: UITableViewDelegate, UITableViewD
 // MARK: - Extensions for UITextView
 extension ItemDetailsEditingMsgViewController: UITextViewDelegate {
     
-    func textViewDidBeginEditing(textView: UITextView) {
+    func textViewDidBeginEditing(_ textView: UITextView) {
         
         textView.selectedRange = NSMakeRange(0, 0)
-        if textView.textColor == UIColor.lightGrayColor() && textView.text != placeHolderText && isCommentEdit_1_replyEdit_2 == 0{
+        if textView.textColor == UIColor.lightGray && textView.text != placeHolderText && isCommentEdit_1_replyEdit_2 == 0{
             textView.text = nil
-            textView.textColor = UIColor.blackColor()
+            textView.textColor = UIColor.black
         }
         else{
             
         }
     }
     
-    func textViewDidEndEditing(textView: UITextView) {
+    func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
             textView.text = placeHolderText
-            textView.textColor = UIColor.lightGrayColor()
+            textView.textColor = UIColor.lightGray
         }
     }
     
-    func textViewDidChange(textView: UITextView) {
+    func textViewDidChange(_ textView: UITextView) {
         //self.textView_comments.textViewDidChange(textView)
     }
     
-    func textViewShouldBeginEditing(textView: UITextView) -> Bool {
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         
         if textView.text == "Add caption tag another user with @username..." {
             textView.text = nil
@@ -341,15 +376,15 @@ extension ItemDetailsEditingMsgViewController: UITextViewDelegate {
         return true
     }
     
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
-        if textView.textColor == UIColor.lightGrayColor() && textView.text == placeHolderText {
+        if textView.textColor == UIColor.lightGray && textView.text == placeHolderText {
             textView.text = nil
-            textView.textColor = UIColor.blackColor()
+            textView.textColor = UIColor.black
         }
-        if text == "" && textView_comments.text.characters.count == 1 && textView.textColor == UIColor.blackColor(){
+        if text == "" && textView_comments.text.characters.count == 1 && textView.textColor == UIColor.black{
             textView.text = placeHolderText
-            textView.textColor = UIColor.lightGrayColor()
+            textView.textColor = UIColor.lightGray
             textView.selectedRange = NSMakeRange(0, 0)
         }
         if text == "\n" {

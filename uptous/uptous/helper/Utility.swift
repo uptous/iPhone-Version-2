@@ -8,13 +8,9 @@
 import UIKit
 import CoreLocation
 
-func delay(delay:Double, closure:()->()) {
-    dispatch_after(
-        dispatch_time(
-            DISPATCH_TIME_NOW,
-            Int64(delay * Double(NSEC_PER_SEC))
-        ),
-        dispatch_get_main_queue(), closure)
+func delay(_ delay:Double, closure:@escaping ()->()) {
+    DispatchQueue.main.asyncAfter(
+        deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
 } //F.E.
 
 class Weak<T: AnyObject> {
@@ -61,25 +57,19 @@ class Utility: NSObject {
     } //P.E.
     
     
-    class func sortArray (arr:NSArray , isAscending : Bool , key : String) -> NSArray {
-        
-        let descriptor: NSSortDescriptor = NSSortDescriptor(key: key, ascending: isAscending)
-        return arr.sortedArrayUsingDescriptors([descriptor])
-    }
-    
     class func hexStringToUIColor (hex:String) -> UIColor {
-        var cString:String = hex.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet() as NSCharacterSet).uppercaseString
+        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         
         if (cString.hasPrefix("#")) {
-            cString = cString.substringFromIndex(cString.startIndex.advancedBy(1))
+            cString.remove(at: cString.startIndex)
         }
         
         if ((cString.characters.count) != 6) {
-            return UIColor.grayColor()
+            return UIColor.gray
         }
         
         var rgbValue:UInt32 = 0
-        NSScanner(string: cString).scanHexInt(&rgbValue)
+        Scanner(string: cString).scanHexInt32(&rgbValue)
         
         return UIColor(
             red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
@@ -88,19 +78,46 @@ class Utility: NSObject {
             alpha: CGFloat(1.0)
         )
     }
+    
+    /*class func hexStringToUIColor (_ hex:String) -> UIColor {
+        
+        let trimmedString = hex.stringByTrimmingCharactersInSet(
+            NSCharacterSet.whitespaceAndNewlineCharacterSet()
+        )
+        
+        var cString:String = hex.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet() as NSCharacterSet).uppercased()
+        
+        if (cString.hasPrefix("#")) {
+            cString = cString.substring(from: cString.characters.index(cString.startIndex, offsetBy: 1))
+        }
+        
+        if ((cString.characters.count) != 6) {
+            return UIColor.gray
+        }
+        
+        var rgbValue:UInt32 = 0
+        Scanner(string: cString).scanHexInt32(&rgbValue)
+        
+        return UIColor(
+            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+            alpha: CGFloat(1.0)
+        )
+    }*/
   
     
-    class func scaleUIImageToSize(let image: UIImage, let size: CGSize) -> UIImage {
+    class func scaleUIImageToSize(_ image: UIImage, size: CGSize) -> UIImage {
         let hasAlpha = false
         let scale: CGFloat = 0.0 // Automatically use scale factor of main screen
         
         UIGraphicsBeginImageContextWithOptions(size, !hasAlpha, scale)
-        image.drawInRect(CGRect(origin: CGPointZero, size: size))
+        image.draw(in: CGRect(origin: CGPoint.zero, size: size))
         
         let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return scaledImage
+        return scaledImage!
     }
     class var MONTH:Int {
         get {return (30 * DAY);}
@@ -109,37 +126,37 @@ class Utility: NSObject {
     
     class func getDate () -> String {
 
-        let dateFormatter =  NSDateFormatter()
+        let dateFormatter =  DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        dateFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
-        return dateFormatter.stringFromDate(NSDate ());
+        dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
+        return dateFormatter.string(from: Date ());
     }
     
-    class func convertDateToNSdate (fromdate : String) -> NSDate {
+    class func convertDateToNSdate (_ fromdate : String) -> Date {
         
-        let dateFormatter =  NSDateFormatter()
+        let dateFormatter =  DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        dateFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
+        dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
         
         //@hassan if else added just to prevent the Crash
         if !fromdate.isEmpty
         {
-            return dateFormatter.dateFromString(fromdate)!
+            return dateFormatter.date(from: fromdate)!
             
         }else{
             
-            return NSDate();
+            return Date();
         }
         
         //return dateFormatter.dateFromString(fromdate)!
         
     }
     
-    class func isCharacterExits (str : String,findCharacter : String)-> Bool {
+    class func isCharacterExits (_ str : String,findCharacter : String)-> Bool {
 
-        let characterSet = NSCharacterSet(charactersInString:findCharacter)
+        let characterSet = CharacterSet(charactersIn:findCharacter)
         
-        if let _ = str.rangeOfCharacterFromSet(characterSet, options: .CaseInsensitiveSearch) {
+        if let _ = str.rangeOfCharacter(from: characterSet, options: .caseInsensitive) {
 
             return true
         }
@@ -151,18 +168,18 @@ class Utility: NSObject {
     
     
     
-    class func isEmailAdddressValid(email:String)->Bool {
+    class func isEmailAdddressValid(_ email:String)->Bool {
         let emailRegex:String="[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
         let predicate:NSPredicate=NSPredicate(format: "SELF MATCHES %@", emailRegex)
   
-        return predicate.evaluateWithObject(email)
+        return predicate.evaluate(with: email)
    } //F.E.
     
-    class func validateURL(urlString:String)-> Bool{
+    class func validateURL(_ urlString:String)-> Bool{
     
-        let candidateURL:NSURL=NSURL(string: urlString)!
+        let candidateURL:URL=URL(string: urlString)!
         
-        if ((candidateURL.scheme).characters.count > 0 && (candidateURL.host!).characters.count > 0)
+        if (((candidateURL.scheme)?.characters.count)! > 0 && (candidateURL.host!).characters.count > 0)
         {
             return true
         }
@@ -170,14 +187,14 @@ class Utility: NSObject {
         return false
     } //F.E.
     
-    class func calculateLabelSize(lbl:UILabel, width:CGFloat)-> CGSize {
+    class func calculateLabelSize(_ lbl:UILabel, width:CGFloat)-> CGSize {
         let attString:NSMutableAttributedString = NSMutableAttributedString(string: lbl.text!);
         //--
         let range:NSRange = NSRange(location: 0, length: attString.length);
         //--
         attString.addAttribute(NSFontAttributeName, value: lbl.font, range: range);
     
-        let rect:CGRect = attString.boundingRectWithSize(CGSize(width: width, height: 3000), options: NSStringDrawingOptions.UsesLineFragmentOrigin, context: nil)
+        let rect:CGRect = attString.boundingRect(with: CGSize(width: width, height: 3000), options: NSStringDrawingOptions.usesLineFragmentOrigin, context: nil)
         return CGSize(width: width, height: rect.size.height);
     } //F.E.
     
@@ -185,7 +202,7 @@ class Utility: NSObject {
     
        
     
-    class func showAlert(title:String?, message:String?) {
+    class func showAlert(_ title:String?, message:String?) {
        
         /*let alert:UIAlertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert);
         //--
@@ -197,23 +214,23 @@ class Utility: NSObject {
         alert.show();
     } //F.E.
 
-    class func formateDate(date:NSDate) ->String?
+    class func formateDate(_ date:Date) ->String?
     {
         //Thu, Jan 29, 2015
         return self.formateDate(date, dateFormat: "eee, MMM dd,  YYYY");
     } //F.E.
     
     
-   class func JSONStringify(value: AnyObject,prettyPrinted:Bool = false) -> String{
+   class func JSONStringify(_ value: AnyObject,prettyPrinted:Bool = false) -> String{
         
-        let options = prettyPrinted ? NSJSONWritingOptions.PrettyPrinted : NSJSONWritingOptions(rawValue: 0)
+        let options = prettyPrinted ? JSONSerialization.WritingOptions.prettyPrinted : JSONSerialization.WritingOptions(rawValue: 0)
         
         
-        if NSJSONSerialization.isValidJSONObject(value) {
+        if JSONSerialization.isValidJSONObject(value) {
             
             do{
-                let data = try NSJSONSerialization.dataWithJSONObject(value, options: options)
-                if let string = NSString(data: data, encoding: NSUTF8StringEncoding) {
+                let data = try JSONSerialization.data(withJSONObject: value, options: options)
+                if let string = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
                     return string as String
                 }
             }catch {
@@ -226,16 +243,16 @@ class Utility: NSObject {
         return ""
     }
     
-   class func convertStringToDictionary(text: String) -> NSMutableArray? {
+   class func convertStringToDictionary(_ text: String) -> NSMutableArray? {
     
    
     
-        if let data = text.dataUsingEncoding(NSUTF8StringEncoding) {
+        if let data = text.data(using: String.Encoding.utf8) {
             do {
                 
                
                 
-                let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? NSMutableArray
+                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSMutableArray
                 return json
             } catch {
                 print("Something went wrong")
@@ -244,13 +261,13 @@ class Utility: NSObject {
         return nil
     }
     
-    class func dateFromString(date : NSDate,format:String) ->String
+    class func dateFromString(_ date : Date,format:String) ->String
     {
         
         
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
-        let datev = dateFormatter.stringFromDate(date)
+        let datev = dateFormatter.string(from: date)
         
   //      dateFormatter.dateFormat = format
 //        let timeStamp = dateFormatter.stringFromDate(datev!)
@@ -260,57 +277,57 @@ class Utility: NSObject {
     
     
     //IT IS RETURNING DATE IN ISO 8601 WITHOUT COMBINING TIME
-    class func formateDateInISO(date:NSDate) ->String
+    class func formateDateInISO(_ date:Date) ->String
     {
         //2015-12-15
         return self.formateDate(date, dateFormat: "YYYY-MM-dd");
     } //F.E.
     
-    class func formateDate(date:NSDate, dateFormat:String) ->String
+    class func formateDate(_ date:Date, dateFormat:String) ->String
     {
-        let formatrer:NSDateFormatter = NSDateFormatter();
+        let formatrer:DateFormatter = DateFormatter();
         formatrer.dateFormat = dateFormat;
         
-        return formatrer.stringFromDate(date);
+        return formatrer.string(from: date);
     } //F.E.
     
-    class func dateFromString(str:String, dateFormat:String, timeZone:NSTimeZone? = nil) ->NSDate
+    class func dateFromString(_ str:String, dateFormat:String, timeZone:TimeZone? = nil) ->Date
     {
-        let formatrer:NSDateFormatter = NSDateFormatter();
+        let formatrer:DateFormatter = DateFormatter();
         formatrer.dateFormat = dateFormat;
         //--
         if (timeZone != nil) {
             formatrer.timeZone = timeZone!;
         }
         
-        return formatrer.dateFromString(str) ?? NSDate();
+        return formatrer.date(from: str) ?? Date();
     } //F.E.
    
     //MARK:- Dates Conversion
-    class func checkIfDateWithin7Days(date:NSDate) -> Bool
+    class func checkIfDateWithin7Days(_ date:Date) -> Bool
     {
-        let delta:NSTimeInterval = timeIntervaleFromCurrentDateToDate(date);
+        let delta:TimeInterval = timeIntervaleFromCurrentDateToDate(date);
         //--
         return ((delta > 0) && (delta < Double(7 * DAY)));
     } //F.E.
     
-    class func timeIntervaleFromCurrentDateToDate(date:NSDate) -> NSTimeInterval
+    class func timeIntervaleFromCurrentDateToDate(_ date:Date) -> TimeInterval
     {
-        return date.timeIntervalSinceDate(NSDate());
+        return date.timeIntervalSince(Date());
     } //F.E.
     
-    class func getDayNDate(FromDate date:NSDate)->(day:String, date:String){
+    class func getDayNDate(FromDate date:Date)->(day:String, date:String){
  
         //--formatter
-        let formatter:NSDateFormatter = NSDateFormatter();
+        let formatter:DateFormatter = DateFormatter();
         
         //--day format
         formatter.dateFormat = "EEE";
-        let rtnDay = formatter.stringFromDate(date);
+        let rtnDay = formatter.string(from: date);
         
         //--date format
         formatter.dateFormat = "MM/dd";
-        let rtnDate = formatter.stringFromDate(date);
+        let rtnDate = formatter.string(from: date);
         
         return (rtnDay, rtnDate);
     }//F.E
@@ -320,7 +337,7 @@ class Utility: NSObject {
         return self.getDayFromDateDifference(firstDate: self.dateFromString(date1, dateFormat: "YYYY-MM-dd"), secondDate: self.dateFromString(date2, dateFormat: "YYYY-MM-dd"));
     } //F.E.
     
-    class func getDayFromDateDifference(firstDate date1:NSDate, secondDate date2:NSDate)-> String
+    class func getDayFromDateDifference(firstDate date1:Date, secondDate date2:Date)-> String
     {
         let days = self.getDaysBetweenDates(date1, endDate: date2)
         var dayStr:String?
@@ -346,69 +363,44 @@ class Utility: NSObject {
         return dayStr!;
     }//F.E
     
-    class func getDaysBetweenDates(startDate:NSDate, endDate:NSDate) -> NSInteger {
-        let gregorian: NSCalendar = NSCalendar.currentCalendar();
-        let components = gregorian.components(NSCalendarUnit.Day, fromDate: startDate, toDate: endDate, options: [])
+    class func getDaysBetweenDates(_ startDate:Date, endDate:Date) -> NSInteger {
+        let gregorian: Calendar = Calendar.current;
+        let components = (gregorian as NSCalendar).components(NSCalendar.Unit.day, from: startDate, to: endDate, options: [])
         //--
-        return components.day
+        return components.day!
     }
     
-    //Mark -Unit Conversion
-    class func convertKilometerToMiles(kilometer:Float) -> NSNumber {
-        return ceil((kilometer * 0.621371));
-    } //F.E.
-    class func convertFeetInchToCentimeter(feet:Float, inch:Float) -> Float {
-        return ((((feet * 12.0) + inch)) * 2.54);
-    } //F.E.
-    
-    class func convertCentimeterToFeetInch(centimeter:Float) -> (feet:Float, inch:Float) {
         
-        var inch:Float = (centimeter / 2.54);
-        let feet:Float = ceilf(inch / 12.0);
-        //--
-        inch = inch % 12;
-        
-        return (feet,inch);
-    } //F.E.
-    
-    class func convertPoundsToKilogram(pounds:Float) -> Float {
-        return round(pounds / 2.20462) ;
-    } //F.E.
-    
-    class func convertKilogramToPounds(kilogram:Float) -> Float {
-        return kilogram * 2.20462;
-    } //F.E.
-    
     //MARK:- Calculate Age
-    class func calculateAge (birthday: NSDate) -> NSInteger
+    class func calculateAge (_ birthday: Date) -> NSInteger
     {
-        let calendar : NSCalendar = NSCalendar.currentCalendar()
-        let unitFlags : NSCalendarUnit = [NSCalendarUnit.Year, NSCalendarUnit.Month, NSCalendarUnit.Day]
-        let dateComponentNow : NSDateComponents = calendar.components(unitFlags, fromDate: NSDate())
-        let dateComponentBirth : NSDateComponents = calendar.components(unitFlags, fromDate: birthday)
+        let calendar : Calendar = Calendar.current
+        let unitFlags : NSCalendar.Unit = [NSCalendar.Unit.year, NSCalendar.Unit.month, NSCalendar.Unit.day]
+        let dateComponentNow : DateComponents = (calendar as NSCalendar).components(unitFlags, from: Date())
+        let dateComponentBirth : DateComponents = (calendar as NSCalendar).components(unitFlags, from: birthday)
         
-        if ((dateComponentNow.month < dateComponentBirth.month) ||
-            ((dateComponentNow.month == dateComponentBirth.month) && (dateComponentNow.day < dateComponentBirth.day))
+        if ((dateComponentNow.month! < dateComponentBirth.month!) ||
+            ((dateComponentNow.month! == dateComponentBirth.month!) && (dateComponentNow.day! < dateComponentBirth.day!))
             )
         {
-            return dateComponentNow.year - dateComponentBirth.year - 1
+            return dateComponentNow.year! - dateComponentBirth.year! - 1
         }
         else {
-            return dateComponentNow.year - dateComponentBirth.year
+            return dateComponentNow.year! - dateComponentBirth.year!
         }
     }//F.E.
     
-    class func getDistanceFromLocation( currentLocation:CLLocation, destinationLocation:CLLocation ) -> CLLocationDistance  {
+    class func getDistanceFromLocation( _ currentLocation:CLLocation, destinationLocation:CLLocation ) -> CLLocationDistance  {
         let destinationLocation = CLLocation(latitude: destinationLocation.coordinate.latitude, longitude: destinationLocation.coordinate.longitude);
-        let kmMeters:CLLocationDistance = currentLocation.distanceFromLocation(destinationLocation) / 1000.0
+        let kmMeters:CLLocationDistance = currentLocation.distance(from: destinationLocation) / 1000.0
         return kmMeters
     } //F.E
     
-    class func makeImageFromView(view:UIView) -> UIImage {
+    class func makeImageFromView(_ view:UIView) -> UIImage {
         var rtnImg:UIImage?
         
         UIGraphicsBeginImageContext(view.frame.size);
-        view.layer.renderInContext(UIGraphicsGetCurrentContext()!);
+        view.layer.render(in: UIGraphicsGetCurrentContext()!);
         rtnImg = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
 
@@ -416,7 +408,7 @@ class Utility: NSObject {
     } //F.E.
    
     
-    class func keyIsExist (key : String, dict:NSDictionary )->Bool {
+    class func keyIsExist (_ key : String, dict:NSDictionary )->Bool {
         
         
         if let _ = dict[key] {
@@ -587,7 +579,7 @@ class Utility: NSObject {
     }*/
     
     
-    class func convertBytes(bytes:Int64,type:String)->Int64{
+    class func convertBytes(_ bytes:Int64,type:String)->Int64{
         
         var convertedData:Double = 0;
         if( type == "GB"){
@@ -600,15 +592,15 @@ class Utility: NSObject {
     }
 
     
-    class func differencesIndate (required : String,currentdate : NSDate,fromdate : NSDate) -> NSDateComponents  {
+    class func differencesIndate (_ required : String,currentdate : Date,fromdate : Date) -> DateComponents  {
         
         if required == "second" {
-              let calender = NSCalendar.currentCalendar()
-              let componentSec =  calender.components(NSCalendarUnit.Second, fromDate:fromdate, toDate: currentdate, options: NSCalendarOptions(rawValue:0))
+              let calender = Calendar.current
+              let componentSec =  (calender as NSCalendar).components(NSCalendar.Unit.second, from:fromdate, to: currentdate, options: NSCalendar.Options(rawValue:0))
             
             NSLog("componentsecond is\(componentSec.second)")
             
-            if componentSec.second <= 0
+            if componentSec.second! <= 0
             {
                 print("PROBLEM in DATE")
             }
@@ -618,13 +610,13 @@ class Utility: NSObject {
         
         else if required == "day" {
             
-            let calender = NSCalendar.currentCalendar()
-            let componentSec =  calender.components(NSCalendarUnit.Day, fromDate:fromdate, toDate: currentdate, options: NSCalendarOptions(rawValue:0))
+            let calender = Calendar.current
+            let componentSec =  (calender as NSCalendar).components(NSCalendar.Unit.day, from:fromdate, to: currentdate, options: NSCalendar.Options(rawValue:0))
             
             return componentSec
         }
      
-        return NSDateComponents()
+        return DateComponents()
     }
     
     //MARK:- Unique Number For Core Data
@@ -638,7 +630,7 @@ class Utility: NSObject {
     
     class func getUniqueLocalIDForCoreDataObject() -> String{
         
-        let ID : String! = NSUserDefaults.standardUserDefaults().objectForKey(UNIQUE_ID_FOR_COREDATA_OBJECTS) as? String
+        let ID : String! = UserDefaults.standard.object(forKey: UNIQUE_ID_FOR_COREDATA_OBJECTS) as? String
 
         if ID == nil {
         
@@ -646,9 +638,9 @@ class Utility: NSObject {
         }
 
            let uniqueVal = Int(ID)! + 1
-            NSUserDefaults.standardUserDefaults().removeObjectForKey(UNIQUE_ID_FOR_COREDATA_OBJECTS)
-            NSUserDefaults.standardUserDefaults().setObject("\(uniqueVal)", forKey: UNIQUE_ID_FOR_COREDATA_OBJECTS)
-            NSUserDefaults.standardUserDefaults().synchronize()
+            UserDefaults.standard.removeObject(forKey: UNIQUE_ID_FOR_COREDATA_OBJECTS)
+            UserDefaults.standard.set("\(uniqueVal)", forKey: UNIQUE_ID_FOR_COREDATA_OBJECTS)
+            UserDefaults.standard.synchronize()
             print("Core Data New Object local_ID == \(uniqueVal)")
             
             return "\(uniqueVal)"
@@ -661,9 +653,9 @@ class Utility: NSObject {
     
     class func setInitialDefaultValueForLocalIDofCoreDataOBJ(){
     
-        NSUserDefaults.standardUserDefaults().removeObjectForKey(UNIQUE_ID_FOR_COREDATA_OBJECTS)
-        NSUserDefaults.standardUserDefaults().setObject("1200", forKey: UNIQUE_ID_FOR_COREDATA_OBJECTS)
-        NSUserDefaults.standardUserDefaults().synchronize()
+        UserDefaults.standard.removeObject(forKey: UNIQUE_ID_FOR_COREDATA_OBJECTS)
+        UserDefaults.standard.set("1200", forKey: UNIQUE_ID_FOR_COREDATA_OBJECTS)
+        UserDefaults.standard.synchronize()
     }
     
 } //CLS END

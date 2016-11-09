@@ -12,7 +12,7 @@ import UIKit
 class GroupIdentifierView: UIView {
 
     var backgroundLayer: CAShapeLayer!
-    @IBInspectable var backgroundLayerColor: UIColor = UIColor.grayColor()
+    @IBInspectable var backgroundLayerColor: UIColor = UIColor.gray
     
     @IBOutlet weak var abbrLabel: UILabel!
     
@@ -23,13 +23,13 @@ class GroupIdentifierView: UIView {
             backgroundLayer = CAShapeLayer()
             //layer.addSublayer(backgroundLayer)
             
-            layer.insertSublayer(backgroundLayer, atIndex: 0)
+            layer.insertSublayer(backgroundLayer, at: 0)
             
-            let rect = CGRectInset(bounds, lineWidth / 2.0, lineWidth / 2.0)
-            let path = UIBezierPath(ovalInRect: rect)
-            backgroundLayer.path = path.CGPath
+            let rect = bounds.insetBy(dx: lineWidth / 2.0, dy: lineWidth / 2.0)
+            let path = UIBezierPath(ovalIn: rect)
+            backgroundLayer.path = path.cgPath
             backgroundLayer.lineWidth = lineWidth
-            backgroundLayer.fillColor = backgroundLayerColor.CGColor
+            backgroundLayer.fillColor = backgroundLayerColor.cgColor
         }
         
         backgroundLayer.frame = layer.bounds

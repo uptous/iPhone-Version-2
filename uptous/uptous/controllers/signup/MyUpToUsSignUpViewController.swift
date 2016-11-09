@@ -17,12 +17,12 @@ class MyUpToUsSignUpViewController: GeneralViewController {
     var list = NSMutableArray()
     var selectedDateType: Int = 0
     
-    private struct headerCellConstants {
+    fileprivate struct headerCellConstants {
         static var cellIdentifier:String = "CustomHeaderCell"
         static var rowHeight:CGFloat! = 50
     }
     
-    private struct eventCellConstants {
+    fileprivate struct eventCellConstants {
         static var cellIdentifier:String = "EventDateCell"
         static var rowHeight:CGFloat! = 120
     }
@@ -31,56 +31,51 @@ class MyUpToUsSignUpViewController: GeneralViewController {
         super.viewDidLoad()
         
         let eventNib = UINib(nibName: "EventDateCell", bundle: nil)
-        tableView.registerNib(eventNib, forCellReuseIdentifier: eventCellConstants.cellIdentifier as String)
+        tableView.register(eventNib, forCellReuseIdentifier: eventCellConstants.cellIdentifier as String)
         //self.tableView.hidden = true
 
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
+        let delayTime = DispatchTime.now() + Double(Int64(1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: delayTime) {
             self.fetchSignupSheetList()
         }
 
     }
     
-    func cornerView(contentsView: UIView) ->UIView {
-        contentsView.layer.borderColor = UIColor(red: CGFloat(0.8), green: CGFloat(0.8), blue: CGFloat(0.8), alpha: CGFloat(1)).CGColor
+    func cornerView(_ contentsView: UIView) ->UIView {
+        contentsView.layer.borderColor = UIColor(red: CGFloat(0.8), green: CGFloat(0.8), blue: CGFloat(0.8), alpha: CGFloat(1)).cgColor
         contentsView.layer.borderWidth = CGFloat(1.0)
         contentsView.layer.cornerRadius = 8.0
         return contentsView
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        ActivityIndicator.hide()
+    }
 
     //MARK:- Signup Sheet List
     func fetchSignupSheetList() {
-        //let user = "asmithutu@gmail.com"
-        //let password = "alpha123"
-        let username = "asmithutu@gmail.com".stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-        let password = "alpha123".stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-        
-        let base64Credentials = "\(username):\(password)".dataUsingEncoding(NSUTF8StringEncoding)!
-        //appDelegate.loginHeaderCredentials = ["Authorization": "Basic \(base64Credentials)"]
-        
         ActivityIndicator.show()
-        //self.cutOffDateList.removeAllObjects()
-        //self.eventDateList.removeAllObjects()
-        
-        Alamofire.request(.GET, SignupListSheet, headers: appDelegate.loginHeaderCredentials)
-            .responseJSON { response in
-                print(response.result.value)
-                if let result = response.result.value {
-                    ActivityIndicator.hide()
-                    
-                    let list = result as! NSArray
-                    if list.count > 0 {
-                        
-                        for index in 0..<list.count {
-                            let dic = list.objectAtIndex(index) as! NSDictionary
-                            self.list.addObject(SignupSheet(info: dic))
-                        }
-                        
-                        self.tableView.reloadData()
-                    }
-                }else {
-                    ActivityIndicator.hide()
+        DataConnectionManager.requestGETURL(api: SignupListSheet, para: ["":""], success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+            let list = response as! NSArray
+            if list.count > 0 {
+                
+                for index in 0..<list.count {
+                    let dic = list.object(at: index) as! NSDictionary
+                    self.list.add(SignupSheet(info: dic))
                 }
+                
+                self.tableView.reloadData()
+            }
+
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
@@ -93,54 +88,54 @@ class MyUpToUsSignUpViewController: GeneralViewController {
 
 extension MyUpToUsSignUpViewController: UITableViewDelegate,UITableViewDataSource {
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.list.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell: EventDateCell = tableView.dequeueReusableCellWithIdentifier(eventCellConstants.cellIdentifier ) as! EventDateCell
-        let event = self.list.objectAtIndex(indexPath.row)
+        let cell: EventDateCell = tableView.dequeueReusableCell(withIdentifier: eventCellConstants.cellIdentifier ) as! EventDateCell
+        let event = self.list.object(at: (indexPath as NSIndexPath).row)
         cell.update(event as! SignupSheet)
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let event = self.list.objectAtIndex(indexPath.row) as! SignupSheet
+        let event = self.list.object(at: (indexPath as NSIndexPath).row) as! SignupSheet
         
         if (event.type! == "Drivers") {
-            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("SignUpDriverViewController") as! SignUpDriverViewController
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpDriverViewController") as! SignUpDriverViewController
             controller.data = event
             self.navigationController?.pushViewController(controller, animated: true)
             
         }else if (event.type! == "RSVP" || event.type! == "Vote") {
-            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("SignUpRSVPViewController") as! SignUpRSVPViewController
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpRSVPViewController") as! SignUpRSVPViewController
             controller.data = event
             self.navigationController?.pushViewController(controller, animated: true)
             
         }else if (event.type! == "Ongoing") {
-            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("OnGoingSignUpsViewController") as! OnGoingSignUpsViewController
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "OnGoingSignUpsViewController") as! OnGoingSignUpsViewController
             controller.data = event
             self.navigationController?.pushViewController(controller, animated: true)
             
         }else if (event.type! == "Shifts" || event.type! == "Snack" || event.type! == "Games") {
-            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ShiftsSigUpsViewController") as! ShiftsSigUpsViewController
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "ShiftsSigUpsViewController") as! ShiftsSigUpsViewController
             controller.data = event
             self.navigationController?.pushViewController(controller, animated: true)
             
         }else if (event.type! == "Volunteer" || event.type! == "Potluck" || event.type! == "Wish List") {
-            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("SignUpOpenViewController") as! SignUpOpenViewController
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpOpenViewController") as! SignUpOpenViewController
             controller.data = event
             self.navigationController?.pushViewController(controller, animated: true)
         }
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
     }
     

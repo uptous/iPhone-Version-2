@@ -33,15 +33,50 @@ class ReadOnlyCommentViewController: GeneralViewController {
         
     }
     
-    @IBAction func back(sender: UIButton) {
-        self.navigationController?.popViewControllerAnimated(true)
+    @IBAction func back(_ sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         voluniteerdDatas.removeAllObjects()
+        ActivityIndicator.hide()
+
         for index in 0..<selectedItems.volunteers!.count {
-            let volunteer = selectedItems.volunteers!.objectAtIndex(index) as? NSDictionary
-            voluniteerdDatas.addObject(volunteer!)
+            let volunteer = selectedItems.volunteers!.object(at: index) as? NSDictionary
+            voluniteerdDatas.add(volunteer!)
+        }
+    }
+    
+    //MARK:- Delete
+    @IBAction func deleteButtonClick(_ sender: UIButton) {
+        let alertView = UIAlertController(title: "UpToUs", message: "Are you sure that you want to delete your assignment?", preferredStyle: .alert)
+        alertView.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (alertAction) -> Void in
+            
+            DispatchQueue.main.async(execute: {
+                self.delete()
+                
+            })
+        }))
+        alertView.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alertView, animated: true, completion: nil)
+    }
+    
+    func delete() {
+        let apiName = SignupItems + ("\(data.id!)") + ("/item/\(data.id!)/Del")
+        ActivityIndicator.show()
+        
+        ActivityIndicator.show()
+        DataConnectionManager.requestPOSTURL(api: apiName, para: ["":""], success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+            self.navigationController?.popViewController(animated: true)
+            
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+            self.navigationController?.popViewController(animated: true)
+            
         }
     }
     
@@ -55,17 +90,17 @@ class ReadOnlyCommentViewController: GeneralViewController {
 //MARK:- TableView
 extension ReadOnlyCommentViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.voluniteerdDatas.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("ReadOnlyCommentCell") as! ReadOnlyCommentCell
-        let data = self.voluniteerdDatas[indexPath.row] as? NSDictionary
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ReadOnlyCommentCell") as! ReadOnlyCommentCell
+        let data = self.voluniteerdDatas[(indexPath as NSIndexPath).row] as? NSDictionary
         cell.updateView(data!)
         return cell
     }

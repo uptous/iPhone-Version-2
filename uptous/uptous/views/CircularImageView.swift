@@ -15,7 +15,7 @@ class CircularImageView: UIView {
     var backgroundLayer: CAShapeLayer!
     var imageLayer: CALayer!
     
-    @IBInspectable var backgroundLayerColor: UIColor = UIColor.grayColor()
+    @IBInspectable var backgroundLayerColor: UIColor = UIColor.gray
     @IBInspectable var lineWidth: CGFloat = 1.0
     
     @IBInspectable var image: UIImage?
@@ -27,9 +27,9 @@ class CircularImageView: UIView {
         if imageLayer == nil {
             let mask = CAShapeLayer()
             let dx = lineWidth + 0.0
-            let path = UIBezierPath(ovalInRect: CGRectInset(self.bounds, dx, dx))
-            mask.fillColor = UIColor.blackColor().CGColor
-            mask.path = path.CGPath
+            let path = UIBezierPath(ovalIn: self.bounds.insetBy(dx: dx, dy: dx))
+            mask.fillColor = UIColor.black.cgColor
+            mask.path = path.cgPath
             mask.frame = self.bounds
             layer.addSublayer(mask)
             imageLayer = CAShapeLayer()
@@ -44,18 +44,18 @@ class CircularImageView: UIView {
     
     func setImage() {
         if let pic = image {
-            imageLayer.contents = pic.CGImage
+            imageLayer.contents = pic.cgImage
         }
     }
     
-    func setUserAvatar(avatarUrl: String) {
-        let downloader = SDWebImageDownloader.sharedDownloader()
+    func setUserAvatar(_ avatarUrl: String) {
+        let downloader = SDWebImageDownloader.shared()
         
-        downloader.downloadImageWithURL(NSURL(string: avatarUrl), options: SDWebImageDownloaderOptions.AllowInvalidSSLCertificates, progress: nil) { (image, data, error, finished) -> Void in
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+        downloader?.downloadImage(with: URL(string: avatarUrl), options: SDWebImageDownloaderOptions.allowInvalidSSLCertificates, progress: nil) { (image, data, error, finished) -> Void in
+            DispatchQueue.main.async(execute: { () -> Void in
                 if let pic = image {
                     if self.imageLayer != nil {
-                        self.imageLayer.contents = pic.CGImage
+                        self.imageLayer.contents = pic.cgImage
                     }
                 }
             })
@@ -75,11 +75,11 @@ class CircularImageView: UIView {
         if backgroundLayer == nil {
             backgroundLayer = CAShapeLayer()
             layer.addSublayer(backgroundLayer)
-            let rect = CGRectInset(bounds, lineWidth / 2.0, lineWidth / 2.0)
-            let path = UIBezierPath(ovalInRect: rect)
-            backgroundLayer.path = path.CGPath
+            let rect = bounds.insetBy(dx: lineWidth / 2.0, dy: lineWidth / 2.0)
+            let path = UIBezierPath(ovalIn: rect)
+            backgroundLayer.path = path.cgPath
             backgroundLayer.lineWidth = lineWidth
-            backgroundLayer.fillColor = backgroundLayerColor.CGColor
+            backgroundLayer.fillColor = backgroundLayerColor.cgColor
            
         }
         

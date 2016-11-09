@@ -30,93 +30,93 @@ class ShiftsSigUpsViewController:  GeneralViewController {
     @IBOutlet weak var owner2NameLbl: UILabel!
     
     var data: SignupSheet!
+    var data1: Feed!
     var driverDatas = NSArray()
     var itemsDatas = NSArray()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         Custom.cornerView(contentView)
-        Custom.fullCornerView(owner1View)
-        Custom.fullCornerView(owner2View)
+        Custom.fullCornerView1(owner1View)
+        Custom.fullCornerView1(owner2View)
 
     }
     
-    func attributedString(str: String) -> NSAttributedString? {
+    func attributedString(_ str: String) -> NSAttributedString? {
         let attributes = [
-            NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue
+            NSUnderlineStyleAttributeName : NSUnderlineStyle.styleSingle.rawValue
         ]
         let attributedString = NSAttributedString(string: str, attributes: attributes)
         return attributedString
     }
     
-    func updateData(data: SignupSheet) {
+    func updateData(_ data: SignupSheet) {
         
         if data.contact != "" {
             
             contact1Lbl.text = data.contact!
             if data.organizer1PhotoUrl == "https://dsnn35vlkp0h4.cloudfront.net/images/blank_image.gif" {
-                owner1View.hidden = false
-                owner1NameLbl.hidden = false
-                contact1PhotoImgView.hidden = true
+                owner1View.isHidden = false
+                owner1NameLbl.isHidden = false
+                contact1PhotoImgView.isHidden = true
                 
-                let stringArray = data.contact?.componentsSeparatedByString(" ")
+                let stringArray = data.contact?.components(separatedBy: " ")
                 let firstName = stringArray![0]
                 let secondName = stringArray![1]
                 let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
                 
                 owner1NameLbl.text = resultString
-                let color1 = Utility.hexStringToUIColor(data.organizer1BackgroundColor!)
-                let color2 = Utility.hexStringToUIColor(data.organizer1TextColor!)
+                let color1 = Utility.hexStringToUIColor(hex: data.organizer1BackgroundColor!)
+                let color2 = Utility.hexStringToUIColor(hex: data.organizer1TextColor!)
                 owner1View.backgroundColor = color1
                 owner1NameLbl.textColor = color2
                 
-                
             }else {
-                owner1View.hidden = true
-                contact1PhotoImgView.hidden = false
+                owner1View.isHidden = true
+                contact1PhotoImgView.isHidden = false
                 if let avatarUrl = data.organizer1PhotoUrl {
                     contact1PhotoImgView.setUserAvatar(avatarUrl)
                 }
             }
             
         }else {
-            contact1PhotoImgView.hidden = true
-            owner1View.hidden = true
-            owner1NameLbl.hidden = true
-            contact1Lbl.hidden = true
+            contact1PhotoImgView.isHidden = true
+            owner1View.isHidden = true
+            owner1NameLbl.isHidden = true
+            contact1Lbl.isHidden = true
         }
         
         if data.contact2 != "" {
             contact2Lbl.text = data.contact2!
             if data.organizer2PhotoUrl == "https://dsnn35vlkp0h4.cloudfront.net/images/blank_image.gif" {
-                owner2View.hidden = false
-                owner2NameLbl.hidden = false
-                contact2PhotoImgView.hidden = true
+                owner2View.isHidden = false
+                owner2NameLbl.isHidden = false
+                contact2PhotoImgView.isHidden = true
                 
-                let stringArray = data.contact2?.componentsSeparatedByString(" ")
+                let stringArray = data.contact2?.components(separatedBy: " ")
                 let firstName = stringArray![0]
                 let secondName = stringArray![1]
                 let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
                 
                 owner2NameLbl.text = resultString
-                let color1 = Utility.hexStringToUIColor(data.organizer1BackgroundColor!)
-                let color2 = Utility.hexStringToUIColor(data.organizer1TextColor!)
+                let color1 = Utility.hexStringToUIColor(hex: data.organizer1BackgroundColor!)
+                let color2 = Utility.hexStringToUIColor(hex: data.organizer1TextColor!)
                 owner2View.backgroundColor = color1
                 owner2NameLbl.textColor = color2
                 
             }else {
-                owner2View.hidden = true
-                contact2PhotoImgView.hidden = false
+                owner2View.isHidden = true
+                contact2PhotoImgView.isHidden = false
                 if let avatarUrl = data.organizer2PhotoUrl {
                     contact2PhotoImgView.setUserAvatar(avatarUrl)
                 }
             }
             
         }else {
-            contact2PhotoImgView.hidden = true
-            owner2View.hidden = true
-            owner2NameLbl.hidden = true
-            contact2Lbl.hidden = true
+            contact2PhotoImgView.isHidden = true
+            owner2View.isHidden = true
+            owner2NameLbl.isHidden = true
+            contact2Lbl.isHidden = true
         }
         
         nameLbl.text = data.name
@@ -145,33 +145,44 @@ class ShiftsSigUpsViewController:  GeneralViewController {
     }
     
     
-    @IBAction func back(sender: UIButton) {
-        self.navigationController?.popViewControllerAnimated(true)
+    @IBAction func back(_ sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
+        ActivityIndicator.hide()
+
         self.fetchItems()
     }
     
         
     //MARK: Fetch Records
     func fetchItems() {
-        let apiName = SignupItems + ("\(data.id!)")
+        let apiName: String!
+        if data1 != nil {
+            apiName = SignupItems + ("\(data1.newsItemId!)")
+        }else {
+            apiName = SignupItems + ("\(data.id!)")
+        }
+
         ActivityIndicator.show()
-        
-        Alamofire.request(.GET, apiName, headers: appDelegate.loginHeaderCredentials)
-            .responseJSON { response in
-                if let result = response.result.value {
-                    ActivityIndicator.hide()
-                    self.driverDatas = (result as? NSArray)!
-                    let dic = self.driverDatas.objectAtIndex(0) as? NSDictionary
-                    self.updateData(SignupSheet(info: dic))
-                    self.itemsDatas = (dic?.objectForKey("items")) as! NSArray
-                    
-                    self.tableView.reloadData()
-                }else {
-                    ActivityIndicator.hide()
-                }
+        DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
+            (response) -> Void in
+            print(response)
+            ActivityIndicator.hide()
+            self.driverDatas = (response as? NSArray)!
+            let dic = self.driverDatas.object(at: 0) as? NSDictionary
+            self.updateData(SignupSheet(info: dic))
+            self.itemsDatas = (dic?.object(forKey: "items")) as! NSArray
+            
+            self.tableView.reloadData()
+            
+        }) {
+            (error) -> Void in
+            ActivityIndicator.hide()
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     override func didReceiveMemoryWarning() {
@@ -184,35 +195,35 @@ class ShiftsSigUpsViewController:  GeneralViewController {
 //MARK:- TableView
 extension ShiftsSigUpsViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.itemsDatas.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("ShiftCell") as! ShiftCell
-        let data = self.itemsDatas[indexPath.row] as? NSDictionary
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ShiftCell") as! ShiftCell
+        let data = self.itemsDatas[(indexPath as NSIndexPath).row] as? NSDictionary
         //print(Comment(info: data))
         cell.updateView(Items(info: data!))
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let dic = self.itemsDatas[indexPath.row] as? NSDictionary
-        print(dic?.objectForKey("volunteers"))
+        let dic = self.itemsDatas[(indexPath as NSIndexPath).row] as? NSDictionary
+        print(dic?.object(forKey: "volunteers"))
         let item = Items(info: dic!)
         if item.volunteerStatus == "Open" {
-            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ItemDetailsEditingMsgViewController") as! ItemDetailsEditingMsgViewController
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "ItemDetailsEditingMsgViewController") as! ItemDetailsEditingMsgViewController
             controller.selectedItems = item
             controller.data = self.data
             self.navigationController?.pushViewController(controller, animated: true)
             
         }else if item.volunteerStatus == "Volunteered" || item.volunteerStatus == "Full"{
-            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ReadOnlyCommentViewController") as! ReadOnlyCommentViewController
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReadOnlyCommentViewController") as! ReadOnlyCommentViewController
             controller.selectedItems = item
             controller.data = self.data
             
