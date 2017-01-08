@@ -22,10 +22,13 @@ class RSVPItemCell: UITableViewCell {
     
     func updateData(_ data: NSDictionary) {
         print(data)
-        commentDescriptionLbl.text = data.object(forKey: "comment") as? String
-        nameLbl.text = data.object(forKey: "firstName") as? String
-        let eventDate = data.object(forKey: "dateTime") as? Double ?? 0
-        dateLbl.text = Custom.dayStringFromTime1(eventDate)
+        //commentDescriptionLbl.text = data.object(forKey: "comment") as? String
+        commentDescriptionLbl.text = data.object(forKey: "phone") as? String
+        let name = data.object(forKey: "firstName") as? String
+        let attendes = data.object(forKey: "attendees") as? Int
+        nameLbl.text = name! + (" - \(attendes!)")
+        //let eventDate = data.object(forKey: "dateTime") as? Double ?? 0
+        //dateLbl.text = Custom.dayStringFromTime1(eventDate)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

@@ -12,24 +12,25 @@ class ItemDetailsMsgCell: UITableViewCell {
 
     @IBOutlet weak var cellView: UIView!
     @IBOutlet weak var nameLbl: UILabel!
-    @IBOutlet weak var dateLbl: UILabel!
+    @IBOutlet weak var phoneLbl: UILabel!
     @IBOutlet weak var commentDescriptionLbl: UILabel!
     @IBOutlet weak var ownerPhotoImgView: CircularImageView!
     @IBOutlet weak var identifierView: GroupIdentifierView!
     
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         Custom.cornerView(cellView)
-        
     }
     
     func updateData(_ data: NSDictionary) {
         print(data)
-        identifierView.isHidden = true
-        ownerPhotoImgView.isHidden = false
         let name = data.object(forKey: "firstName") as? String ?? ""
         let phone = data.object(forKey: "phone") as? String ?? ""
-        if phone == "" {
+        nameLbl.text = name
+        commentDescriptionLbl.text = phone
+        
+        /*if phone == "" {
             nameLbl.text = name
             
         }else {
@@ -41,11 +42,11 @@ class ItemDetailsMsgCell: UITableViewCell {
             nameLbl.attributedText = attributedStr
             //nameLbl.text = data.objectForKey("firstName") as? String ?? ""
             
-        }
+        }*/
         
         //let eventDate = data.objectForKey("dateTime") as! String ?? ""
-        dateLbl.text = ""
-        commentDescriptionLbl.text = phone
+        
+        //commentDescriptionLbl.text = commentText
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

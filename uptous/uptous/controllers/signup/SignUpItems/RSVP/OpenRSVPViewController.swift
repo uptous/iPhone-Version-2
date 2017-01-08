@@ -28,6 +28,9 @@ class OpenRSVPViewController: GeneralViewController {
     var volunteerData = NSArray()
     var sheetData: SignupSheet!
     var itemData: Items!
+    var sheetDataID: String?
+
+    
     var scrollToTop = false
     var offset = 0
     var placeHolderText = "Type comments here.."
@@ -37,9 +40,9 @@ class OpenRSVPViewController: GeneralViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         Custom.buttonCorner(cancelButton)
-        self.headingLbl.text = ("Join the \(sheetData.name!)")
+        self.headingLbl.text = ("Join the \(itemData.name!)")
         self.rsvpLbl.text = "Yeah! You have just RSVP'd as joining the party!"
-        self.dateTimeLbl.text = ("\(Custom.dayStringFromTime1(sheetData.createDate!))")
+        self.dateTimeLbl.text = ("\(Custom.dayStringFromTime3(itemData.dateTime!))")
         
         //attendeesTxtField.text = data.volunteers![0].objectForKey("phone") as? String ?? ""
         
@@ -74,7 +77,7 @@ class OpenRSVPViewController: GeneralViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         //self.tableView.hidden = true
-        ActivityIndicator.hide()
+        
 
         tableView.estimatedRowHeight = 110
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -82,33 +85,48 @@ class OpenRSVPViewController: GeneralViewController {
     
     //Post Comment
     func postComment(_ msg: String,attendees: String) {
-        //let opportunityID = result.objectForKey("id") as? String
-        let apiName = SignupItems + ("\(sheetData.id!)") + ("/item/\(itemData.Id!)/Add")
-        ActivityIndicator.show()
+        let apiName = SignupItems + ("\(sheetDataID!)") + ("/item/\(itemData.Id!)/Add")
+        var stringPost = "comment=" + msg
+        stringPost += "&numberOfAttendees=" + attendees
         
-        let parameters = ["comment": msg,"numberOfAttendees": attendees]
-        DataConnectionManager.requestPOSTURL(api: apiName, para: parameters, success: {
+        DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
-            self.fetchItems()
             
-        }) {
-            (error) -> Void in
-            ActivityIndicator.hide()
-            self.fetchItems()
+            if response["status"] as? String == "0" {
+                DispatchQueue.main.async(execute: {
+                    let _ = self.navigationController?.popViewController(animated: true)
+                })
+            }else {
+                let msg = response["message"] as? String ?? ""
+                if msg != "" || msg != nil {
+                    self.showAlertWithoutCancel(title: "Alert", message: msg)
+                }
+                
+            }
+        })
+    }
+    
+    func showAlertWithoutCancel(title:String?, message:String?) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
+            self.navigationController?.popViewController(animated: true)
+            print("you have pressed OK button");
         }
+        alertController.addAction(OKAction)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     //Fetch Comment
     func fetchItems() {
-        let apiName = SignupItems + ("\(sheetData.id!)")
-        ActivityIndicator.show()
+        let apiName = SignupItems + ("\(sheetDataID!)")
+        
         
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
+            
             let datas = (response as? NSArray)!
             let dic = datas.object(at: 0) as? NSDictionary
             let sheet = SignupSheet(info: dic)
@@ -117,7 +135,7 @@ class OpenRSVPViewController: GeneralViewController {
             
         }) {
             (error) -> Void in
-            ActivityIndicator.hide()
+            
             let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -166,7 +184,21 @@ class OpenRSVPViewController: GeneralViewController {
     }
     
     @IBAction func commentsSend_btnAction(_ sender: UIButton) {
-        if (textView_comments.text != "" || textView_comments.text != " ") && textView_comments.textColor == UIColor.black {
+        
+        if(textView_comments.text != " ") && textView_comments.textColor == UIColor.black {
+            
+        }else {
+            textView_comments.text = " "
+        }
+        
+        if textView_comments.text == "Type comments here.." {
+            textView_comments.text = ""
+        }
+        postComment(textView_comments.text, attendees: attendeesTxtField.text!)
+        attendeesTxtField.text = ""
+        textView_comments.text = ""
+        
+        /*if (textView_comments.text != "" || textView_comments.text != " ") && textView_comments.textColor == UIColor.black {
             if attendeesTxtField.text == "" || attendeesTxtField.text == nil {
                 BaseUIView.toast("Please enter Attendees.")
                 attendeesTxtField.becomeFirstResponder()
@@ -181,7 +213,7 @@ class OpenRSVPViewController: GeneralViewController {
             
         }else {
             BaseUIView.toast("Please enter text")
-        }
+        }*/
         return
     }
     
@@ -227,11 +259,7 @@ class OpenRSVPViewController: GeneralViewController {
             }, completion: nil)
     }
     
-    // MARK: - UITextFiled Delegate
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField_comments.resignFirstResponder()
-        return true
-    }
+    
     
     //MARK: - Button Action
     @IBAction func backBtnClick(_ sender: UIButton) {
@@ -266,6 +294,20 @@ extension OpenRSVPViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+}
+
+// MARK: - Extensions for UITextField
+extension OpenRSVPViewController: UITextFieldDelegate {
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.resignFirstResponder()
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        //textField_comments.resignFirstResponder()
+        textField.resignFirstResponder()
+        return true
+    }
 }
 
 
@@ -330,3 +372,5 @@ extension OpenRSVPViewController: UITextViewDelegate {
     }
     
 }
+
+

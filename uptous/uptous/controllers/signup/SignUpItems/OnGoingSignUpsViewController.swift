@@ -39,12 +39,14 @@ class OnGoingSignUpsViewController: GeneralViewController {
     var isCommentEdit_1_replyEdit_2 : Int?
     var data: SignupSheet!
     var data1: Feed!
+    var itemsDatas = NSArray()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         Custom.cornerView(contentView)
         Custom.fullCornerView1(owner1View)
         Custom.fullCornerView1(owner2View)
+        updateData(data)
         
     }
     
@@ -162,33 +164,36 @@ class OnGoingSignUpsViewController: GeneralViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        ActivityIndicator.hide()
-
-        self.fetchDriverItems()
+        self.fetchItems()
     }
     
-    //MARK: Fetch Driver Records
-    func fetchDriverItems() {
+    
+    //MARK: Fetch Records
+    func fetchItems() {
         let apiName: String!
         if data1 != nil {
             apiName = SignupItems + ("\(data1.newsItemId!)")
         }else {
             apiName = SignupItems + ("\(data.id!)")
         }
-
-        ActivityIndicator.show()
+        
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
-
+            
+            let data = (response as? NSArray)!
+            let dic = data.object(at: 0) as? NSDictionary
+            self.updateData(SignupSheet(info: dic))
+            self.itemsDatas = (dic?.object(forKey: "items")) as! NSArray
+            
+            self.tableView.reloadData()
             
         }) {
             (error) -> Void in
-            ActivityIndicator.hide()
+            
             let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            //self.present(alert, animated: true, completion: nil)
         }
     }
     override func didReceiveMemoryWarning() {
@@ -206,15 +211,45 @@ extension OnGoingSignUpsViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2//self.commentList.count
+        return self.itemsDatas.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "OnGoingCell") as! OnGoingCell
-        //let data = commentList[indexPath.row] as? NSDictionary
-        //print(Comment(info: data))
-        //cell.updateData(Comment(info: data!))
+        let data = self.itemsDatas[(indexPath as NSIndexPath).row] as? NSDictionary
+        cell.updateView(Items(info: data!))
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let dic = self.itemsDatas[(indexPath as NSIndexPath).row] as? NSDictionary
+        print(dic?.object(forKey: "volunteers"))
+        let item = Items(info: dic!)
+        if item.volunteerStatus == "Open" {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "ItemDetailsEditingMsgViewController") as! ItemDetailsEditingMsgViewController
+            controller.selectedItems = item
+            //controller.data = self.data
+            if data1 != nil {
+                controller.sheetDataID = ("\(data1.newsItemId!)")
+            }else {
+                controller.sheetDataID = ("\(data.id!)")
+            }
+            self.navigationController?.pushViewController(controller, animated: true)
+            
+        }else if item.volunteerStatus == "Volunteered" || item.volunteerStatus == "Full"{
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReadOnlyCommentViewController") as! ReadOnlyCommentViewController
+            controller.selectedItems = item
+            //controller.data = self.data
+            if data1 != nil {
+                controller.sheetDataID = ("\(data1.newsItemId!)")
+            }else {
+                controller.sheetDataID = ("\(data.id!)")
+            }
+            
+            self.navigationController?.pushViewController(controller, animated: true)
+            
+        }
     }
     
 }

@@ -154,12 +154,10 @@ class SignUpRSVPViewController: GeneralViewController {
             apiName = SignupItems + ("\(data.id!)")
         }
 
-        ActivityIndicator.show()
-        
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
+            
             let datas = (response as? NSArray)!
             let dic = datas.object(at: 0) as? NSDictionary
             self.updateData(SignupSheet(info: dic ))
@@ -169,7 +167,7 @@ class SignUpRSVPViewController: GeneralViewController {
             
         }) {
             (error) -> Void in
-            ActivityIndicator.hide()
+            
             let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -186,7 +184,7 @@ class SignUpRSVPViewController: GeneralViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        ActivityIndicator.hide()
+        
 
         self.fetchItems()
     }
@@ -217,15 +215,40 @@ extension SignUpRSVPViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let dic = self.itemsDatas.object(at: (indexPath as NSIndexPath).row) as? NSDictionary
-        print(self.data)
-        //let data = Items(info: dic!)
-        let controller = self.storyboard?.instantiateViewController(withIdentifier: "OpenRSVPViewController") as! OpenRSVPViewController
-        controller.itemData = Items(info: dic)
-        controller.sheetData = self.data
-        self.navigationController?.pushViewController(controller, animated: true)
+        let data = Items(info: dic!)
+        
+        if data.volunteerStatus == "Open" {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "OpenRSVPViewController") as! OpenRSVPViewController
+            controller.itemData = Items(info: dic)
+            if data1 != nil {
+                controller.sheetDataID = ("\(data1.newsItemId!)")
+            }else {
+                controller.sheetDataID = ("\(self.data.id!)")
+            }
+            //controller.sheetData = self.data
+            self.navigationController?.pushViewController(controller, animated: true)
+        }else if data.volunteerStatus == "Volunteered" {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "RSVPVolunteerViewController") as! RSVPVolunteerViewController
+            if data1 != nil {
+                controller.sheetDataID = ("\(data1.newsItemId!)")
+            }else {
+                controller.sheetDataID = ("\(self.data.id!)")
+            }
+            controller.data = data
+            //controller.sheetData = self.data
+            
+            
+            self.navigationController?.pushViewController(controller, animated: true)
+            
+        }else if data.volunteerStatus == "Full" {
+            
+        }
+        
     }
-
+    
 }
+
+
 
 
 

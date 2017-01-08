@@ -20,6 +20,8 @@ class SignUpDriversCell: UITableViewCell {
     @IBOutlet weak var fullFromLbl: UILabel!
     @IBOutlet weak var fullToLbl: UILabel!
     @IBOutlet weak var volunteeredLbl: UILabel!
+    @IBOutlet weak var gifImageView: UIImageView!
+
 
     @IBOutlet weak var ownerPhotoImgView: CircularImageView!
     @IBOutlet weak var identifierView: GroupIdentifierView!
@@ -63,6 +65,8 @@ class SignUpDriversCell: UITableViewCell {
             attributedStr1.append(Custom.attributedString("To: ",size: 16.0)!)
             attributedStr1.append(attributedString2)
             volunteeredToLbl.attributedText = attributedStr1
+            gifImageView.image = Custom.setGIFImage(name: "fav-icon")
+
             
         }else if data.volunteerStatus == "Full" {
             volunteeredView.isHidden = true

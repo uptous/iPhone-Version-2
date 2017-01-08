@@ -37,12 +37,14 @@ class DetailsSignUpDriverViewController: GeneralViewController {
     var placeHolderText = "Type comments here.."
     var isCommentEdit_1_replyEdit_2 : Int?
     var list = NSArray()
+    var sheetDataID: String!
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         Custom.buttonCorner(cancelButton)
         
-        headingLbl.text = ("Join the \(sheetData.name!)")
+        //headingLbl.text = ("Join the \(sheetData.name!)")
         fromLbl.text = "Driving from: \(selectedItems.name!)"
         toLbl.text = "To: \(selectedItems.extra!)"
         print("\(Custom.dayStringFromTime1(selectedItems.dateTime!))")
@@ -82,8 +84,6 @@ class DetailsSignUpDriverViewController: GeneralViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.tableView.isHidden = true
-        ActivityIndicator.hide()
-
         tableView.estimatedRowHeight = 110
         tableView.rowHeight = UITableViewAutomaticDimension
     }
@@ -99,52 +99,77 @@ class DetailsSignUpDriverViewController: GeneralViewController {
     }
     
     func delete() {
-        let apiName = SignupItems + ("\(sheetData.id!)") + ("/item/\(selectedItems.Id!)/Del")
-        ActivityIndicator.show()
-        DataConnectionManager.requestPOSTURL(api: apiName, para: ["":""], success: {
+        let apiName = SignupItems + ("\(sheetDataID!)") + ("/item/\(selectedItems.Id!)/Del")
+        
+        let stringPost = ""
+        DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
+            
+            print(response["status"])
+            if response["status"] as? String == "0" {
+               self.navigationController?.popViewController(animated: true)
+            }
+        })
+       /* DataConnectionManager.requestPOSTURL(api: apiName, para: ["":""], success: {
+            (response) -> Void in
+            print(response)
+            
             //self.fetchItems()
             self.navigationController?.popViewController(animated: true)
             
         }) {
             (error) -> Void in
-            ActivityIndicator.hide()
+            
             self.navigationController?.popViewController(animated: true)
 
-        }
+        }*/
 
     }
     
     //Post Comment
     func postComment(_ msg: String,phone: String) {
-        let apiName = SignupItems + ("\(sheetData.id!)") + ("/item/\(selectedItems.Id!)/Add")
-        ActivityIndicator.show()
-        let parameters = ["comment": msg,"phone": phone]
+        let apiName = SignupItems + ("\(sheetDataID!)") + ("/item/\(selectedItems.Id!)/Add")
         
-        DataConnectionManager.requestPOSTURL(api: apiName, para: parameters, success: {
+        var stringPost = "comment=" + msg
+        stringPost += "&phone=" + phone
+        
+        DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
-            self.fetchItems()
             
-        }) {
-            (error) -> Void in
-            ActivityIndicator.hide()
-            self.fetchItems()
-        }
-
+            if response["status"] as? String == "0" {
+                DispatchQueue.main.async(execute: {
+                    let _ = self.navigationController?.popViewController(animated: true)
+                })
+            }else {
+                let msg = response["message"] as? String ?? ""
+                if msg != "" || msg != nil {
+                     self.showAlertWithoutCancel(title: "Alert", message: msg)
+                }
+               
+            }
+        })
     }
     
-    func fetchItems() {
-        let apiName = SignupItems + ("\(sheetData.id!)")
-        ActivityIndicator.show()
+    func showAlertWithoutCancel(title:String?, message:String?) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
+            self.navigationController?.popViewController(animated: true)
+            print("you have pressed OK button");
+        }
+        alertController.addAction(OKAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+
+    
+    func fetchItems() {
+        let apiName = SignupItems + ("\(sheetDataID!)")
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
+            
             let datas  = (response as? NSArray)!
             let dic = datas.object(at: 0) as? NSDictionary
             //self.updateData(SignupSheet(info: dic))
@@ -163,61 +188,13 @@ class DetailsSignUpDriverViewController: GeneralViewController {
             self.tableView.reloadData()
         }) {
             (error) -> Void in
-            ActivityIndicator.hide()
+            
             let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
 
-        /*Alamofire.request(.GET, apiName, headers: appDelegate.loginHeaderCredentials)
-            .responseJSON { response in
-                if let result = response.result.value {
-                    ActivityIndicator.hide()
-                    let datas  = (result as? NSArray)!
-                    let dic = datas.object(at: 0) as? NSDictionary
-                    //self.updateData(SignupSheet(info: dic))
-                    let data = (dic?.object(forKey: "items")) as! NSArray
-                    
-                    for index in 0..<data.count {
-                        let dic = data.object(at: index) as? NSDictionary
-                        if dic?.object(forKey: "id") as? Int == self.selectedItems.Id {
-                            print(dic?.object(forKey: "volunteers"))
-                            self.itemsDatas = dic?.object(forKey: "volunteers") as! NSArray
-                            break
-                        }
-                    }
-                    print("self.voluniteerdDatas==\(self.itemsDatas.count)")
-                    
-                    self.tableView.reloadData()
-                }else {
-                    ActivityIndicator.hide()
-                }
-        }*/
     }
-
-    
-    //Fetch Comment
-   /* func fetchItems() {
-        let apiName = SignupItems + ("\(sheetData.id!)")
-        ActivityIndicator.show()
-        
-        Alamofire.request(.GET, apiName, headers: appDelegate.loginHeaderCredentials)
-            .responseJSON { response in
-                if let result = response.result.value {
-                    ActivityIndicator.hide()
-                    let datas = (result as? NSArray)!
-                    let dic = datas.objectAtIndex(0) as? NSDictionary
-                    let item = (dic?.objectForKey("items")) as! NSArray
-                    let dic1 = item.objectAtIndex(0) as? NSDictionary
-                    
-                    self.itemsDatas = (dic1?.objectForKey("volunteers")) as! NSArray
-                    self.tableView.reloadData()
-                }else {
-                    ActivityIndicator.hide()
-                }
-        }
-    }*/
-
     
     //MARK:- Keyboard
     func HideTextKeyboard(_ sender: UITapGestureRecognizer?) {
@@ -261,6 +238,9 @@ class DetailsSignUpDriverViewController: GeneralViewController {
     }
     
     @IBAction func commentsSend_btnAction(_ sender: UIButton) {
+        if textView_comments.text == "Type comments here.." {
+            textView_comments.text = ""
+        }
         postComment(textView_comments.text, phone: phoneTxtField.text!)
         textView_comments.text = ""
         phoneTxtField.text = ""
@@ -356,7 +336,13 @@ extension DetailsSignUpDriverViewController: UITableViewDelegate, UITableViewDat
         let cell = tableView.dequeueReusableCell(withIdentifier: "DriverItemCell") as! DriverItemCell
         let data = self.itemsDatas[(indexPath as NSIndexPath).row] as? NSDictionary
         print(data)
-        cell.updateData(data!)
+        if textView_comments.text.characters.count > 0 {
+            cell.updateData(data!, commentText:textView_comments.text!)
+
+        }else {
+            cell.updateData(data!, commentText:"")
+ 
+        }
         
         return cell
     }

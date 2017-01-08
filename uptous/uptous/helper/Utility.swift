@@ -196,23 +196,49 @@ class Utility: NSObject {
     
         let rect:CGRect = attString.boundingRect(with: CGSize(width: width, height: 3000), options: NSStringDrawingOptions.usesLineFragmentOrigin, context: nil)
         return CGSize(width: width, height: rect.size.height);
-    } //F.E.
+    }
     
-    
-    
-       
-    
-    class func showAlert(_ title:String?, message:String?) {
-       
-        /*let alert:UIAlertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert);
-        //--
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil));
-        //--
-        (UIApplication.sharedApplication().delegate as! AppDelegate).window!.rootViewController?.presentViewController(alert, animated: true, completion: nil);*/
+    class func scaleUIImageToSize( image: UIImage, size: CGSize) -> UIImage {
+        let hasAlpha = false
+        let scale: CGFloat = 0.0 // Automatically use scale factor of main screen
         
-        let alert:UIAlertView = UIAlertView(title: title, message: message, delegate: nil, cancelButtonTitle: "OK");
-        alert.show();
-    } //F.E.
+        UIGraphicsBeginImageContextWithOptions(size, !hasAlpha, scale)
+        image.draw(in: CGRect(origin: CGPoint.zero, size: size))
+        
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return scaledImage!
+    }
+    
+    class func showAlertWithCancel(_ title:String?, message:String?) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action:UIAlertAction!) in
+            print("you have pressed the Cancel button");
+        }
+        alertController.addAction(cancelAction)
+        
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
+            print("you have pressed OK button");
+        }
+        alertController.addAction(OKAction)
+        
+        (UIApplication.shared.delegate as! AppDelegate).window!.rootViewController?.present(alertController, animated: true, completion: nil)
+    }
+    
+    class func showAlertWithoutCancel(_ title:String?, message:String?) {
+        
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
+            print("you have pressed OK button");
+        }
+        alertController.addAction(OKAction)
+        
+        (UIApplication.shared.delegate as! AppDelegate).window!.rootViewController?.present(alertController, animated: true, completion: nil)
+    }
+
 
     class func formateDate(_ date:Date) ->String?
     {

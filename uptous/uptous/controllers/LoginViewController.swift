@@ -14,12 +14,23 @@ class LoginViewController: GeneralViewController {
     @IBOutlet weak var emailTxtField: UITextField!
     @IBOutlet weak var passwordTxtField: UITextField!
     
+    let defaults = UserDefaults.standard
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Do any additional setup after loading the view. // yuval.spector@uptous.com
+        //emailTxtField.text! = "asmithutu@gmail.com"
+        //passwordTxtField.text! = "alpha123"
+        //emailTxtField.text! = "yuval.spector@uptous.com"
+        //passwordTxtField.text! = "postgres"  //
         
-        // Do any additional setup after loading the view.
-        emailTxtField.text! = "asmithutu@gmail.com"
-        passwordTxtField.text! = "alpha123"
+        //emailTxtField.text! = "testp1@uptous.com"
+        //passwordTxtField.text! = "alpha1"  //testp17@uptous.com
+        
+        emailTxtField.text! = "testp1@uptous.com"
+        passwordTxtField.text! = "alpha1"
+        
+        
     }
     
     @IBAction func signInBtnClick(_ sender: UIButton) {
@@ -34,21 +45,24 @@ class LoginViewController: GeneralViewController {
             
             let credentialData = "\(username):\(password)".data(using: String.Encoding.utf8)!
             let base64Credentials = credentialData.base64EncodedString(options: [])
+            appDelegate.loginHeader64Credentials = base64Credentials
             appDelegate.loginHeaderCredentials = ["Authorization": "Basic \(base64Credentials)"]
             
-            ActivityIndicator.show()
             
             DataConnectionManager.requestGETURL(api: LoginAPI, para: ["":""], success: {
                 (response) -> Void in
                print(response)
-                ActivityIndicator.hide()
+                
                 let result = response as? NSDictionary
                 if (result?.object(forKey: "result"))! as! String == "Authenticated" {
+                    self.checkNewFeed()
+                    UserPreferences.LoginID = username
+                    UserPreferences.Password = password
                     
                     let controller = self.storyboard?.instantiateViewController(withIdentifier: MainStoryBoard.ViewControllerIdentifiers.tabbarViewController) as! TabBarViewController
                     controller.selectedIndex = 0
                     
-                    self.navigationController?.pushViewController(controller, animated: true)
+                self.navigationController?.pushViewController(controller, animated: true)
                 }else {
                     DispatchQueue.main.async(execute: { () -> Void in
                         let alert = UIAlertController(title: "Alert", message: "Not Valid User", preferredStyle: UIAlertControllerStyle.alert)
@@ -59,7 +73,7 @@ class LoginViewController: GeneralViewController {
             }) {
                 
                 (error) -> Void in
-                ActivityIndicator.hide()
+                
                 let alert = UIAlertController(title: "Alert", message: "Not Valid User", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
@@ -93,12 +107,12 @@ class LoginViewController: GeneralViewController {
             DataConnectionManager.requestPOSTURL(api: apiName, para: parameters , success: {
                 (response) -> Void in
                 print(response)
-                ActivityIndicator.hide()
+                
                 
                 
             }) {
                 (error) -> Void in
-                ActivityIndicator.hide()
+                
                 let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
@@ -109,12 +123,12 @@ class LoginViewController: GeneralViewController {
             DataConnectionManager.requestGETURL1(api: apiName, para: parameters , success: {
                 (response) -> Void in
                 print(response)
-                ActivityIndicator.hide()
+                
                 
                 
             }) {
                 (error) -> Void in
-                ActivityIndicator.hide()
+                
                 let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
@@ -126,7 +140,7 @@ class LoginViewController: GeneralViewController {
                 print("response==> \(response)")
                 print("response==> \(response.data)")
                 print("response==> \(response)")
-                //ActivityIndicator.hide()
+                //
                 let result = response.data as? NSDictionary
                 
                 if (result?.objectForKey("result"))! as! String == "Authenticated" {
@@ -153,6 +167,19 @@ class LoginViewController: GeneralViewController {
             BaseUIView.toast("Please enter email or password")
         }
         return
+    }
+    
+    func checkNewFeed() {
+        DataConnectionManager.requestGETURL1(api: FeedUpdateAPI, para: ["":""], success: {
+            (response) -> Void in
+            print("First Time==>\(response)")
+            
+            let data = response as? NSDictionary
+            self.defaults.set(data?.object(forKey: "lastItemTime"), forKey: "LastModified")
+            self.defaults.synchronize()
+        }) {
+            (error) -> Void in
+        }
     }
     
     override func didReceiveMemoryWarning() {

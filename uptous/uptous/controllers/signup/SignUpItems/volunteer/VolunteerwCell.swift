@@ -17,10 +17,8 @@ class VolunteerwCell: UITableViewCell {
     @IBOutlet weak var spotLbl: UILabel!
     @IBOutlet weak var msg1Lbl: UILabel!
     @IBOutlet weak var msg2Lbl: UILabel!
-    
-    
-    @IBOutlet weak var ownerPhotoImgView: CircularImageView!
-    @IBOutlet weak var identifierView: GroupIdentifierView!
+    @IBOutlet weak var gifImageView: UIImageView!
+
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -43,7 +41,13 @@ class VolunteerwCell: UITableViewCell {
             let attributedString1 = NSAttributedString(string: "spots open", attributes: nil)
             
             attributedStr.append(attributedString1)
-            spotLbl.attributedText = attributedStr
+            if data.numVolunteers! == 0 {
+                spotLbl.text = "Open"
+                
+            }else {
+                spotLbl.attributedText = attributedStr
+                
+            }
             
             
         }else if data.volunteerStatus == "Volunteered" {
@@ -51,6 +55,8 @@ class VolunteerwCell: UITableViewCell {
             fullView.isHidden = true
             openView.isHidden = true
             msg1Lbl.text = data.name!
+            gifImageView.image = Custom.setGIFImage(name: "volunteer1")
+
             
             
         }else if data.volunteerStatus == "Full" {

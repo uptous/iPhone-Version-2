@@ -20,27 +20,26 @@ class ReadOnlyCommentViewController: GeneralViewController {
     
     var selectedItems: Items!
     var data: SignupSheet!
+    var sheetDataID: String!
+
     var voluniteerdDatas = NSMutableArray()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         Custom.cornerView(contentView)
-        //voluniteerdDatas = selectedItems.volunteers!
-        //print(voluniteerdDatas)
         nameLbl.text = selectedItems.name!
-        headingLbl.text = data.name!
-        eventDateLbl.text = ("\(Custom.dayStringFromTime1(selectedItems.dateTime!))")
-        
+        headingLbl.text = selectedItems.name!
+        eventDateLbl.text = ("\(Custom.dayStringFromTime3(selectedItems.dateTime!))")
     }
     
     @IBAction func back(_ sender: UIButton) {
-        self.navigationController?.popViewController(animated: true)
+        DispatchQueue.main.async(execute: {
+            let _ = self.navigationController?.popViewController(animated: true)
+        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
         voluniteerdDatas.removeAllObjects()
-        ActivityIndicator.hide()
-
         for index in 0..<selectedItems.volunteers!.count {
             let volunteer = selectedItems.volunteers!.object(at: index) as? NSDictionary
             voluniteerdDatas.add(volunteer!)
@@ -54,7 +53,6 @@ class ReadOnlyCommentViewController: GeneralViewController {
             
             DispatchQueue.main.async(execute: {
                 self.delete()
-                
             })
         }))
         alertView.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -62,22 +60,31 @@ class ReadOnlyCommentViewController: GeneralViewController {
     }
     
     func delete() {
-        let apiName = SignupItems + ("\(data.id!)") + ("/item/\(data.id!)/Del")
-        ActivityIndicator.show()
-        
-        ActivityIndicator.show()
-        DataConnectionManager.requestPOSTURL(api: apiName, para: ["":""], success: {
+        let apiName = SignupItems + ("\(sheetDataID!)") + ("/item/\(selectedItems.Id!)/Del")
+        let stringPost = ""
+        DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
-            print(response)
-            ActivityIndicator.hide()
-            self.navigationController?.popViewController(animated: true)
             
-        }) {
-            (error) -> Void in
-            ActivityIndicator.hide()
-            self.navigationController?.popViewController(animated: true)
-            
+            if response["status"] as? String == "0" {
+                DispatchQueue.main.async(execute: {
+                    let _ = self.navigationController?.popViewController(animated: true)
+                })
+            }else {
+                let msg = response["message"] as? String
+               self.showAlertWithoutCancel(title: "Error", message: msg)
+            }
+        })
+    }
+    
+    func showAlertWithoutCancel(title:String?, message:String?) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
+            //self.navigationController?.popViewController(animated: true)
+            print("you have pressed OK button");
         }
+        alertController.addAction(OKAction)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -101,6 +108,10 @@ extension ReadOnlyCommentViewController: UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ReadOnlyCommentCell") as! ReadOnlyCommentCell
         let data = self.voluniteerdDatas[(indexPath as NSIndexPath).row] as? NSDictionary
+        let tblView = UIView(frame: CGRect.zero)
+        tableView.tableFooterView = tblView
+        tableView.tableFooterView?.isHidden = true
+        tableView.backgroundColor = UIColor.clear
         cell.updateView(data!)
         return cell
     }

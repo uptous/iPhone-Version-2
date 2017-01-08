@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PDFViewerViewController: GeneralViewController,UIWebViewDelegate {
+class PDFViewerViewController: GeneralViewController,ReaderViewControllerDelegate {
 
     @IBOutlet weak var webView: UIWebView!
     var data: Feed!
@@ -18,46 +18,25 @@ class PDFViewerViewController: GeneralViewController,UIWebViewDelegate {
 
         let url = URL(string: data.newsItemUrl!)
         
-        //Create the document for the viewer when the segue is performed.
-//        var viewer = segue.destinationViewController as PDFKBasicPDFViewer
-//        
-//        //Load the document (pdfUrl represents the path on the phone of the pdf document you wish to load)
-//        var document = PDFKDocument(contentsOfFile: pdfUrl!, password: nil)
-//        viewer.loadDocument(document)
-        
-        
-        //let url : NSURL! = NSURL(string: "http://developer.apple.com/iphone/library/documentation/UIKit/Reference/UIWebView_Class/UIWebView_Class.pdf")
-        webView.loadRequest(URLRequest(url: url!))
-        
-        
-        
-        let req = URLRequest(url: url!)
-        webView.delegate = self
-        //here is the sole part
-        webView.scalesPageToFit = true
-        webView.contentMode = .scaleToFill
-        webView.loadRequest(req)
+        PDFDownload.loadFileAsync(url: url! as NSURL, completion:{(path) in
+            print("pdf downloaded to: \(path)")
+            if path.1 == nil {
+                // Get the directory contents urls (including subfolders urls)
+                if let document = ReaderDocument.withDocumentFilePath(path.0, password: "") {
+                    let readerViewController: ReaderViewController = ReaderViewController(readerDocument: document)
+                    readerViewController.delegate = self
+                    // Set the ReaderViewController delegate to self
+                    self.navigationController!.pushViewController(readerViewController, animated: true)
+                }
+            } else {
+                print(path.1?.localizedDescription ?? "Error Occured")
+            }
+        })
     }
     
-    func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
-        print("Webview fail with error \(error)");
+    func dismiss(_ viewController: ReaderViewController!) {
+        self.navigationController!.popViewController(animated: true)
     }
-    
-    
-    
-    func webViewDidStartLoad(_ webView: UIWebView) {
-        print("Webview started Loading")
-       // ActivityIndicator.show()
-
-    }
-    
-    func webViewDidFinishLoad(_ webView: UIWebView) {
-        print("Webview did finish load")
-        //ActivityIndicator.hide()
-
-    }
-    
-    
     
     //MARK: - Button Action
     @IBAction func backBtnClick(_ sender: UIButton) {

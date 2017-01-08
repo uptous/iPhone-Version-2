@@ -59,7 +59,7 @@ class CommentViewController: GeneralViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.tableView.isHidden = true
-        ActivityIndicator.hide()
+        
         tableView.estimatedRowHeight = 110
         tableView.rowHeight = UITableViewAutomaticDimension
     }
@@ -67,32 +67,36 @@ class CommentViewController: GeneralViewController {
     //Post Comment
     func postComment(_ msg: String) {
         let apiName = PostCommentAPI + ("\(data.feedId!)")
-        ActivityIndicator.show()
-        let parameters = ["contents": msg]
-        
-        DataConnectionManager.requestPOSTURL(api: apiName, para: parameters , success: {
+        var stringPost = "contents=" + msg
+        DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
-            self.fetchCommentList()
             
-        }) {
-            (error) -> Void in
-            ActivityIndicator.hide()
-            self.fetchCommentList()
-        }
+            print(response["status"])
+            if response["status"] as? String == "0" {
+                self.fetchCommentList()
+            }
+        })
+    }
+    
+    func showAlertWithoutCancel(title:String?, message:String?) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
+            self.fetchCommentList()
+            print("you have pressed OK button");
+        }
+        alertController.addAction(OKAction)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     //Fetch Comment
     func fetchCommentList() {
         let apiName = FetchCommentAPI + ("\(data.feedId!)")
-        ActivityIndicator.show()
-        
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
+            
             self.commentList = response as! NSArray
             if self.commentList.count > 0 {
                 self.tableView.isHidden = false
@@ -100,7 +104,7 @@ class CommentViewController: GeneralViewController {
             }
         }) {
             (error) -> Void in
-            ActivityIndicator.hide()
+            
             let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -258,7 +262,7 @@ class CommentViewController: GeneralViewController {
     
     //MARK: - Button Action
     @IBAction func backBtnClick(_ sender: UIButton) {
-        ActivityIndicator.hide()
+        
         self.dismiss(animated: true, completion: nil)
     }
     

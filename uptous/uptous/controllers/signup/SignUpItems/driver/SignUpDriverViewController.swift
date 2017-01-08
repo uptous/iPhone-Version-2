@@ -38,7 +38,6 @@ class SignUpDriverViewController: GeneralViewController {
         Custom.cornerView(contentView)
         Custom.fullCornerView1(owner1View)
         Custom.fullCornerView1(owner2View)
-        
     }
     
     func attributedString(_ str: String) -> NSAttributedString? {
@@ -70,7 +69,6 @@ class SignUpDriverViewController: GeneralViewController {
                 owner1View.backgroundColor = color1
                 owner1NameLbl.textColor = color2
                 
-                
             }else {
                 owner1View.isHidden = true
                 contact1PhotoImgView.isHidden = false
@@ -78,7 +76,6 @@ class SignUpDriverViewController: GeneralViewController {
                     contact1PhotoImgView.setUserAvatar(avatarUrl)
                 }
             }
-            
         }else {
             contact1PhotoImgView.isHidden = true
             owner1View.isHidden = true
@@ -146,7 +143,7 @@ class SignUpDriverViewController: GeneralViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        ActivityIndicator.hide()
+        
 
         self.fetchDriverItems()
     }
@@ -160,11 +157,11 @@ class SignUpDriverViewController: GeneralViewController {
            apiName = SignupItems + ("\(data.id!)")
         }
         
-        ActivityIndicator.show()
+        
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
+            
             self.driverDatas = (response as? NSArray)!
             let dic = self.driverDatas.object(at: 0) as? NSDictionary
             self.updateData(SignupSheet(info: dic))
@@ -173,7 +170,7 @@ class SignUpDriverViewController: GeneralViewController {
             
         }) {
             (error) -> Void in
-            ActivityIndicator.hide()
+            
             let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -212,12 +209,23 @@ extension SignUpDriverViewController: UITableViewDelegate, UITableViewDataSource
         if data.volunteerStatus == "Open" {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "DetailsSignUpDriverViewController") as! DetailsSignUpDriverViewController
             controller.selectedItems = data
-            controller.sheetData = self.data
+            //controller.sheetData = self.data
+            if data1 != nil {
+                controller.sheetDataID = ("\(data1.newsItemId!)")
+            }else {
+                controller.sheetDataID = ("\(self.data.id!)")
+            }
             self.navigationController?.pushViewController(controller, animated: true)
         }else if data.volunteerStatus == "Volunteered" {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "VolunteeredViewController") as! VolunteeredViewController
+            if data1 != nil {
+                controller.sheetDataID = ("\(data1.newsItemId!)")
+            }else {
+                controller.sheetDataID = ("\(self.data.id!)")
+            }
             controller.data = data
-            controller.sheetData = self.data
+            //controller.sheetData = self.data
+            
             
             self.navigationController?.pushViewController(controller, animated: true)
     

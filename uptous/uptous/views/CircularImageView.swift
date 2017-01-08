@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import SDWebImage
+//import SDWebImage
 
 @IBDesignable
 class CircularImageView: UIView {

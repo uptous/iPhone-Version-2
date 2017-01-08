@@ -32,6 +32,9 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
     var selectedItems: Items!
     var driverDatas = NSArray()
     var voluniteerdDatas = NSArray()
+    var sheetDataID: String!
+
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,7 +56,7 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         voluniteerdDatas = selectedItems.volunteers!
         print(voluniteerdDatas)
         
-        headingLbl.text = data.name
+        //headingLbl.text = data.name
         msgLbl.text = selectedItems.name
         eventDateLbl.text = ("\(Custom.dayStringFromTime1(selectedItems.dateTime!))")
         
@@ -89,13 +92,14 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
     
     
     @IBAction func back(_ sender: UIButton) {
-        self.navigationController?.popViewController(animated: true)
+        DispatchQueue.main.async(execute: {
+            let _ = self.navigationController?.popViewController(animated: true)
+        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
         tableView.estimatedRowHeight = 110
-        ActivityIndicator.hide()
-
+        
         tableView.rowHeight = UITableViewAutomaticDimension
         self.fetchItems()
     }
@@ -111,57 +115,62 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
     }
     
     func delete() {
-        let apiName = SignupItems + ("\(data.id!)") + ("/item/\(selectedItems.Id!)/Del")
-        ActivityIndicator.show()
-        
-        DataConnectionManager.requestPOSTURL(api: apiName, para: ["":""] , success: {
+        let apiName = SignupItems + ("\(sheetDataID!)") + ("/item/\(selectedItems.Id!)/Del")
+        let stringPost = ""
+        DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
-            self.navigationController?.popViewController(animated: true)
             
-        }) {
-            (error) -> Void in
-            ActivityIndicator.hide()
-            self.navigationController?.popViewController(animated: true)
-        }
-        
+            print(response["status"])
+            if response["status"] as? String == "0" {
+                self.navigationController?.popViewController(animated: true)
+            }
+        })
     }
-
     
     //Post Comment
     func postComment(_ msg: String) {
         //let opportunityID = selectedItems.Id
-        let apiName = SignupItems + ("\(data.id!)") + ("/item/\(selectedItems.Id!)/Add")
-        print(apiName)
-        ActivityIndicator.show()
-        let parameters = ["comment": msg]
+        let apiName = SignupItems + ("\(sheetDataID!)") + ("/item/\(selectedItems.Id!)/Add")
+        var stringPost = "comment=" + msg
+        stringPost += "&phone=" + ""
         
-        DataConnectionManager.requestPOSTURL(api: apiName, para: parameters, success: {
+        DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
             print(response)
-            self.fetchItems()
-            self.navigationController?.popViewController(animated: true)
             
-        }) {
-            (error) -> Void in
-            ActivityIndicator.hide()
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
+            if response["status"] as? String == "0" {
+                DispatchQueue.main.async(execute: {
+                    let _ = self.navigationController?.popViewController(animated: true)
+                })
+            }else {
+                let msg = response["message"] as? String ?? ""
+                if msg != "" || msg != nil {
+                    self.showAlertWithoutCancel(title: "Alert", message: msg)
+                }
+                
+            }
+        })
     }
 
-    
+    func showAlertWithoutCancel(title:String?, message:String?) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
+            self.navigationController?.popViewController(animated: true)
+            print("you have pressed OK button");
+        }
+        alertController.addAction(OKAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+
     //MARK: Fetch Records
     func fetchItems() {
-        let apiName = SignupItems + ("\(data.id!)")
-        ActivityIndicator.show()
-        
+        let apiName = SignupItems + ("\(sheetDataID!)")
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
+            
             self.driverDatas = (response as? NSArray)!
             let dic = self.driverDatas.object(at: 0) as? NSDictionary
             //self.updateData(SignupSheet(info: dic))
@@ -181,37 +190,11 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
             
         }) {
             (error) -> Void in
-            ActivityIndicator.hide()
+            
             let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            //self.present(alert, animated: true, completion: nil)
         }
-
-        
-       /* Alamofire.request(.GET, apiName, headers: appDelegate.loginHeaderCredentials)
-            .responseJSON { response in
-                if let result = response.result.value {
-                    ActivityIndicator.hide()
-                    self.driverDatas = (result as? NSArray)!
-                    let dic = self.driverDatas.object(at: 0) as? NSDictionary
-                    //self.updateData(SignupSheet(info: dic))
-                    let data = (dic?.object(forKey: "items")) as! NSArray
-                   
-                    for index in 0..<data.count {
-                        let dic = data.object(at: index) as? NSDictionary
-                         if dic?.object(forKey: "id") as? Int == self.selectedItems.Id {
-                            print(dic?.object(forKey: "volunteers"))
-                            self.voluniteerdDatas = dic?.object(forKey: "volunteers") as! NSArray
-                            break
-                        }
-                    }
-                    print("self.voluniteerdDatas==\(self.voluniteerdDatas.count)")
-                    
-                    self.tableView.reloadData()
-                }else {
-                    ActivityIndicator.hide()
-                }
-        }*/
     }
     
     //***************Comment***************
@@ -256,14 +239,22 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
     }
     
     @IBAction func commentsSend_btnAction(_ sender: UIButton) {
-        if (textView_comments.text != "" ||  textView_comments.text != " ") && textView_comments.textColor == UIColor.black {
+        if textView_comments.text == "Type comments here.." {
+            textView_comments.text = ""
+        }
+        postComment(textView_comments.text)
+        textView_comments.text = ""
+        textView_comments.text = ""
+        textView_comments.resignFirstResponder()
+
+        /*if (textView_comments.text != "" ||  textView_comments.text != " ") && textView_comments.textColor == UIColor.black {
             postComment(textView_comments.text)
             textView_comments.text = ""
             textView_comments.resignFirstResponder()
             
         }else {
             BaseUIView.toast("Please enter text")
-        }
+        }*/
         return
     }
     
@@ -337,6 +328,10 @@ extension ItemDetailsEditingMsgViewController: UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailsMsgCell") as! ItemDetailsMsgCell
         let data = self.voluniteerdDatas[(indexPath as NSIndexPath).row] as? NSDictionary
+        var tblView = UIView(frame: CGRect.zero)
+        tableView.tableFooterView = tblView
+        tableView.tableFooterView?.isHidden = true
+        tableView.backgroundColor = UIColor.clear
         cell.updateData(data!)
         return cell
     }

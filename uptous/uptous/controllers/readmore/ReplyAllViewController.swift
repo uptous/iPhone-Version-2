@@ -33,7 +33,7 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
     var commentList = NSArray()
     var scrollToTop = false
     var offset = 0
-    var placeHolderText = "Type comments here.."
+    var placeHolderText = "Reply all..."
     var isCommentEdit_1_replyEdit_2 : Int?
     
     override func viewDidLoad() {
@@ -42,7 +42,7 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
         textView_comments.placeholder = placeHolderText
         textView_comments.text = placeHolderText
         textView_comments.textColor = UIColor.lightGray
-        textField_comments.placeholder = "Type comments here.."
+        textField_comments.placeholder = "Reply all..."
         // Observer Keyboard
         let center: NotificationCenter = NotificationCenter.default
         center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -63,7 +63,7 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
     
     override func viewWillAppear(_ animated: Bool) {
         self.tableView.isHidden = true
-        ActivityIndicator.hide()
+        
         tableView.estimatedRowHeight = 110
         tableView.rowHeight = UITableViewAutomaticDimension
     }
@@ -71,33 +71,36 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
     //MARK:- Reply Post
     func postReply(_ msg: String) {
         let apiName = PostReplyAPI + ("\(data.newsItemId!)")
-        ActivityIndicator.show()
-        
-        let parameters = ["contents": msg]
-        DataConnectionManager.requestPOSTURL(api: apiName, para: parameters , success: {
+        var stringPost = "contents=" + msg
+        DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
-            self.fetchOldReplyList()
             
-        }) {
-            (error) -> Void in
-            ActivityIndicator.hide()
-            self.fetchOldReplyList()
-        }
+            print(response["status"])
+            if response["status"] as? String == "0" {
+                self.fetchOldReplyList()
+            }
+        })
+    }
+    
+    func showAlertWithoutCancel(title:String?, message:String?) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
+            self.fetchOldReplyList()
+            print("you have pressed OK button");
+        }
+        alertController.addAction(OKAction)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     //Fetch Old Reply List
     func fetchOldReplyList() {
-        
         let apiName = FetchReplyAPI + ("\(data.newsItemId!)")
-        ActivityIndicator.show()
-        
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
+            
             self.commentList = response as! NSArray
             if self.commentList.count > 0 {
                 self.tableView.isHidden = false
@@ -105,7 +108,7 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
             }
         }) {
             (error) -> Void in
-            ActivityIndicator.hide()
+            
             let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -114,7 +117,7 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
 
     func HideTextKeyboard(_ sender: UITapGestureRecognizer?) {
         //textField_comments.resignFirstResponder()
-        placeHolderText = "Type comments here.."
+        placeHolderText = "Reply all..."
         textView_comments.text = placeHolderText
         textView_comments.textColor = UIColor.lightGray
         textView_comments.resignFirstResponder()
@@ -251,7 +254,7 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
             let mail = MFMailComposeViewController()
             mail.mailComposeDelegate = self
             mail.setToRecipients([data.ownerEmail!])
-            mail.setMessageBody("<p>You're so awesome!</p>", isHTML: true)
+            mail.setMessageBody("", isHTML: true)
             
             present(mail, animated: true, completion: nil)
         } else {
@@ -274,7 +277,7 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
     
     //MARK: - Button Action
     @IBAction func backBtnClick(_ sender: UIButton) {
-        ActivityIndicator.hide()
+        
         self.dismiss(animated: true, completion: nil)
     }
 

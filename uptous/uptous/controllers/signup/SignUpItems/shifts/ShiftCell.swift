@@ -21,6 +21,8 @@ class ShiftCell: UITableViewCell {
     @IBOutlet weak var eventDate1Lbl: UILabel!
     @IBOutlet weak var msg2Lbl: UILabel!
     @IBOutlet weak var eventDate2Lbl: UILabel!
+    @IBOutlet weak var gifImageView: UIImageView!
+
     
     @IBOutlet weak var ownerPhotoImgView: CircularImageView!
     @IBOutlet weak var identifierView: GroupIdentifierView!
@@ -47,8 +49,14 @@ class ShiftCell: UITableViewCell {
             attributedStr.append(Custom.attributedString1(("\(count) "),size: 14.0)!)
             let attributedString1 = NSAttributedString(string: "spots open", attributes: nil)
             
-        attributedStr.append(attributedString1)
-            spotLbl.attributedText = attributedStr
+            attributedStr.append(attributedString1)
+            if data.numVolunteers! == 0 {
+                spotLbl.text = "Open"
+
+            }else {
+                spotLbl.attributedText = attributedStr
+
+            }
             
             
         }else if data.volunteerStatus == "Volunteered" {
@@ -57,6 +65,8 @@ class ShiftCell: UITableViewCell {
             openView.isHidden = true
             msg1Lbl.text = data.name!
             eventDate1Lbl.text = Custom.dayStringFromTime1(data.dateTime!)
+            gifImageView.image = Custom.setGIFImage(name: "volunteer2")
+
             
         }else if data.volunteerStatus == "Full" {
             volunteeredView.isHidden = true

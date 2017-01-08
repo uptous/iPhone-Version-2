@@ -12,7 +12,8 @@ class DriverItemCell: UITableViewCell {
 
     @IBOutlet weak var cellView: UIView!
     @IBOutlet weak var nameLbl: UILabel!
-    @IBOutlet weak var dateLbl: UILabel!
+    @IBOutlet weak var phoneLbl: UILabel!
+    @IBOutlet weak var commentLbl: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,28 +21,14 @@ class DriverItemCell: UITableViewCell {
         Custom.cornerView(cellView)
     }
     
-    func updateData(_ data: NSDictionary) {
+    func updateData(_ data: NSDictionary, commentText:String) {
          let name = data.object(forKey: "firstName") as? String ?? ""
         
         let phone = data.object(forKey: "phone") as? String ?? ""
-        if phone == "" {
-            nameLbl.text = name
-
-        }else {
-            let attributedStr = NSMutableAttributedString()
-            let attributedString1 = NSAttributedString(string: name, attributes: nil)
-            attributedStr.append(attributedString1)
-            attributedStr.append(Custom.attributedString(("- \(phone)"),size: 16.0)!)
-            
-            nameLbl.attributedText = attributedStr
-        }
-        
-        //let eventDate = data.objectForKey("dateTime") as! String ?? ""
-        dateLbl.text = ""
+        nameLbl.text = name
+        phoneLbl.text = phone
+        commentLbl.text = commentText
     }
-    
-
-
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

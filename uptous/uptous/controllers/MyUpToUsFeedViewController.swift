@@ -18,16 +18,19 @@ enum feedNewsType : String {
     case PrivateThreads = "Private Threads"
     //case PersonalAnnouncement = "Private Threads"
     /*case Post
-    case Announcement
-    case File
-    case Homework
-    case Link
-    case JoinedUser*/
+     case Announcement
+     case File
+     case Homework
+     case Link
+     case JoinedUser*/
 }
 
-class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,AnnouncementCellDelegate,PrivateThreadsCellDelegate,OpportunityCellDelegate,FileCellDelegate,MFMailComposeViewControllerDelegate {
+class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,AnnouncementCellDelegate,PrivateThreadsCellDelegate,OpportunityCellDelegate,FileCellDelegate,MFMailComposeViewControllerDelegate,UISearchBarDelegate {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var communityTableView: UITableView!
+    @IBOutlet weak var communityView: UIView!
+    @IBOutlet weak var headingBtn: UIButton!
     @IBOutlet weak var postBtn: UIButton!
     @IBOutlet weak var directBtn: UIButton!
     @IBOutlet weak var pictureBtn: UIButton!
@@ -35,22 +38,33 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     @IBOutlet weak var searchTextField: UITextField!
     var isButtonSelected = false
     var filterStatus = false
-
+    var topMenuStatus = 0
+    @IBOutlet weak var notifNoRecordsView: UIView!
+    
+    
+    @IBOutlet weak var searchBar: UISearchBar!
+    var searchActive : Bool = false
+    var filterListArr = [Feed]()
+    var searchKey: String = ""
+    var searchKeyBool: Bool = false
+    
     var newsTypeList = [Feed]()
     var newsList = NSArray()
+    var communityList = NSMutableArray()
+    
     var searchedArray = [Feed]()
     var refreshControl: UIRefreshControl!
     let defaults = UserDefaults.standard
     
-
+    
     fileprivate struct photosCellConstants {
         static var cellIdentifier:String = "PhotosCell"
-        static var rowHeight:CGFloat! = 450
+        static var rowHeight:CGFloat! = 308
     }
     
     fileprivate struct fileCellConstants {
         static var cellIdentifier:String = "FileCell"
-        static var rowHeight:CGFloat! = 275
+        static var rowHeight:CGFloat! = 250
     }
     
     fileprivate struct announcementCellConstants {
@@ -69,15 +83,16 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         static var rowHeight:CGFloat! = 310
     }
     
-//    private struct  personalAnnouncementCellConstants {
-//        static var cellIdentifier:String = "PersonalAnnouncementCell"
-//        static var rowHeight:CGFloat! = 310
-//    }
-
-
+    //    private struct  personalAnnouncementCellConstants {
+    //        static var cellIdentifier:String = "PersonalAnnouncementCell"
+    //        static var rowHeight:CGFloat! = 310
+    //    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        communityView.isHidden = true
+        self.searchBar.delegate = self
         //MARK:- For UI Design Notification
         let photosNib = UINib(nibName: "PhotosCell", bundle: nil)
         tableView.register(photosNib, forCellReuseIdentifier: photosCellConstants.cellIdentifier as String)
@@ -94,54 +109,151 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         let personalThreadNib = UINib(nibName: "PrivateThreadsCell", bundle: nil)
         tableView.register(personalThreadNib, forCellReuseIdentifier: personalThreadsCellConstants.cellIdentifier as String)
         
+        if UserPreferences.SelectedCommunityName == "" {
+            headingBtn.setTitle("All", for: .normal)
+        }else{
+            headingBtn.setTitle(UserPreferences.SelectedCommunityName, for: .normal)
+        }
+         notifNoRecordsView.isHidden = true
         //Fetch Feed Items
-        let delayTime = DispatchTime.now() + Double(Int64(1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-        DispatchQueue.main.asyncAfter(deadline: delayTime) {
-           
-            self.getFeedList()
-            self.checkNewFeed()
-        }
+        //self.getFeedList()
     }
     
-    func checkNewFeed() {
-        DataConnectionManager.requestGETURL(api: FeedUpdateAPI, para: ["":""], success: {
-            (response) -> Void in
-            print(response)
-            ActivityIndicator.hide()
-            let data = response as? NSDictionary
-            self.defaults.set(data?.object(forKey: "lastItemTime"), forKey: "LastModified")
-            
-        }) {
-            (error) -> Void in
-            ActivityIndicator.hide()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if UserPreferences.SelectedCommunityName == "" {
+            headingBtn.setTitle("All", for: .normal)
+        }else{
+            headingBtn.setTitle(UserPreferences.SelectedCommunityName, for: .normal)
         }
-     }
-    
-    func onTimerTick() {
-        DataConnectionManager.requestGETURL(api: FeedUpdateAPI, para: ["":""], success: {
-            (response) -> Void in
-            print(response)
-            ActivityIndicator.hide()
-            let data = response as? NSDictionary
-            if data?.object(forKey: "lastItemTime") as? NSNumber != self.defaults.object(forKey: "LastModified") as? NSNumber {
-                self.getFeedList1()
-            }
 
-        }) {
-            (error) -> Void in
-            ActivityIndicator.hide()
-        }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         messageBtn.isHidden = true
         pictureBtn.isHidden = true
         directBtn.isHidden = true
-        
-        //Schedule For New Feed
-        Timer.scheduledTimer(timeInterval: 0, target: self, selector: #selector(MyUpToUsFeedViewController.onTimerTick), userInfo: nil, repeats: false)
+        onTimerTick()
+        self.getFeedList()
     }
+    
+    // MARK: UISearchBarDelegate functions
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchActive = false
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        searchActive = false
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        searchActive = false
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        searchActive = false
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.filterListArr = self.newsTypeList.filter({( feed: Feed) -> Bool in
+            let tmp = feed.ownerName!.lowercased()
+            var tmp1 = feed.communityName!.lowercased()
+            var tmp2 = feed.newsType!.lowercased()
+            var tmp3 = feed.newsItemName!.lowercased()
+            
+            //print(tmp?.range(of: searchText.lowercased()))
+            //print($0.firstName!.rangeOfString(searchText) != nil)
+            return (tmp.range(of: searchText.lowercased()) != nil) || (tmp1.range(of: searchText.lowercased()) != nil) || (tmp2.range(of: searchText.lowercased()) != nil) || (tmp3.range(of: searchText.lowercased()) != nil)
+            
+        })
+        if(searchText == ""){
+            searchActive = false
+        } else {
+            searchActive = true
+        }
+        DispatchQueue.main.async( execute: {
+            if searchBar.text == "" {
+                self.searchBar.resignFirstResponder()
+            }
+        })
+        self.tableView.reloadData()
+    }
+
+
+    @IBAction func menuButtonClick(_ sender: UIButton) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+        self.present(controller, animated: true, completion: nil)
+    }
+    
+    @IBAction func inviteButtonClick(_ sender: UIButton) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "InviteViewController") as! InviteViewController
+        self.present(controller, animated: true, completion: nil)
+    }
+    
+    func onTimerTick() {
+        DataConnectionManager.requestGETURL1(api: FeedUpdateAPI, para: ["":""], success: {
+            (response) -> Void in
+            
+            let data = response as? NSDictionary
+            
+            if data != nil {
+                let status = data?.object(forKey: "status") as? String
+                if (status == "2") {
+                    self.notifNoRecordsView.isHidden = false
+
+                }else {
+                    if data?.object(forKey: "lastItemTime") as? NSNumber != self.defaults.object(forKey: "LastModified") as? NSNumber {
+                        self.defaults.set(data?.object(forKey: "lastItemTime"), forKey: "LastModified")
+                        self.getFeedList()
+                    }
+                }
+                
+            }
+            
+        }) {
+            (error) -> Void in
+        }
+    }
+    
+    //MARk:- Top Menu Community
+    @IBAction func topMenuButtonClick(_ sender: UIButton) {
+        fetchCommunity()
+        appDelegate.tabbarView?.isHidden = true
+        communityView.isHidden = false
+     }
+    
+    //MARK: Fetch Community Records
+    func fetchCommunity() {
+        self.communityList.removeAllObjects()
+
+        DataConnectionManager.requestGETURL(api: TopMenuCommunity, para: ["":""], success: {
+            (response) -> Void in
+            
+            let item = response as! NSArray
+            var dic1 = [String : String]()
+            dic1["id"] = "0"
+            dic1["name"] = "All Community"
+            self.communityList.add(Community(info: dic1 as NSDictionary?))
+            
+            for index in 0..<item.count {
+                let dic = item.object(at: index) as! NSDictionary
+                self.communityList.add(Community(info: dic))
+            }
+            self.communityTableView.reloadData()
+        }) {
+            (error) -> Void in
+            
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            //self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    @IBAction func closeMenuButtonClick(_ sender: UIButton) {
+        communityView.isHidden = true
+        appDelegate.tabbarView?.isHidden = false
+    }
+    
     
     //MARK:- Mail Composer
     func sendEmail(_ data: Feed) {
@@ -149,7 +261,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
             let mail = MFMailComposeViewController()
             mail.mailComposeDelegate = self
             mail.setToRecipients([data.ownerEmail!])
-            mail.setMessageBody("<p>You're so awesome!</p>", isHTML: true)
+            mail.setMessageBody("", isHTML: true)
             
             present(mail, animated: true, completion: nil)
         } else {
@@ -170,66 +282,101 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     }
     
     func getFeedList1() {
-        DataConnectionManager.requestGETURL(api: FeedAPI, para: ["":""], success: {
+        DataConnectionManager.requestGETURL1(api: FeedAPI, para: ["":""], success: {
             (response) -> Void in
-            print(response)
-            ActivityIndicator.hide()
-             self.newsTypeList.removeAll()
+            self.newsTypeList.removeAll()
             self.newsList = response as! NSArray
             
             for i in 0 ..< self.newsList.count {
                 let result = self.newsList.object(at: i) as? NSDictionary
                 let data = Feed(info: result)
-                if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" {
-                    self.newsTypeList.append(data)
+                
+                if UserPreferences.SelectedCommunityID == 001 {
+                    if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" {
+                        self.newsTypeList.append(data)
+                    }
+                }else {
+                    if data.communityId == UserPreferences.SelectedCommunityID {
+                        if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" {
+                            self.newsTypeList.append(data)
+                        }
+                    }
                 }
+                
             }
             if self.newsTypeList.count > 0 {
+                self.communityView.isHidden = true
+                if UserPreferences.SelectedCommunityName == "none" {
+                    self.headingBtn.setImage(UIImage(named: "top-down-arrow"), for: .normal)
+                    self.headingBtn.setTitle("My UpToUs Feed", for: .normal)
+                }else {
+                    self.headingBtn.setImage(UIImage(named: "top-up-arrow"), for: .normal)
+                    self.headingBtn.setTitle("News Feed", for: .normal)
+                    self.newsTypeList = self.newsTypeList.filter({( feed: Feed) -> Bool in
+                        let tmp = feed.communityName!.lowercased()
+                        let communityName = UserPreferences.SelectedCommunityName
+                        return (tmp.range(of: communityName.lowercased()) != nil)
+                    })
+                }
                 self.tableView.reloadData()
             }
             
-            
         }) {
             (error) -> Void in
-            ActivityIndicator.hide()
+            
             let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            //self.present(alert, animated: true, completion: nil)
         }
-
+        
     }
-
-
+    
+    
     func getFeedList() {
-        ActivityIndicator.show()
+        appDelegate.tabbarView?.isHidden = false
         DataConnectionManager.requestGETURL(api: FeedAPI, para: ["":""], success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
-             self.newsTypeList.removeAll()
+            
+            self.newsTypeList.removeAll()
             self.newsList = response as! NSArray
             
             for i in 0 ..< self.newsList.count {
                 let result = self.newsList.object(at: i) as? NSDictionary
                 let data = Feed(info: result)
-                if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" {
-                    self.newsTypeList.append(data)
+                
+                if UserPreferences.SelectedCommunityID == 001 {
+                    if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" {
+                        self.newsTypeList.append(data)
+                    }
+                }else {
+                    if data.communityId == UserPreferences.SelectedCommunityID {
+                        if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" {
+                            self.newsTypeList.append(data)
+                        }
+                    }
                 }
+                
             }
             if self.newsTypeList.count > 0 {
+                self.communityView.isHidden = true
+                if UserPreferences.SelectedCommunityID == 001 {
+                }else {
+                    let communityID = UserPreferences.SelectedCommunityID
+                    self.newsTypeList = self.newsTypeList.filter{ $0.communityId == communityID }
+                }
                 self.tableView.reloadData()
             }
             
-            
         }) {
             (error) -> Void in
-            ActivityIndicator.hide()
+            
             let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            //self.present(alert, animated: true, completion: nil)
         }
     }
-
+    
     //MARK: PhotoCell Delegate
     func photoReplyTo(_ sender: NSInteger) {
         let data = newsTypeList[sender]
@@ -256,6 +403,13 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReadMoreViewController") as! ReadMoreViewController
         controller.data = data
+        self.present(controller, animated: true, completion: nil)
+    }
+    
+    func openAlbumPage(_ sender: NSInteger) {
+        let data = newsTypeList[sender]
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "DetailsLibraryViewController") as! DetailsLibraryViewController
+        controller.albumID = ("\(data.newsItemId!)")
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -333,7 +487,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
+            
             let driverDatas = (response as? NSArray)!
             let dic = driverDatas.object(at: 0) as? NSDictionary
             let type = dic?.object(forKey: "type") as! String
@@ -341,10 +495,6 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
             
         }) {
             (error) -> Void in
-            ActivityIndicator.hide()
-//            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-//            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
-//            self.present(alert, animated: true, completion: nil)
         }
         
     }
@@ -413,6 +563,9 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     
     
+    
+    
+    
     //MARK:- Post Button
     @IBAction func postButtonClick(_ sender: UIButton) {
         if isButtonSelected == true {
@@ -420,7 +573,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
             isButtonSelected = false
             UIView.animate(withDuration: 1.0, animations: {
                 
-            }) 
+            })
             UIView.animate(withDuration: 0.15, animations: {
                 self.pictureBtn.center = self.postBtn.center
                 self.pictureBtn.center = self.postBtn.center
@@ -442,7 +595,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
             let button2Center = CGPoint(x: postBtn.center.x + radius * sin(-CGFloat(160.degreesToRadians)), y:  postBtn.center.y + radius * cos(-CGFloat(160.degreesToRadians)))
             let button3Center = CGPoint(x: postBtn.center.x + radius * sin(-CGFloat(130.degreesToRadians)), y:  postBtn.center.y + radius * cos(-CGFloat(130.degreesToRadians)))
             let button4Center = CGPoint(x: postBtn.center.x + radius * sin(-CGFloat(100.degreesToRadians)), y:  postBtn.center.y + radius * cos(-CGFloat(100.degreesToRadians)))
-
+            
             UIView.animate(withDuration: 0.35, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.0, options: .curveEaseOut, animations: {
                 self.messageBtn.center = button2Center
                 self.pictureBtn.center = button3Center
@@ -454,11 +607,13 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     }
     
     @IBAction func messageBtnClick(_ sender: UIButton) {
-    
+        let controller = MessagePostViewController(nibName: "MessagePostViewController", bundle: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
     @IBAction func pictureBtnClick(_ sender: UIButton) {
-        
+        let controller = ImagePostViewController(nibName: "ImagePostViewController", bundle: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
     @IBAction func directBtnClick(_ sender: UIButton) {
@@ -501,163 +656,165 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if filterStatus == true {
-            return self.searchedArray.count
-        }else{
-            return self.newsTypeList.count
+        if tableView == communityTableView {
+            return self.communityList.count
+            
+        }else {
+            if(searchActive) {
+                return self.filterListArr.count
+            } else{
+                return self.newsTypeList.count
+            }
         }
-        //return self.newsTypeList.count
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        var  sectionName: String = ""
+        if tableView != communityTableView {
+            if(searchActive) {
+                sectionName = "SEARCH RESULTS"
+            }
+            return sectionName
+        }else {
+            return ""
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let data: Feed!
-        
-        if filterStatus == true {
-            data = searchedArray[(indexPath as NSIndexPath).row]
-        }else{
-            data = newsTypeList[(indexPath as NSIndexPath).row]
-        }
-        switch feedNewsType(rawValue: data.newsType!)! {
-           
+        if tableView == communityTableView {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "CommunityCell") as! CommunityCell
+            let data = self.communityList[(indexPath as NSIndexPath).row] as? Community
+            cell.update(data!)
+            // cell.communityNameLbl.text = "ghghgjgytjhkjkjhl"
+            return cell
+            
+            
+        }else {
+            let data: Feed!
+            if(searchActive) {
+                data = self.filterListArr[(indexPath as NSIndexPath).row]
+            }else {
+                data = self.newsTypeList[(indexPath as NSIndexPath).row]
+            }
+            
+            switch feedNewsType(rawValue: data.newsType!)! {
+                
             case .Photos :
                 let cell: PhotosCell = tableView.dequeueReusableCell(withIdentifier: photosCellConstants.cellIdentifier ) as! PhotosCell
                 cell.commentBtn.tag = (indexPath as NSIndexPath).row
                 cell.comment1Btn.tag = (indexPath as NSIndexPath).row
                 cell.replyToBtn.tag = (indexPath as NSIndexPath).row
                 cell.readMoreBtn.tag = (indexPath as NSIndexPath).row
+                cell.albumPageBtn.tag = (indexPath as NSIndexPath).row
                 cell.delegate = self
                 
                 cell.updateData(data)
-            
+                
                 return cell
-            
-        case .File :
-            let cell: FileCell = tableView.dequeueReusableCell(withIdentifier: fileCellConstants.cellIdentifier ) as! FileCell
-            cell.commentBtn.tag = (indexPath as NSIndexPath).row
-            cell.comment1Btn.tag = (indexPath as NSIndexPath).row
-            cell.replyToBtn.tag = (indexPath as NSIndexPath).row
-            cell.pdfDownloadBtn.tag = (indexPath as NSIndexPath).row
-            cell.delegate = self
-
-            cell.updateData(data)
-            
-            return cell
-            
-        case .Announcement :
-            let cell: AnnouncementCell = tableView.dequeueReusableCell(withIdentifier: announcementCellConstants.cellIdentifier ) as! AnnouncementCell
-            cell.replyAllBtn.tag = (indexPath as NSIndexPath).row
-            cell.postBtn.tag = (indexPath as NSIndexPath).row
-            cell.replyToBtn.tag = (indexPath as NSIndexPath).row
-            cell.delegate = self
-
-            cell.updateData(data)
-            
-            return cell
-            
-        case .Opportunity :
-            let cell: OpportunityCell = tableView.dequeueReusableCell(withIdentifier: opportunityCellConstants.cellIdentifier ) as! OpportunityCell
-            cell.commentBtn.tag = (indexPath as NSIndexPath).row
-            cell.comment1Btn.tag = (indexPath as NSIndexPath).row
-            cell.replyToBtn.tag = (indexPath as NSIndexPath).row
-            cell.delegate = self
-
-            cell.updateData(data)
-            
-            return cell
-            
-        case .PrivateThreads :
-            let cell: PrivateThreadsCell = tableView.dequeueReusableCell(withIdentifier: personalThreadsCellConstants.cellIdentifier ) as! PrivateThreadsCell
-            cell.replyAllBtn.tag = (indexPath as NSIndexPath).row
-            cell.replyToBtn.tag = (indexPath as NSIndexPath).row
-            cell.commentBtn.tag = (indexPath as NSIndexPath).row
-            cell.delegate = self
-
-            cell.updateData(data)
-            
-            return cell
+                
+            case .File :
+                let cell: FileCell = tableView.dequeueReusableCell(withIdentifier: fileCellConstants.cellIdentifier ) as! FileCell
+                cell.commentBtn.tag = (indexPath as NSIndexPath).row
+                cell.comment1Btn.tag = (indexPath as NSIndexPath).row
+                cell.replyToBtn.tag = (indexPath as NSIndexPath).row
+                cell.pdfDownloadBtn.tag = (indexPath as NSIndexPath).row
+                cell.delegate = self
+                
+                cell.updateData(data)
+                
+                return cell
+                
+            case .Announcement :
+                let cell: AnnouncementCell = tableView.dequeueReusableCell(withIdentifier: announcementCellConstants.cellIdentifier ) as! AnnouncementCell
+                cell.replyAllBtn.tag = (indexPath as NSIndexPath).row
+                cell.postBtn.tag = (indexPath as NSIndexPath).row
+                cell.replyToBtn.tag = (indexPath as NSIndexPath).row
+                cell.delegate = self
+                
+                cell.updateData(data)
+                
+                return cell
+                
+            case .Opportunity :
+                let cell: OpportunityCell = tableView.dequeueReusableCell(withIdentifier: opportunityCellConstants.cellIdentifier ) as! OpportunityCell
+                cell.commentBtn.tag = (indexPath as NSIndexPath).row
+                cell.comment1Btn.tag = (indexPath as NSIndexPath).row
+                cell.replyToBtn.tag = (indexPath as NSIndexPath).row
+                cell.signUpBtn.tag = (indexPath as NSIndexPath).row
+                cell.delegate = self
+                
+                cell.updateData(data)
+                
+                return cell
+                
+            case .PrivateThreads :
+                let cell: PrivateThreadsCell = tableView.dequeueReusableCell(withIdentifier: personalThreadsCellConstants.cellIdentifier ) as! PrivateThreadsCell
+                cell.replyAllBtn.tag = (indexPath as NSIndexPath).row
+                cell.replyToBtn.tag = (indexPath as NSIndexPath).row
+                cell.commentBtn.tag = (indexPath as NSIndexPath).row
+                cell.delegate = self
+                
+                cell.updateData(data)
+                
+                return cell
+            }
         }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let data: Feed!
-        /*if filterStatus == true {
-            data = searchedArray[indexPath.row]
-        }else{
-            data = newsTypeList[indexPath.row]
-        }
-        if data.newsType! == "Photos" {
-            return 450
-        }else if data.newsType! == "File" {
-            return 275
-        }else if data.newsType! == "Announcement" {
-            return 310
-        }else if data.newsType! == "Opportunity" {
-            return 270
-        }else if data.newsType! == "PrivateThreads" {
-            return 310
-        }else{
-            return 0
-        }*/
         
-        if filterStatus == true {
-            data = searchedArray[(indexPath as NSIndexPath).row]
-        }else{
-            data = newsTypeList[(indexPath as NSIndexPath).row]
+        if tableView == communityTableView {
+            return 50
+        }else {
+            let data: Feed!
+            if(searchActive) {
+                data = self.filterListArr[(indexPath as NSIndexPath).row]
+            }else {
+                data = self.newsTypeList[(indexPath as NSIndexPath).row]
+            }
+            switch feedNewsType(rawValue: data.newsType!)! {
+                
+            case .Photos :
+                return 308
+                
+            case .File :
+                return 250
+                
+            case .Announcement :
+                return 310
+                
+            case .Opportunity :
+                return 270
+                
+            case .PrivateThreads :
+                return 310
+            }
         }
-        switch feedNewsType(rawValue: data.newsType!)! {
-            
-        case .Photos :
-            return 450
-            
-        case .File :
-            return 275
-            
-        case .Announcement :
-            return 310
-            
-        case .Opportunity :
-            return 270
-            
-        case .PrivateThreads :
-            return 310
-            
-        }
-
-        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
-        /*let data = newsTypeList[indexPath.row]
-        switch feedNewsType(rawValue: data.newsType!)! {
-            
-        case .Photos :
-            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ReadMoreViewController") as! ReadMoreViewController
-            controller.data = data
-            self.presentViewController(controller, animated: true, completion: nil)
-            
-        case .File :
-            let cell: FileCell = tableView.dequeueReusableCellWithIdentifier(fileCellConstants.cellIdentifier ) as! FileCell
-            cell.updateData(data)
-            return
-            
-        case .Announcement :
-            let cell: AnnouncementCell = tableView.dequeueReusableCellWithIdentifier(announcementCellConstants.cellIdentifier ) as! AnnouncementCell
-            cell.delegate = self
-            cell.updateData(data)
-            return
-            
-        case .Opportunity :
-            let cell: OpportunityCell = tableView.dequeueReusableCellWithIdentifier(opportunityCellConstants.cellIdentifier ) as! OpportunityCell
-            cell.updateData(data)
-            return
-            
-        case .PrivateThreads :
-            let cell: PrivateThreadsCell = tableView.dequeueReusableCellWithIdentifier(personalThreadsCellConstants.cellIdentifier ) as! PrivateThreadsCell
-            cell.updateData(data)
-            return
-        }*/
+        
+        if tableView == communityTableView {
+            let data = self.communityList[(indexPath as NSIndexPath).row] as? Community
+            if data?.name == "All Community" {
+                topMenuStatus = 0
+                headingBtn.setImage(UIImage(named: "top-down-arrow"), for: .normal)
+                headingBtn.setTitle("All Community", for: .normal)
+                communityView.isHidden = true
+                UserPreferences.SelectedCommunityID = 001
+                UserPreferences.SelectedCommunityName = ""
+                getFeedList()
+            }else {
+                headingBtn.setImage(UIImage(named: "top-up-arrow"), for: .normal)
+                UserPreferences.SelectedCommunityName = (data?.name)!
+                headingBtn.setTitle((data?.name)!, for: .normal)
+                UserPreferences.SelectedCommunityID = (data?.communityId)!
+                communityView.isHidden = true
+                getFeedList()
+            }
+        }
     }
 }
 
@@ -675,21 +832,9 @@ extension MyUpToUsFeedViewController: UITextFieldDelegate {
         }else {
             filterStatus = false
         }
-        
-        
-        /*let destinations = self.newsTypeList.filter { (destinations ) -> Bool in
-            let predicate = NSPredicate(format: "SELF.name beginswith[c] %@", text)
-            let feed = (destinations as? [Feed])
-            
-            let feed = self.newsTypeList.filteredArrayUsingPredicate(predicate) //as! [Feed]
-            for city in cities{
-                searchedArray.append(city)
-            }
-            return cities.count != 0
-        }*/
         tableView.reloadData()
     }
-
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         var subString: NSString = searchTextField.text! as NSString
         subString = subString.replacingCharacters(in: range, with: string) as NSString
@@ -697,39 +842,39 @@ extension MyUpToUsFeedViewController: UITextFieldDelegate {
         getFilteredFilter(subString as String)
         return true
     }
-
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         searchedArray.removeAll()
         tableView.reloadData()
-    
-        //Add Search Table View
-       /* if !tableView.isDescendantOfView(view) {
-            view.addSubview(tableView)
-            tableView.layer.cornerRadius = 4.0;
-            //tableView.layer.borderColor = cyanColor.CGColor
-            tableView.layer.borderWidth = 2.0
-            var frame = tableView.frame
-            frame.origin.x = filtersContainerView.frame.origin.x
-            frame.origin.y = CGRectGetMaxY(filtersContainerView.frame)
-            frame.size.width = filtersContainerView.frame.size.width
-            frame.size.height = 300
-            tableView.frame = frame
         
-        UIView.animateWithDuration(0.35, animations: { () -> Void in
-            
-            var frame = self.tableView.frame
-            frame.origin.x = self.filtersContainerView.frame.origin.x
-            frame.origin.y = CGRectGetMaxY(self.searchTextField.frame) + 5
-            self.tableView.frame = frame
-        })
-     }*/
-  }
-
-func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-    return true
-}
-
-
+        //Add Search Table View
+        /* if !tableView.isDescendantOfView(view) {
+         view.addSubview(tableView)
+         tableView.layer.cornerRadius = 4.0;
+         //tableView.layer.borderColor = cyanColor.CGColor
+         tableView.layer.borderWidth = 2.0
+         var frame = tableView.frame
+         frame.origin.x = filtersContainerView.frame.origin.x
+         frame.origin.y = CGRectGetMaxY(filtersContainerView.frame)
+         frame.size.width = filtersContainerView.frame.size.width
+         frame.size.height = 300
+         tableView.frame = frame
+         
+         UIView.animateWithDuration(0.35, animations: { () -> Void in
+         
+         var frame = self.tableView.frame
+         frame.origin.x = self.filtersContainerView.frame.origin.x
+         frame.origin.y = CGRectGetMaxY(self.searchTextField.frame) + 5
+         self.tableView.frame = frame
+         })
+         }*/
+    }
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return true
+    }
+    
+    
 }
 
 

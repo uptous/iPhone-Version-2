@@ -10,19 +10,19 @@ import UIKit
 
 class TabBarViewController: UITabBarController {
 
-    var tabbarView: CustomTabBarView?
+    //var tabbarView: CustomTabBarView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+   
         self.tabBar.isHidden = true
-        tabbarView =  Bundle.main.loadNibNamed("CustomTabBarView", owner: nil, options: nil)?.first! as? CustomTabBarView
-        tabbarView?.frame = CGRect(x: 0, y: self.view.frame.height - 50, width: self.view.frame.width, height: 50)
-        self.view.addSubview(tabbarView!)
+        appDelegate.tabbarView =  Bundle.main.loadNibNamed("CustomTabBarView", owner: nil, options: nil)?.first! as? CustomTabBarView
+        appDelegate.tabbarView?.frame = CGRect(x: 0, y: self.view.frame.height - 50, width: self.view.frame.width, height: 50)
+        self.view.addSubview(appDelegate.tabbarView!)
         //self.selectedIndex = 0
         
         //Custom Button Action
-        tabbarView!.newsFeedTapHandler = {
+        appDelegate.tabbarView!.newsFeedTapHandler = {
             (firstTabBar: CustomTabBarView) in
             self.selectedIndex = 0
             
@@ -43,7 +43,7 @@ class TabBarViewController: UITabBarController {
             appDelegate.window?.rootViewController?.view.bringSubviewToFront(vc.view)*/
         }
         
-        tabbarView!.contactsTapHandler = {
+        appDelegate.tabbarView!.contactsTapHandler = {
             (secondTabBar: CustomTabBarView) in
             self.selectedIndex = 1
             
@@ -56,7 +56,7 @@ class TabBarViewController: UITabBarController {
             secondTabBar.calendarBtn1.isHidden = true
         }
         
-        tabbarView!.signupTapHandler = {
+        appDelegate.tabbarView!.signupTapHandler = {
             (thirdTabBar: CustomTabBarView) in
             self.selectedIndex = 2
             
@@ -76,7 +76,7 @@ class TabBarViewController: UITabBarController {
 //            appDelegate.window?.rootViewController?.view.bringSubviewToFront(vc.view)
         }
         
-        tabbarView!.libraryTapHandler = {
+        appDelegate.tabbarView!.libraryTapHandler = {
             (fourthTabBar: CustomTabBarView) in
             self.selectedIndex = 3
             
@@ -90,7 +90,7 @@ class TabBarViewController: UITabBarController {
             fourthTabBar.calendarBtn1.isHidden = true
         }
         
-        tabbarView!.calendarTapHandler = {
+        appDelegate.tabbarView!.calendarTapHandler = {
             (fifthTabBar: CustomTabBarView) in
             self.selectedIndex = 4
             

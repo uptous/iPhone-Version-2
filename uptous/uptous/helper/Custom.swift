@@ -9,6 +9,24 @@
 import UIKit
 
 class Custom: NSObject {
+    
+    class func setGIFImage(name: String) -> UIImage {
+        let imageData = try? Data(contentsOf: Bundle.main.url(forResource: ("\(name)"), withExtension: "gif")!)
+        let advTimeGif = UIImage.gifImageWithData(imageData!)
+        //gifImageView.image = advTimeGif
+        
+        return advTimeGif!
+    }
+    
+    class func dayStringFromTime12(_ unixTime: Double) -> String {
+        let epocTime = TimeInterval(unixTime) / 1000
+        let dateFormatter = DateFormatter()
+        let myDate = Date(timeIntervalSince1970:  epocTime)
+        dateFormatter.locale = Locale(identifier: Locale.current.identifier)
+        dateFormatter.dateFormat = "yyyy-dd-mm hh:m:SSS"
+        
+        return dateFormatter.string(from: myDate)
+    }
 
     class func dayStringFromTime(_ unixTime: Double) -> String {
         let epocTime = TimeInterval(unixTime) / 1000
@@ -29,6 +47,38 @@ class Custom: NSObject {
         
         return dateFormatter.string(from: myDate)
     }
+    
+    class func dayStringFromTime2(_ unixTime: Double) -> String {
+        let epocTime = TimeInterval(unixTime) / 1000
+        let dateFormatter = DateFormatter()
+        let myDate = Date(timeIntervalSince1970:  epocTime)
+        dateFormatter.locale = Locale(identifier: Locale.current.identifier)
+        dateFormatter.dateFormat = "EEE, MMM d"
+        
+        return dateFormatter.string(from: myDate)
+    }
+    
+    class func dayStringFromTime3(_ unixTime: Double) -> String {
+        let epocTime = TimeInterval(unixTime) / 1000
+        let dateFormatter = DateFormatter()
+        let myDate = Date(timeIntervalSince1970:  epocTime)
+        dateFormatter.locale = Locale(identifier: Locale.current.identifier)
+        dateFormatter.dateFormat = "EEE, MMM d, hh:m a"
+        
+        return dateFormatter.string(from: myDate)
+    }
+    
+    class func dayStringFromTime4(_ unixTime: Double) -> String {
+        let epocTime = TimeInterval(unixTime) / 1000
+        let dateFormatter = DateFormatter()
+        let myDate = Date(timeIntervalSince1970:  epocTime)
+        dateFormatter.locale = Locale(identifier: Locale.current.identifier)
+        dateFormatter.dateFormat = "hh:m a"
+        
+        return dateFormatter.string(from: myDate)
+    }
+
+
     
     //Mark:- Get Label Width with text
     class func widthSize(_ text:String, fontName:String, fontSize:CGFloat) -> CGFloat{

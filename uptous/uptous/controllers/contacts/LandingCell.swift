@@ -29,18 +29,62 @@ class LandingCell: UITableViewCell {
     }
     
     func updateView(_ data: Contacts) {
-        nameLbl.text = ("\(data.firstName!)") + (" \(data.lastName!)")
-        teamLbl.text = ""
+        ownerView.isHidden = false
+        ownerNameLbl.isHidden = false
+        ownerPhotoImgView.isHidden = true
         
-        if data.photo == "https://dsnn35vlkp0h4.cloudfront.net/images/blank_image.gif" {
+        if data.firstName != nil &&  data.lastName != nil {
+            nameLbl.text = ("\(data.firstName!)") + (" \(data.lastName!)")
+            
+            if data.firstName != "" && data.lastName != "" {
+                let firstName = data.firstName!.capitalized.characters.first
+                let secondName = data.lastName!.capitalized.characters.first
+                let resultString = ("\(firstName!)") + ("\(secondName!)")
+                ownerNameLbl.text = resultString
+            }
+            
+            
+            let color1 = Utility.hexStringToUIColor(hex: data.memberBackgroundColor!)
+            let color2 = Utility.hexStringToUIColor(hex: data.memberTextColor!)
+            ownerView.backgroundColor = color1
+            ownerNameLbl.textColor = color2
+        }
+        
+        
+        
+        teamLbl.text = ""
+        var childrens = [String]()
+        /*if data.children != nil {
+            if (data.children?.count)! > 0 {
+                for i in 0..<(data.children?.count)! {
+                    let dic = data.children?.object(at: i) as! NSDictionary
+                    childrens.append("\((dic.object(forKey: "firstName"))!)")
+                }
+                let stringRepresentation1 = childrens.joined(separator: ", ")
+                teamLbl.text = "\(stringRepresentation1)"
+            }else {
+                teamLbl.text = ""
+            }
+        }*/
+        if data.children != nil {
+            for i in 0..<(data.children?.count)! {
+                let dic = data.children?.object(at: i) as! NSDictionary
+                childrens.append("\((dic.object(forKey: "firstName"))!)")
+            }
+            let stringRepresentation1 = childrens.joined(separator: ", ")
+            teamLbl.text = "\(stringRepresentation1)"
+            
+        }
+
+        
+       /* //if data.photo == "https://dsnn35vlkp0h4.cloudfront.net/images/blank_image.gif" {
             ownerView.isHidden = false
             ownerNameLbl.isHidden = false
             ownerPhotoImgView.isHidden = true
             
-            let stringArray = nameLbl.text?.components(separatedBy: " ")
-            let firstName = stringArray![0]
-            let secondName = stringArray![1]
-            let resultString = "\((firstName.characters.first!))\((secondName.characters.first!))"
+            let firstName = data.firstName!.capitalized.characters.first
+            let secondName = data.lastName!.capitalized.characters.first
+            let resultString = ("\(firstName!)") + ("\(secondName!)")
             
             ownerNameLbl.text = resultString
             let color1 = Utility.hexStringToUIColor(hex: data.memberBackgroundColor!)
@@ -55,7 +99,7 @@ class LandingCell: UITableViewCell {
             if let avatarUrl = data.photo {
                 ownerPhotoImgView.setUserAvatar(avatarUrl)
             }
-        }
+        }*/
         
     }
 

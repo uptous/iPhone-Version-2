@@ -24,7 +24,8 @@ class Contacts: NSObject {
     var memberBackgroundColor: String?
     var memberTextColor: String?
     var children: NSArray?
-    var communities: NSArray?
+    var communities: Array<Community>?
+    var isExpendable : Bool?
     
     init(info: NSDictionary?) {
         super.init()
@@ -43,8 +44,9 @@ class Contacts: NSObject {
         self.memberBackgroundColor = info?.object(forKey: "memberBackgroundColor") as? String ?? ""
         self.memberTextColor = info?.object(forKey: "memberTextColor") as? String ?? ""
         self.children = info?.object(forKey: "children") as? NSArray
-        self.communities = info?.object(forKey: "communities") as? NSArray 
-        
+        self.communities = info?.object(forKey: "communities") as! Array<Community>? 
+        self.isExpendable = false
+
     }
 
 }

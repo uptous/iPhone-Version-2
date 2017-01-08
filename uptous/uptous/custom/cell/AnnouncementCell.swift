@@ -49,16 +49,20 @@ class AnnouncementCell: UITableViewCell {
     @IBOutlet weak var postBtn: UIButton!
     @IBOutlet weak var replyToBtn: UIButton!
     @IBOutlet weak var identifierView: GroupIdentifierView!
+    @IBOutlet weak var ownerView: UIView!
+    @IBOutlet weak var ownerNameLbl: UILabel!
     
     var delegate: AnnouncementCellDelegate!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+        //Custom.fullCornerView(ownerView)
+
         contentsView.layer.borderColor = UIColor(red: CGFloat(0.8), green: CGFloat(0.8), blue: CGFloat(0.8), alpha: CGFloat(1)).cgColor
         contentsView.layer.borderWidth = CGFloat(1.0)
         contentsView.layer.cornerRadius = 8.0
         //commentLbl.hidden = true
+        Custom.fullCornerView(ownerView)
     }
     
     @IBAction func replyTo(_ sender: UIButton) {
@@ -85,27 +89,28 @@ class AnnouncementCell: UITableViewCell {
     func updateData(_ data: Feed) {
         
         if data.ownerPhotoUrl == "https://dsnn35vlkp0h4.cloudfront.net/images/blank_image.gif" {
-            identifierView.isHidden = false
+            ownerView.isHidden = false
             ownerPhotoImgView.isHidden = true
             let stringArray = data.ownerName?.components(separatedBy: " ")
             let firstName = stringArray![0]
             let secondName = stringArray![1]
-            
             let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
             
-            identifierView.abbrLabel.text = resultString
+            ownerNameLbl.text = resultString
             let color1 = Utility.hexStringToUIColor(hex: data.ownerBackgroundColor!)
-            identifierView.backgroundLayerColor = color1
             let color2 = Utility.hexStringToUIColor(hex: data.ownerTextColor!)
-            identifierView.abbrLabel.textColor = color2
-
+            ownerView.backgroundColor = color1
+            ownerNameLbl.textColor = color2
+            
+            
         }else {
-            identifierView.isHidden = true
+            ownerView.isHidden = true
             ownerPhotoImgView.isHidden = false
             if let avatarUrl = data.ownerPhotoUrl {
                 ownerPhotoImgView.setUserAvatar(avatarUrl)
             }
         }
+
 
         let replyName = data.ownerName?.components(separatedBy: " ")[0]
         replyToBtn.setTitle(("Reply to" + " " + replyName!), for: UIControlState())
@@ -124,7 +129,11 @@ class AnnouncementCell: UITableViewCell {
         
         newsItemNameLbl.text = data.newsItemName
         //newsItemDescriptionLbl.text = data.newsItemDescription!.decodeHTML()
-        webView.loadHTMLString(data.newsItemDescription!,baseURL: nil)
+        
+        
+        DispatchQueue.main.async(execute: {
+            self.webView.loadHTMLString(data.newsItemDescription!,baseURL: nil)
+        })
         
         if data.comments?.count > 0 {
             postBtn.isHidden = false

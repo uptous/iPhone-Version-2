@@ -20,6 +20,8 @@ class VolunteeredViewController: GeneralViewController {
 
     var data: Items!
     var sheetData: SignupSheet!
+    var sheetDataID: String?
+
     var itemsDatas = NSArray()
     
     override func viewDidLoad() {
@@ -27,7 +29,7 @@ class VolunteeredViewController: GeneralViewController {
         headingLbl.text = ("Join the \((data.volunteers![0] as AnyObject).object(forKey: "firstName") as? String ?? "")")
         fromLbl.text = "Driving from: \(data.name!)"
         toLbl.text = "To: \(data.extra!)"
-        dateTimeLbl.text = ("\(Custom.dayStringFromTime1(data.dateTime!))")
+        dateTimeLbl.text = ("\(Custom.dayStringFromTime3(data.dateTime!))")
         
         let imageData = try? Data(contentsOf: Bundle.main.url(forResource: "smiley_test", withExtension: "gif")!)
         let advTimeGif = UIImage.gifImageWithData(imageData!)
@@ -52,28 +54,33 @@ class VolunteeredViewController: GeneralViewController {
     }
     
     func delete() {
-        let apiName = SignupItems + ("\(sheetData.id!)") + ("/item/\(data.Id!)/Del")
-        ActivityIndicator.show()
+        let apiName = SignupItems + ("\(sheetDataID!)") + ("/item/\(data.Id!)/Del")
         
-        ActivityIndicator.show()
-        DataConnectionManager.requestPOSTURL(api: apiName, para: ["":""], success: {
+        let stringPost = ""
+        DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
-            self.navigationController?.popViewController(animated: true)
             
-        }) {
-            (error) -> Void in
-            ActivityIndicator.hide()
-            self.navigationController?.popViewController(animated: true)
-
-        }
-       /* Alamofire.request(.POST, apiName, headers: appDelegate.loginHeaderCredentials,parameters: nil)
-            .responseJSON { response in
-                ActivityIndicator.hide()
-                self.navigationController?.popViewController(animated: true)
-        }*/
+            if response["status"] as? String == "0" {
+                DispatchQueue.main.async(execute: {
+                    let _ = self.navigationController?.popViewController(animated: true)
+                })
+            }else {
+                let msg = response["message"] as? String
+                self.showAlertWithoutCancel(title: "Error", message: msg)
+            }
+        })
+    }
+    
+    func showAlertWithoutCancel(title:String?, message:String?) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
+            //self.navigationController?.popViewController(animated: true)
+            print("you have pressed OK button");
+        }
+        alertController.addAction(OKAction)
+        self.present(alertController, animated: true, completion: nil)
     }
 
     
@@ -101,7 +108,7 @@ extension VolunteeredViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "DriverItemCell") as! DriverItemCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "VolunteeredCell") as! VolunteeredCell
         let data = self.data.volunteers![(indexPath as NSIndexPath).row] as? NSDictionary
         print(data)
         cell.updateData(data!)

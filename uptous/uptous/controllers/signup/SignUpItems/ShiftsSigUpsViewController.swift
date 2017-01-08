@@ -150,8 +150,6 @@ class ShiftsSigUpsViewController:  GeneralViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        ActivityIndicator.hide()
-
         self.fetchItems()
     }
     
@@ -165,11 +163,11 @@ class ShiftsSigUpsViewController:  GeneralViewController {
             apiName = SignupItems + ("\(data.id!)")
         }
 
-        ActivityIndicator.show()
+        
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
             print(response)
-            ActivityIndicator.hide()
+            
             self.driverDatas = (response as? NSArray)!
             let dic = self.driverDatas.object(at: 0) as? NSDictionary
             self.updateData(SignupSheet(info: dic))
@@ -179,7 +177,7 @@ class ShiftsSigUpsViewController:  GeneralViewController {
             
         }) {
             (error) -> Void in
-            ActivityIndicator.hide()
+            
             let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -219,13 +217,23 @@ extension ShiftsSigUpsViewController: UITableViewDelegate, UITableViewDataSource
         if item.volunteerStatus == "Open" {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "ItemDetailsEditingMsgViewController") as! ItemDetailsEditingMsgViewController
             controller.selectedItems = item
-            controller.data = self.data
+            //controller.data = self.data
+            if data1 != nil {
+                controller.sheetDataID = ("\(data1.newsItemId!)")
+            }else {
+                controller.sheetDataID = ("\(data.id!)")
+            }
             self.navigationController?.pushViewController(controller, animated: true)
             
         }else if item.volunteerStatus == "Volunteered" || item.volunteerStatus == "Full"{
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReadOnlyCommentViewController") as! ReadOnlyCommentViewController
             controller.selectedItems = item
-            controller.data = self.data
+            //controller.data = self.data
+            if data1 != nil {
+                controller.sheetDataID = ("\(data1.newsItemId!)")
+            }else {
+                controller.sheetDataID = ("\(data.id!)")
+            }
             
             self.navigationController?.pushViewController(controller, animated: true)
             
