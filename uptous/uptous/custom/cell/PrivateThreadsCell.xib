@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
         <array key="HelveticaNeue.ttc">
             <string>HelveticaNeue</string>
+            <string>HelveticaNeue-Bold</string>
+            <string>HelveticaNeue-Medium</string>
         </array>
     </customFonts>
     <objects>
@@ -16,28 +21,28 @@
         <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="PeH-SU-qWT" customClass="PrivateThreadsCell" customModule="uptous" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="320" height="311"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="PeH-SU-qWT" id="PNa-V8-G2S">
-                <frame key="frameInset" width="320" height="310"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PeH-SU-qWT" id="PNa-V8-G2S">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="310.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0cr-ie-gUc">
-                        <frame key="frameInset" width="1000" height="1000"/>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0cr-ie-gUc">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="310"/>
                         <subviews>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qeB-32-FOM" customClass="CustomView" customModule="uptous" customModuleProvider="target">
-                                <frame key="frameInset" width="1000" height="1000"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qeB-32-FOM" customClass="CustomView" customModule="uptous" customModuleProvider="target">
+                                <rect key="frame" x="10" y="56" width="300" height="234"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Yesterday" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kAR-Bp-C4b">
-                                        <frame key="frameInset" width="1000" height="1000"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Yesterday" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="kAR-Bp-C4b">
+                                        <rect key="frame" x="67" y="3" width="224" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="hdb-dG-wIZ"/>
-                                            <constraint firstAttribute="width" constant="150" id="tiW-Sq-rCd"/>
+                                            <constraint firstAttribute="width" constant="224" id="tiW-Sq-rCd"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                         <color key="textColor" red="0.65098039220000004" green="0.65098039220000004" blue="0.65098039220000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <webView contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d9t-It-PYD">
-                                        <frame key="frameInset" width="1000" height="1000"/>
+                                    <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d9t-It-PYD">
+                                        <rect key="frame" x="12" y="57" width="276" height="111"/>
                                         <color key="backgroundColor" red="0.28958413" green="0.31462949509999999" blue="0.32950475810000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="111" id="Uw7-K0-lL8"/>
@@ -46,8 +51,8 @@
                                             <outlet property="delegate" destination="PeH-SU-qWT" id="hdQ-my-KiI"/>
                                         </connections>
                                     </webView>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hU1-BK-hd5">
-                                        <frame key="frameInset" width="1000" height="1000"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hU1-BK-hd5">
+                                        <rect key="frame" x="150.5" y="189" width="149.5" height="45"/>
                                         <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="45" id="3c4-60-DRT"/>
@@ -61,8 +66,8 @@
                                             <action selector="replyALL:" destination="PeH-SU-qWT" eventType="touchUpInside" id="JID-MW-jsH"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Field trip pictures available to view" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="xbx-0R-vt9">
-                                        <frame key="frameInset" width="1000" height="1000"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Field trip pictures available to view" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="xbx-0R-vt9">
+                                        <rect key="frame" x="13" y="32" width="280" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="U2Q-wv-IPi"/>
                                         </constraints>
@@ -70,8 +75,8 @@
                                         <color key="textColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ngv-VE-IeJ">
-                                        <frame key="frameInset" width="1000" height="1000"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ngv-VE-IeJ">
+                                        <rect key="frame" x="177" y="169" width="109" height="19"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="109" id="Jc5-oJ-NYb"/>
                                             <constraint firstAttribute="height" constant="19" id="bUY-bE-MP8"/>
@@ -84,8 +89,8 @@
                                             <action selector="comment:" destination="PeH-SU-qWT" eventType="touchUpInside" id="mmT-Ut-YD3"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9c5-uo-CKf">
-                                        <frame key="frameInset" width="1000" height="1000"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9c5-uo-CKf">
+                                        <rect key="frame" x="0.0" y="189" width="149.5" height="45"/>
                                         <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="45" id="rNv-Uj-5XV"/>
@@ -132,15 +137,15 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oHP-t5-TXo">
-                                <frame key="frameInset" width="1000" height="1000"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oHP-t5-TXo">
+                                <rect key="frame" x="5" y="7" width="60" height="60"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="PDN-uc-Apd"/>
                                     <constraint firstAttribute="height" constant="60" id="xxh-cu-7j6"/>
                                 </constraints>
                             </imageView>
-                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jv7-9b-UAz" customClass="CircularImageView" customModule="uptous" customModuleProvider="target">
-                                <frame key="frameInset" width="1000" height="1000"/>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jv7-9b-UAz" customClass="CircularImageView" customModule="uptous" customModuleProvider="target">
+                                <rect key="frame" x="5" y="7" width="60" height="60"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="E2y-4n-yyp"/>
                                     <constraint firstAttribute="width" constant="60" id="NCw-Ms-M9C"/>
@@ -152,11 +157,11 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TpL-QZ-bfy">
-                                <frame key="frameInset" width="1000" height="1000"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TpL-QZ-bfy" customClass="GroupIdentifierView" customModule="uptous" customModuleProvider="target">
+                                <rect key="frame" x="5" y="7" width="60" height="60"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ABBR" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iZb-Gg-NfW">
-                                        <frame key="frameInset" minX="2" minY="20" width="56" height="21"/>
+                                        <rect key="frame" x="2" y="20" width="56" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="20"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -173,9 +178,12 @@
                                         <color key="value" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="abbrLabel" destination="iZb-Gg-NfW" id="jlE-K6-Uvd"/>
+                                </connections>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Violet Hsieh in: Mrs. Shenider's class" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="47o-Y4-QtM">
-                                <frame key="frameInset" width="1000" height="1000"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Violet Hsieh in: Mrs. Shenider's class" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="47o-Y4-QtM">
+                                <rect key="frame" x="73" y="27" width="239" height="27"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="27" id="DcE-kW-0qa"/>
@@ -213,13 +221,12 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="commentBtn" destination="Ngv-VE-IeJ" id="EhX-a2-NkO"/>
-                <outlet property="contentsView" destination="qeB-32-FOM" id="KVe-5j-PsU"/>
+                <outlet property="contentsView" destination="qeB-32-FOM" id="x5v-os-F1y"/>
                 <outlet property="dateLbl" destination="kAR-Bp-C4b" id="Ttc-eO-DFF"/>
                 <outlet property="groupNameLbl" destination="47o-Y4-QtM" id="7tY-lw-fzZ"/>
+                <outlet property="identifierView" destination="TpL-QZ-bfy" id="7Wf-bD-BXn"/>
                 <outlet property="newsItemNameLbl" destination="xbx-0R-vt9" id="G4l-FO-2fW"/>
-                <outlet property="ownerNameLbl" destination="iZb-Gg-NfW" id="4LS-y4-bkt"/>
                 <outlet property="ownerPhotoImgView" destination="oHP-t5-TXo" id="h1Y-Uz-Rgn"/>
-                <outlet property="ownerView" destination="TpL-QZ-bfy" id="SDE-1b-BDZ"/>
                 <outlet property="replyAllBtn" destination="hU1-BK-hd5" id="N4Z-qV-BAa"/>
                 <outlet property="replyToBtn" destination="9c5-uo-CKf" id="FFR-6n-UVb"/>
                 <outlet property="webView" destination="d9t-It-PYD" id="HBT-Q4-dfd"/>

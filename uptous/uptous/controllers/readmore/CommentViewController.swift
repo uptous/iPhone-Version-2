@@ -66,16 +66,13 @@ class CommentViewController: GeneralViewController {
         Custom.fullCornerView(ownerView)
         ownerPhotoImgView.layer.cornerRadius = 30.0
         ownerPhotoImgView.layer.masksToBounds = true
-        
-        tableView.estimatedRowHeight = 110
-        tableView.rowHeight = UITableViewAutomaticDimension
-        self.tableView.layoutIfNeeded()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.tableView.isHidden = true
         
-       
+        tableView.estimatedRowHeight = 110
+        tableView.rowHeight = UITableViewAutomaticDimension
     }
     
     //Post Comment
@@ -307,7 +304,6 @@ extension CommentViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.commentList.count
     }
-    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ReadMoreCell") as! ReadMoreCell

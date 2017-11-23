@@ -16,8 +16,6 @@ class ReadMoreCell: UITableViewCell {
     @IBOutlet weak var commentPersonNameLbl: UILabel!
     @IBOutlet weak var ownerView: UIView!
     @IBOutlet weak var ownerNameLbl: UILabel!
-    @IBOutlet weak var webView: UIWebView!
-
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -55,15 +53,9 @@ class ReadMoreCell: UITableViewCell {
                 ownerPhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
             }
         }
-        //webView.loadHTMLString(data.body!,baseURL: nil)
-        let attrStr = try! NSAttributedString(
-            data: (data.body!).data(using: String.Encoding.unicode, allowLossyConversion: true)!,
-            options: [ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType],
-            documentAttributes: nil)
-        //commentDescriptionLbl.attributedText = attrStr
-        commentDescriptionLbl.text = (data.body!).html2String
+
         commentPersonNameLbl.text = data.ownerName
-        //commentDescriptionLbl.text = data.body!
+        commentDescriptionLbl.text = data.body!
         //groupNameLbl.text = data.ownerName! + " in: " + data.communityName!
         //commentLbl.text = ("\((data.comments?.count)!) comments")
         dateLbl.text = ("\(Custom.dayStringFromTime(data.createDate!))")

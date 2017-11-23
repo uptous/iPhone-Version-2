@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class MyUpToUsSignUpViewController: GeneralViewController,UISearchBarDelegate {
+class MyUpToUsSignUpViewController: GeneralViewController,UISearchBarDelegate,UITableViewDelegate,UITableViewDataSource {
 
     @IBOutlet weak var searchTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
@@ -23,6 +23,7 @@ class MyUpToUsSignUpViewController: GeneralViewController,UISearchBarDelegate {
 
     var list = NSMutableArray()
     var selectedDateType: Int = 0
+    var topMenuSelected = 0
     
     @IBOutlet weak var communityTableView: UITableView!
     @IBOutlet weak var communityView: UIView!
@@ -58,14 +59,25 @@ class MyUpToUsSignUpViewController: GeneralViewController,UISearchBarDelegate {
     
     //MARk:- Top Menu Community
     @IBAction func topMenuButtonClick(_ sender: UIButton) {
-        fetchCommunity()
-        appDelegate.tabbarView?.isHidden = true
-        communityView.isHidden = false
+        if topMenuSelected == 0 {
+            headingBtn.setImage(UIImage(named: "top-up-arrow"), for: .normal)
+            fetchCommunity()
+            appDelegate.tabbarView?.isHidden = true
+            communityView.isHidden = false
+            topMenuSelected = 1
+        }else {
+            headingBtn.setImage(UIImage(named: "top-down-arrow"), for: .normal)
+            communityView.isHidden = true
+            appDelegate.tabbarView?.isHidden = false
+            topMenuSelected = 0
+        }
     }
     
     @IBAction func closeMenuButtonClick(_ sender: UIButton) {
+        headingBtn.setImage(UIImage(named: "top-down-arrow"), for: .normal)
         communityView.isHidden = true
         appDelegate.tabbarView?.isHidden = false
+        topMenuSelected = 0
     }
     
     //MARK: Fetch Community Records
@@ -205,17 +217,46 @@ class MyUpToUsSignUpViewController: GeneralViewController,UISearchBarDelegate {
         })
         self.tableView.reloadData()
     }
-
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    //MARK: Fetch Driver Records
+    func fetchDriverItems(data: SignupSheet, signUpType: String) {
+        let apiName = SignupItems + ("\(data.id!)")
+        
+        DataConnectionManager.requestGETURL1(api: apiName, para: ["":""], success: {
+            (response) -> Void in
+            let driverDatas = (response as? NSArray)!
+            let dic = driverDatas.object(at: 0) as? NSDictionary
+            let dataSheet = SignupSheet(info: dic)
+            
+            appDelegate.globalSignUpData = data
+            
+            if dataSheet.contact == "" && dataSheet.contact2 == "" {
+                let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpType1ViewController") as! SignUpType1ViewController
+                controller.data = dataSheet
+                //controller.data1 = data1
+                controller.signUpType = signUpType
+                self.present(controller, animated: true, completion: nil)
+            }else {
+                let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpType3ViewController") as! SignUpType3ViewController
+                controller.data = dataSheet
+                //controller.data1 = data1
+                controller.signUpType = signUpType
+                self.present(controller, animated: true, completion: nil)
+            }
+            
+            //self.updateData(SignupSheet(info: dic))
+            //self.itemsDatas = (dic?.object(forKey: "items")) as! NSArray
+            //self.tableView.reloadData()
+        }) {
+            (error) -> Void in
+            
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
-    
-}
 
-extension MyUpToUsSignUpViewController: UITableViewDelegate,UITableViewDataSource {
-    
+    //MARK:-UITableView
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -271,6 +312,7 @@ extension MyUpToUsSignUpViewController: UITableViewDelegate,UITableViewDataSourc
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if tableView == communityTableView {
+            topMenuSelected = 0
             let data = self.communityList[(indexPath as NSIndexPath).row] as? Community
             if data?.name == "All Communities" {
                 topMenuStatus = 0
@@ -296,34 +338,21 @@ extension MyUpToUsSignUpViewController: UITableViewDelegate,UITableViewDataSourc
             }
             
             if (event.type! == "Drivers") {
-                let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpDriverViewController") as! SignUpDriverViewController
-                controller.data = event
-                self.navigationController?.pushViewController(controller, animated: true)
+                fetchDriverItems(data: event , signUpType: "103")
                 
             }else if (event.type! == "RSVP" || event.type! == "Vote") {
-                let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpRSVPViewController") as! SignUpRSVPViewController
-                controller.data = event
-                self.navigationController?.pushViewController(controller, animated: true)
+                fetchDriverItems(data: event , signUpType: "102")
                 
-            }
-            /*else if (event.type! == "Ongoing Volunteering") {
-                let controller = self.storyboard?.instantiateViewController(withIdentifier: "OnGoingSignUpsViewController") as! OnGoingSignUpsViewController
-                controller.data = event
-                self.navigationController?.pushViewController(controller, animated: true)
+            }else if (event.type! == "Shifts" || event.type! == "Snack" || event.type! == "Games" || event.type! == "Multi Game/Event RSVP" || event.type! == "Snack Schedule") {
+                fetchDriverItems(data: event , signUpType: "100")
                 
-            }*/else if (event.type! == "Shifts" || event.type! == "Snack" || event.type! == "Games" || event.type! == "Multi Game/Event RSVP" || event.type! == "Snack Schedule") {
-                let controller = self.storyboard?.instantiateViewController(withIdentifier: "ShiftsSigUpsViewController") as! ShiftsSigUpsViewController
-                controller.data = event
-                self.navigationController?.pushViewController(controller, animated: true)
+           }else if (event.type! == "Volunteer" || event.type! == "Potluck" || event.type! == "Wish List" || event.type! == "Potluck/Party" || event.type! == "Ongoing Volunteering") {
+                fetchDriverItems(data: event , signUpType: "101")
                 
-            }else if (event.type! == "Volunteer" || event.type! == "Potluck" || event.type! == "Wish List" || event.type! == "Potluck/Party" || event.type! == "Ongoing Volunteering") {
-                let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpOpenViewController") as! SignUpOpenViewController
-                controller.data = event
-                self.navigationController?.pushViewController(controller, animated: true)
             }else {
                 let alertView = UIAlertController(title: "UpToUs", message: "We're sorry but for now, this type of sign-up is not accessible with the app", preferredStyle: .alert)
                 alertView.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (alertAction) -> Void in
-                   
+                    
                 }))
                 present(alertView, animated: true, completion: nil)
             }
@@ -338,4 +367,11 @@ extension MyUpToUsSignUpViewController: UITableViewDelegate,UITableViewDataSourc
         }
     }
     
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
 }
+
+

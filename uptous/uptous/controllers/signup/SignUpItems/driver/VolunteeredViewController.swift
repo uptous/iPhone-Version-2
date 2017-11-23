@@ -82,6 +82,7 @@ class VolunteeredViewController: GeneralViewController {
             
             if response["status"] as? String == "0" {
                 DispatchQueue.main.async(execute: {
+                    self.dismiss(animated: true, completion: nil)
                     let _ = self.navigationController?.popViewController(animated: true)
                 })
             }else {
@@ -106,6 +107,7 @@ class VolunteeredViewController: GeneralViewController {
     //MARK: - Button Action
     @IBAction func backBtnClick(_ sender: UIButton) {
         //self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
         self.navigationController?.popViewController(animated: true)
     }
 

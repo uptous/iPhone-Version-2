@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class ShiftCell: UITableViewCell {
     
     @IBOutlet weak var volunteeredView: UIView!
@@ -22,10 +23,12 @@ class ShiftCell: UITableViewCell {
     @IBOutlet weak var msg2Lbl: UILabel!
     @IBOutlet weak var eventDate2Lbl: UILabel!
     @IBOutlet weak var gifImageView: UIImageView!
+    
 
     
     @IBOutlet weak var ownerPhotoImgView: CircularImageView!
     @IBOutlet weak var identifierView: GroupIdentifierView!
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()

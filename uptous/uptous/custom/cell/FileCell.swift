@@ -163,7 +163,7 @@ class FileCell: UITableViewCell {
             comment1Btn.isHidden = true
         }
         
-        dateLbl.text = ("\(Custom.dayStringFromTime(data.createDate!))")
+        dateLbl.text = ("\(Custom.dayStringFromTime(data.modifiedDate!))")
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

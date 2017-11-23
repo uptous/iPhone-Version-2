@@ -27,7 +27,6 @@ class ReadMoreViewController: GeneralViewController {
     @IBOutlet weak var ownerView: UIView!
     @IBOutlet weak var ownerNameLbl: UILabel!
     @IBOutlet weak var contentsView: UIView!
-    
 
     @IBOutlet weak var viewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var labelHeightConstraint: NSLayoutConstraint!
@@ -69,16 +68,13 @@ class ReadMoreViewController: GeneralViewController {
         ownerPhotoImgView.layer.cornerRadius = 30.0
         ownerPhotoImgView.layer.masksToBounds = true
 
-        tableView.estimatedRowHeight = 110
-        tableView.rowHeight = UITableViewAutomaticDimension
-        
-        self.tableView.layoutIfNeeded()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.tableView.isHidden = true
         
-        
+        tableView.estimatedRowHeight = 110
+        tableView.rowHeight = UITableViewAutomaticDimension
     }
 
     func attributedString(_ str: String) -> NSAttributedString? {

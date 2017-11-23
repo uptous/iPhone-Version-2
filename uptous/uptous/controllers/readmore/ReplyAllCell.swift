@@ -16,8 +16,6 @@ class ReplyAllCell: UITableViewCell {
     @IBOutlet weak var commentPersonNameLbl: UILabel!
     @IBOutlet weak var ownerView: UIView!
     @IBOutlet weak var ownerNameLbl: UILabel!
-    @IBOutlet weak var webView: UIWebView!
-
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -55,17 +53,9 @@ class ReplyAllCell: UITableViewCell {
                 ownerPhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
             }
         }
-        print(data.body!)
-        let attrStr = try! NSAttributedString(
-            data: (data.body!).data(using: String.Encoding.unicode, allowLossyConversion: true)!,
-            options: [ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType],
-            documentAttributes: nil)
-        //commentDescriptionLbl.attributedText = attrStr
-        commentDescriptionLbl.text = (data.body!).html2String
-        
-        //commentDescriptionLbl.text = (data.body!).html2String
+
         commentPersonNameLbl.text = data.createdByUserName
-        //commentDescriptionLbl.text = data.body!
+        commentDescriptionLbl.text = data.body!
         dateLbl.text = ("\(Custom.dayStringFromTime(data.createTime!))")
     }
     
@@ -75,19 +65,4 @@ class ReplyAllCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-}
-
-extension String {
-    var html2AttributedString: NSAttributedString? {
-        guard let data = data(using: .utf8) else { return nil }
-        do {
-            return try NSAttributedString(data: data, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
-        } catch let error as NSError {
-            print(error.localizedDescription)
-            return  nil
-        }
-    }
-    var html2String: String {
-        return html2AttributedString?.string ?? ""
-    }
 }

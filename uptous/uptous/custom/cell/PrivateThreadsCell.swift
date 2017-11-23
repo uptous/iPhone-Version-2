@@ -60,8 +60,7 @@ class PrivateThreadsCell: UITableViewCell {
         contentsView.layer.borderColor = UIColor(red: CGFloat(0.8), green: CGFloat(0.8), blue: CGFloat(0.8), alpha: CGFloat(1)).cgColor
         contentsView.layer.borderWidth = CGFloat(1.0)
         contentsView.layer.cornerRadius = 8.0
-        ownerPhotoImgView.layer.cornerRadius = 30.0
-        ownerPhotoImgView.layer.masksToBounds = true
+        //commentLbl.hidden = true
     }
     
     @IBAction func replyTo(_ sender: UIButton) {
@@ -139,13 +138,16 @@ class PrivateThreadsCell: UITableViewCell {
         
         newsItemNameLbl.text = data.newsItemName
         DispatchQueue.main.async(execute: {
-            self.webView.loadHTMLString(data.newsItemDescription!,baseURL: nil)
+            let font = UIFont.init(name: "Helvetica Neue", size: 14.0)
+            self.webView.loadHTMLString("<span style=\"font-family: \(font!.fontName); font-size: \(font!.pointSize); \">\(data.newsItemDescription!)</span>", baseURL: nil)
+            
+            //self.webView.loadHTMLString(data.newsItemDescription!,baseURL: nil)
         })
         //webView.loadHTMLString(data.newsItemDescription!,baseURL: nil)
         
         //newsItemDescriptionLbl.text = data.newsItemDescription!.decodeHTML()
         //groupNameLbl.text = data.ownerName! + " in: " + data.communityName!
-        dateLbl.text = ("\(Custom.dayStringFromTime(data.createDate!))")
+        dateLbl.text = ("\(Custom.dayStringFromTime(data.modifiedDate!))")
         if data.comments?.count > 0 {
             commentBtn.isHidden = false
             if data.comments?.count == 1 {

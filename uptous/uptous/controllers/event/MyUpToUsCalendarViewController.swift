@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import GoogleMaps
 
 class MyUpToUsCalendarViewController: GeneralViewController{
 
@@ -25,6 +26,7 @@ class MyUpToUsCalendarViewController: GeneralViewController{
     var topMenuStatus = 0
     var communityList = NSMutableArray()
     var selectedIndexPath: Int?
+    var topMenuSelected = 0
 
 
     fileprivate struct landingCellConstants {
@@ -41,7 +43,6 @@ class MyUpToUsCalendarViewController: GeneralViewController{
         super.viewDidLoad()
         tableView.estimatedRowHeight = 60
         tableView.rowHeight = UITableViewAutomaticDimension
-        self.tableView.layoutIfNeeded()
         
         communityView.isHidden = true
         let landingNib = UINib(nibName: "EventCollapseTableViewCell", bundle: nil)
@@ -50,8 +51,6 @@ class MyUpToUsCalendarViewController: GeneralViewController{
         let expandNib = UINib(nibName: "CalendarTableViewCell", bundle: nil)
         tableView.register(expandNib, forCellReuseIdentifier: expandCellConstants.cellIdentifier as String)
         self.fetchCommunity()
-        
-        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -75,14 +74,25 @@ class MyUpToUsCalendarViewController: GeneralViewController{
     
     //MARk:- Top Menu Community
     @IBAction func topMenuButtonClick(_ sender: UIButton) {
-        fetchCommunity()
-        appDelegate.tabbarView?.isHidden = true
-        communityView.isHidden = false
+        if topMenuSelected == 0 {
+            headingBtn.setImage(UIImage(named: "top-up-arrow"), for: .normal)
+            fetchCommunity()
+            appDelegate.tabbarView?.isHidden = true
+            communityView.isHidden = false
+            topMenuSelected = 1
+        }else {
+            headingBtn.setImage(UIImage(named: "top-down-arrow"), for: .normal)
+            communityView.isHidden = true
+            appDelegate.tabbarView?.isHidden = false
+            topMenuSelected = 0
+        }
     }
     
     @IBAction func closeMenuButtonClick(_ sender: UIButton) {
+        headingBtn.setImage(UIImage(named: "top-down-arrow"), for: .normal)
         communityView.isHidden = true
         appDelegate.tabbarView?.isHidden = false
+        topMenuSelected = 0
     }
     
     //MARK: Fetch Community Records
@@ -238,6 +248,134 @@ class MyUpToUsCalendarViewController: GeneralViewController{
     */
 
 extension MyUpToUsCalendarViewController: EventExpandCellDelegate, EventCellDelegate,UITableViewDelegate, UITableViewDataSource {
+    
+    //MARK:- Open Map for location
+    func openMapForLocation(_ rowNumber: NSInteger) {
+        let data: Event!
+        if(searchActive) {
+            data = self.filterEventListArr[rowNumber]
+        }else {
+            data = self.eventList[rowNumber]
+        }
+        
+        let address = "\(data.address!), " + "\(data.city!), " + "\(data.state!), " + "\(data.country!), " + "\(data.zipCode!)"
+        
+        let geoCoder = CLGeocoder()
+        geoCoder.geocodeAddressString(address) { (placemarks, error) in
+            if let error = error {
+                print("Unable to Forward Geocode Address (\(error))")
+                
+            }else {
+                var location: CLLocation?
+                
+                if let placemarks = placemarks, placemarks.count > 0 {
+                    location = placemarks.first?.location
+                }
+                
+                if let location = location {
+                    let coordinate = location.coordinate
+                    let latitiudeText = "\(coordinate.latitude)"
+                    let longitudeText = "\(coordinate.longitude)"
+                    print(latitiudeText)
+                    print(longitudeText)
+                    
+                    let controller = ShowLocationViewController(nibName: "ShowLocationViewController", bundle: nil)
+                    controller.calendarEvent = data
+                    controller.latitude = coordinate.latitude
+                    controller.longitude = coordinate.longitude
+                    self.present(controller, animated: true, completion: nil)
+                    
+                } else {
+                    let msg = "No Matching Location Found"
+                }
+            }
+        }
+    }
+    
+    func openMapForLocation1(_ rowNumber: NSInteger) {
+        let data: Event!
+        if(searchActive) {
+            data = self.filterEventListArr[rowNumber]
+        }else {
+            data = self.eventList[rowNumber]
+        }
+        
+        let address = "\(data.address!), " + "\(data.city!), " + "\(data.state!), " + "\(data.country!), " + "\(data.zipCode!)"
+        
+        let geoCoder = CLGeocoder()
+        geoCoder.geocodeAddressString(address) { (placemarks, error) in
+            if let error = error {
+                print("Unable to Forward Geocode Address (\(error))")
+                
+            }else {
+                var location: CLLocation?
+                
+                if let placemarks = placemarks, placemarks.count > 0 {
+                    location = placemarks.first?.location
+                }
+                
+                if let location = location {
+                    let coordinate = location.coordinate
+                    let latitiudeText = "\(coordinate.latitude)"
+                    let longitudeText = "\(coordinate.longitude)"
+                    print(latitiudeText)
+                    print(longitudeText)
+                    
+                    let controller = ShowLocationViewController(nibName: "ShowLocationViewController", bundle: nil)
+                    controller.calendarEvent = data
+                    controller.latitude = coordinate.latitude
+                    controller.longitude = coordinate.longitude
+                    self.present(controller, animated: true, completion: nil)
+                    
+                } else {
+                    let msg = "No Matching Location Found"
+                }
+            }
+        }
+    }
+    
+    func getLatLngForAddress(address: String) {
+        let data: Event!
+        if(searchActive) {
+            data = self.filterEventListArr[0]
+        }else {
+            data = self.eventList[0]
+        }
+        
+        let address = "\(data.address!), " + "\(data.city!), " + "\(data.state!), " + "\(data.country!), " + "\(data.zipCode!)"
+        
+        let geoCoder = CLGeocoder()
+        geoCoder.geocodeAddressString(address) { (placemarks, error) in
+            if let error = error {
+                print("Unable to Forward Geocode Address (\(error))")
+
+            }else {
+                var location: CLLocation?
+                
+                if let placemarks = placemarks, placemarks.count > 0 {
+                    location = placemarks.first?.location
+                }
+                
+                if let location = location {
+                    let coordinate = location.coordinate
+                    let latitiudeText = "\(coordinate.latitude)"
+                    let longitudeText = "\(coordinate.longitude)"
+                    print(latitiudeText)
+                    print(longitudeText)
+                    
+                    let controller = ShowLocationViewController(nibName: "ShowLocationViewController", bundle: nil)
+                    controller.calendarEvent = data
+                    controller.latitude = coordinate.latitude
+                    controller.longitude = coordinate.longitude
+                    self.present(controller, animated: true, completion: nil)
+                    
+                } else {
+                    let msg = "No Matching Location Found"
+                }
+            }
+        }
+    }
+
 
     func expandClick(_ rowNumber: NSInteger) {
         self.selectedIndexPath = rowNumber
@@ -286,11 +424,8 @@ extension MyUpToUsCalendarViewController: EventExpandCellDelegate, EventCellDele
                 let cell = tableView.dequeueReusableCell(withIdentifier: "CommunityCell") as! CommunityCell
                 let data = self.communityList[(indexPath as NSIndexPath).row] as? Community
                 cell.update(data!)
-                // cell.communityNameLbl.text = "ghghgjgytjhkjkjhl"
                 return cell
-                
             }else {
-                
                 if(selectedIndexPath == indexPath.row) {
                     let cell: CalendarTableViewCell = tableView.dequeueReusableCell(withIdentifier: expandCellConstants.cellIdentifier ) as! CalendarTableViewCell
                     cell.collapseBtn.tag = indexPath.row
@@ -303,11 +438,6 @@ extension MyUpToUsCalendarViewController: EventExpandCellDelegate, EventCellDele
                         data = self.eventList[(indexPath as NSIndexPath).row]
                     }
                     cell.updateData(data,communityList: self.communityList)
-                    //cell.updateData(data)
-                    /*if(self.eventList.count > 0){
-                        let data = self.eventList[(indexPath as NSIndexPath).row]
-                        cell.updateData(data)
-                    }*/
                     return cell
                 }else {
                     
@@ -322,11 +452,6 @@ extension MyUpToUsCalendarViewController: EventExpandCellDelegate, EventCellDele
                         data = self.eventList[(indexPath as NSIndexPath).row]
                     }
                     cell.updateData(data,communityList: self.communityList)
-                    //cell.updateData(data)
-                    /*if(self.eventList.count > 0){
-                        let data = self.eventList[(indexPath as NSIndexPath).row]
-                        cell.updateData(data)
-                    }*/
                     return cell
                 }
                 
@@ -352,22 +477,20 @@ extension MyUpToUsCalendarViewController: EventExpandCellDelegate, EventCellDele
             }
         }
         
-        /*func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
             if tableView == communityTableView {
                 return 50
+            }else if selectedIndexPath == indexPath.row {
+                return 215
             }else {
-                if(selectedIndexPath == indexPath.row && selectedIndexPath != -1) {
-                    
-                    return 190 + calculateHeight(data.eventDescription!, width: detailLabelWidt)+detailLabelOriginY + 20
-                }else {
-                    return 120.0
-                }
+                return 125
             }
-        }*/
+        }
    
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             
             if tableView == communityTableView {
+                topMenuSelected = 0
                 let data = self.communityList[(indexPath as NSIndexPath).row] as? Community
                 if data?.name == "All Communities" {
                     topMenuStatus = 0

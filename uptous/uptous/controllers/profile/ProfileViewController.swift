@@ -9,7 +9,7 @@
 import UIKit
 
 
-class ProfileViewController: GeneralViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate,RSKImageCropViewControllerDelegate {
+class ProfileViewController: GeneralViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
 
     @IBOutlet weak var firstNameTxtField: UITextField!
     @IBOutlet weak var lastNameTxtField: UITextField!
@@ -247,16 +247,16 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
         //self.image.contentMode = .scaleAspectFill //3
         //self.image.image = chosenImage //4
         //dismiss(animated:true, completion: nil)
-        let fixOrientationImage=chosenImage.fixOrientation()
+        //let fixOrientationImage=chosenImage.fixOrientation()
         //self.displayImage.image = fixOrientationImage
-        chosenImage = fixOrientationImage!
+        //chosenImage = fixOrientationImage!
 
         
         delay(0.2, closure: { () -> () in
-         let imageCropVC =  RSKImageCropViewController (image: chosenImage)
+        /* let imageCropVC =  RSKImageCropViewController (image: chosenImage)
          imageCropVC.delegate = self
             self.imgUploadStatus = true
-         self.present(imageCropVC, animated: true, completion:nil)
+         self.present(imageCropVC, animated: true, completion:nil)*/
          })
         dismiss(animated:true, completion: nil)
     }
@@ -268,7 +268,7 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
     }
     
     // MARK :- RSCROPPER IMAGE DELEGATE
-    func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect) {
+   /* func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect) {
         
     }
     
@@ -287,7 +287,7 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
     func imageCropViewControllerDidCancelCrop(_ controller: RSKImageCropViewController) {
         self.dismiss(animated: true, completion:nil)
         
-    }
+    }*/
 
 
 

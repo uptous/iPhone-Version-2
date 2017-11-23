@@ -146,7 +146,10 @@ class AnnouncementCell: UITableViewCell {
         
         
         DispatchQueue.main.async(execute: {
-            self.webView.loadHTMLString(data.newsItemDescription!,baseURL: nil)
+            let font = UIFont.init(name: "Helvetica Neue", size: 14.0)
+            self.webView.loadHTMLString("<span style=\"font-family: \(font!.fontName); font-size: \(font!.pointSize); \">\(data.newsItemDescription!)</span>", baseURL: nil)
+
+            //self.webView.loadHTMLString(data.newsItemDescription!,baseURL: nil)
         })
         
         if data.comments?.count > 0 {
@@ -162,7 +165,7 @@ class AnnouncementCell: UITableViewCell {
         }else{
             postBtn.isHidden = true
         }
-        dateLbl.text = ("\(Custom.dayStringFromTime(data.createDate!))")
+        dateLbl.text = ("\(Custom.dayStringFromTime(data.modifiedDate!))")
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

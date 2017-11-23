@@ -34,6 +34,7 @@ class SignUpDriverViewController: GeneralViewController {
     @IBOutlet weak var webView: UIWebView!
     @IBOutlet weak var organizerView: UIView!
     @IBOutlet weak var organizerLbl: UILabel!
+    @IBOutlet weak var descriptionTextView: UITextView!
 
     
     var data: SignupSheet!
@@ -43,182 +44,29 @@ class SignUpDriverViewController: GeneralViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Custom.cornerView(contentView)
-        Custom.fullCornerView1(owner1View)
-        Custom.fullCornerView1(owner2View)
         tableView.estimatedRowHeight = 81
         tableView.rowHeight = UITableViewAutomaticDimension
-        
-        contact1PhotoImgView.layer.cornerRadius = 25.0
-        contact1PhotoImgView.layer.masksToBounds = true
-        
-        contact2PhotoImgView.layer.cornerRadius = 25.0
-        contact2PhotoImgView.layer.masksToBounds = true
-        
-        organizerView.isHidden = true
-        tableView.estimatedRowHeight = 81
-        tableView.rowHeight = UITableViewAutomaticDimension
-    }
-    
-    func attributedString(_ str: String) -> NSAttributedString? {
-        let attributes = [
-            NSUnderlineStyleAttributeName : NSUnderlineStyle.styleSingle.rawValue
-        ]
-        let attributedString = NSAttributedString(string: str, attributes: attributes)
-        return attributedString
-    }
-    
-    //Mark : Get Label Height with text
-    func calculateHeight(_ text:String, width:CGFloat) -> CGFloat {
-        let label:UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: CGFloat.greatestFiniteMagnitude))
-        label.numberOfLines = 0
-        label.lineBreakMode = NSLineBreakMode.byWordWrapping
-        label.font = UIFont(name: "Helvetica Neue Regular", size: 16)
-        label.text = text
-        
-        label.sizeToFit()
-        return label.frame.height
     }
     
     func updateData(_ data: SignupSheet) {
-        
-        if data.contact != "" {
-            
-            contact1Lbl.text = data.contact!
-            if data.organizer1PhotoUrl == "https://dsnn35vlkp0h4.cloudfront.net/images/blank_image.gif" {
-                owner1View.isHidden = false
-                owner1NameLbl.isHidden = false
-                contact1PhotoImgView.isHidden = true
-                
-                let stringArray = data.contact?.components(separatedBy: " ")
-                let firstName = stringArray![0]
-                let secondName = stringArray![1]
-                let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
-                
-                owner1NameLbl.text = resultString
-                let color1 = Utility.hexStringToUIColor(hex: data.organizer1BackgroundColor!)
-                let color2 = Utility.hexStringToUIColor(hex: data.organizer1TextColor!)
-                owner1View.backgroundColor = color1
-                owner1NameLbl.textColor = color2
-                
-            }else {
-                owner1View.isHidden = true
-                contact1PhotoImgView.isHidden = false
-                if let avatarUrl = data.organizer1PhotoUrl {
-                    contact2PhotoImgView.isHidden = false
-                    //ownerPhotoImgView.setUserAvatar(avatarUrl)
-                    let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
-                        self.contact1PhotoImgView.image = image
-                    }
-                    contact1PhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
-                }
-            }
-        }else {
-            contact1PhotoImgView.isHidden = true
-            owner1View.isHidden = true
-            owner1NameLbl.isHidden = true
-            contact1Lbl.isHidden = true
-        }
-        
-        if data.contact2 != "" {
-            contact2Lbl.text = data.contact2!
-            if data.organizer2PhotoUrl == "https://dsnn35vlkp0h4.cloudfront.net/images/blank_image.gif" {
-                owner2View.isHidden = false
-                owner2NameLbl.isHidden = false
-                contact2PhotoImgView.isHidden = true
-                
-                let stringArray = data.contact2?.components(separatedBy: " ")
-                let firstName = stringArray![0]
-                let secondName = stringArray![1]
-                let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
-                
-                owner2NameLbl.text = resultString
-                let color1 = Utility.hexStringToUIColor(hex: data.organizer1BackgroundColor!)
-                let color2 = Utility.hexStringToUIColor(hex: data.organizer1TextColor!)
-                owner2View.backgroundColor = color1
-                owner2NameLbl.textColor = color2
-                
-            }else {
-                owner2View.isHidden = true
-                contact2PhotoImgView.isHidden = false
-                if let avatarUrl = data.organizer2PhotoUrl {
-                    contact2PhotoImgView.isHidden = false
-                    //ownerPhotoImgView.setUserAvatar(avatarUrl)
-                    let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
-                        self.contact2PhotoImgView.image = image
-                    }
-                    contact2PhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
-                }
-            }
-            
-        }else {
-            contact2PhotoImgView.isHidden = true
-            owner2View.isHidden = true
-            owner2NameLbl.isHidden = true
-            contact2Lbl.isHidden = true
-        }
-        
-        nameLbl.text = data.name
-        //notesLbl.text = data.notes
-        eventTimeLbl.text = ""
-        cutoffTimeLbl.text = ""
-        
-        //notesLbl.text = data.notes
-        DispatchQueue.main.async(execute: {
-            self.webView.loadHTMLString(data.notes!,baseURL: nil)
-        })
-        if calculateHeight(data.notes!, width: webView.frame.size.width) > 38 {
-            detailHeightContraint.constant = 70
-            //detailViewHeightContraint.constant = 288
-        }
+        appDelegate.globalSignUpData = data
         
         if data.contact == "" && data.contact2 == "" {
-            organizerView.isHidden = true
-            organizerLbl.text = ""
-            organizerViewYContraint.constant = 0.0
-            print(detailHeightContraint.constant)
-            //detailHeightContraint.constant = 100
-            //eventViewYContraint.constant = detailHeightContraint.constant + 2.0
-            //print(eventViewYContraint.constant)
-            detailViewHeightContraint.constant = detailHeightContraint.constant + 95.0
-            print(detailViewHeightContraint.constant)
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpType1ViewController") as! SignUpType1ViewController
+            controller.data = data
+            controller.data1 = data1
+            controller.signUpType = "103"
+            self.present(controller, animated: true, completion: nil)
         }else {
-            organizerView.isHidden = false
-            organizerLbl.text = "Organizers:"
-            //organizerViewYContraint.constant = detailHeightContraint.constant + 2.0
-            eventViewYContraint.constant = 107.0
-            detailViewHeightContraint.constant = detailHeightContraint.constant + 92.5 + 110.0
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpType3ViewController") as! SignUpType3ViewController
+            controller.data = data
+            controller.data1 = data1
+            controller.signUpType = "103"
+            self.present(controller, animated: true, completion: nil)
         }
-        
-        //For Event Date and Time
-        if data.dateTime == 0 {
-            eventTimeLbl.text = ""
-        }else {
-            eventDateLbl.text = Custom.dayStringFromTime1(data.dateTime!)
-            /*if Custom.dayStringFromTime4(data.dateTime!) != "1:00AM" {
-             eventDateLbl.text = Custom.dayStringFromTime1(data.dateTime!)
-             }*/
-            print(Custom.dayStringFromTime1(data.dateTime!))
-            if data.endTime == "" || data.endTime == "1:00AM" {
-                if Custom.dayStringFromTime4(data.dateTime!) != "1:00AM" {
-                    eventTimeLbl.text = "\(Custom.dayStringFromTime4(data.dateTime!))"
-                }
-                
-            }else {
-                if Custom.dayStringFromTime4(data.dateTime!) != "1:00AM" {
-                    eventTimeLbl.text = "\(Custom.dayStringFromTime4(data.dateTime!)) - " + "" + "\(data.endTime!)"
-                }
-                
-            }
-        }
-        //For Cuttoff Date and Time
-        if data.cutoffDate == 0 {
-            cutoffDateLbl.text = ""
-        }else {
-            cutoffDateLbl.text = Custom.dayStringFromTime1(data.cutoffDate!)
-        }
-
     }
+    
+    
     
     @IBAction func back(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
@@ -227,8 +75,7 @@ class SignUpDriverViewController: GeneralViewController {
     override func viewWillAppear(_ animated: Bool) {
         tableView.estimatedRowHeight = 81
         tableView.rowHeight = UITableViewAutomaticDimension
-        
-         self.fetchDriverItems()
+        self.fetchDriverItems()
     }
     
     //MARK: Fetch Driver Records
@@ -239,18 +86,13 @@ class SignUpDriverViewController: GeneralViewController {
         }else {
            apiName = SignupItems + ("\(data.id!)")
         }
-        
-        
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
-            print(response)
-            
             self.driverDatas = (response as? NSArray)!
             let dic = self.driverDatas.object(at: 0) as? NSDictionary
             self.updateData(SignupSheet(info: dic))
             self.driverItemsDatas = (dic?.object(forKey: "items")) as! NSArray
             self.tableView.reloadData()
-            
         }) {
             (error) -> Void in
             
@@ -280,20 +122,16 @@ extension SignUpDriverViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SignUpDriversCell") as! SignUpDriversCell
         let data = self.driverItemsDatas[(indexPath as NSIndexPath).row] as? NSDictionary
-        //print(Comment(info: data))
         cell.updateView(Items(info: data!))
         return cell
     }
     
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let dic = self.driverItemsDatas[(indexPath as NSIndexPath).row] as? NSDictionary
-        //let dic = self.driverItemsDatas.objectAtIndex(0) as? NSDictionary
         let data = Items(info: dic!)
         if data.volunteerStatus == "Open" {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "DetailsSignUpDriverViewController") as! DetailsSignUpDriverViewController
             controller.selectedItems = data
-            //controller.sheetData = self.data
             if data1 != nil {
                 controller.sheetDataID = ("\(data1.newsItemId!)")
             }else {
@@ -308,9 +146,6 @@ extension SignUpDriverViewController: UITableViewDelegate, UITableViewDataSource
                 controller.sheetDataID = ("\(self.data.id!)")
             }
             controller.data = data
-            //controller.sheetData = self.data
-            
-            
             self.navigationController?.pushViewController(controller, animated: true)
     
         }else if data.volunteerStatus == "Full" {
@@ -319,6 +154,22 @@ extension SignUpDriverViewController: UITableViewDelegate, UITableViewDataSource
         
     }
     
+}
+
+extension UILabel {
+    func setHTMLFromString(htmlText: String) {
+        let modifiedFont = String(format:"<span style=\"font-family: '-apple-system', 'HelveticaNeue'; font-size: \(14)\">%@</span>", htmlText)
+        
+        
+        //process collection values
+        let attrStr = try! NSAttributedString(
+            data: modifiedFont.data(using: .unicode, allowLossyConversion: true)!,
+            options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue],
+            documentAttributes: nil)
+        
+        
+        self.attributedText = attrStr
+    }
 }
 
 

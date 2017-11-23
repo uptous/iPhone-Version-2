@@ -70,8 +70,6 @@ class ExpandCell: UITableViewCell {
         }
         
         // Initialization code
-        
-        
         kidsLbl.text = ""
         var childrens = [String]()
         if data.children != nil {
@@ -81,15 +79,11 @@ class ExpandCell: UITableViewCell {
             }
             let stringRepresentation1 = childrens.joined(separator: ", ")
             kidsLbl.text = "kids: \(stringRepresentation1)"
-            
         }
-        
         
         if data.address != nil {
             teamLbl.text = data.address!
         }
-        
-        
         
         if data.firstName != "" && data.lastName != "" {
             nameLbl.text = ("\(data.firstName!)") + (" \(data.lastName!)")
@@ -114,8 +108,8 @@ class ExpandCell: UITableViewCell {
             nameLbl.text = "- -"
             ownerNameLbl.text = "- -"
         }
-        print("\(data.firstName!)")
-        print("\(data.photo!)")
+        //print("\(data.firstName!)")
+        //print("\(data.photo!)")
         if data.photo == "" {
             let color1 = Utility.hexStringToUIColor(hex: data.memberBackgroundColor!)
             let color2 = Utility.hexStringToUIColor(hex: data.memberTextColor!)
@@ -127,8 +121,11 @@ class ExpandCell: UITableViewCell {
             if let avatarUrl = data.photo {
                 ownerPhotoImgView.isHidden = false
                 //ownerPhotoImgView.setUserAvatar(avatarUrl)
+                ownerPhotoImgView.setShowActivityIndicator(true)
+                ownerPhotoImgView.setIndicatorStyle(.gray)
                 let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
                     self.ownerPhotoImgView.image = image
+                    self.ownerPhotoImgView.setShowActivityIndicator(false)
                 }
                 ownerPhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
             }

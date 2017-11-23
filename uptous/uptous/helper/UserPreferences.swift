@@ -20,6 +20,16 @@ class UserPreferences: NSObject {
         }
     }
     
+    class var DeepLinkingStatus: String {
+        get {
+            return (UserDefaults.standard.object(forKey: "DeepLinking") as? String) ?? ""
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "DeepLinking")
+            UserDefaults.standard.synchronize()
+        }
+    }
+    
     class var LoginHeaderCodition: [String: String] {
         get {
             return (UserDefaults.standard.object(forKey: "loginHeader") as? [String: String]) ?? [:]

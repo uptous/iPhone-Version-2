@@ -125,6 +125,7 @@ class DetailsSignUpDriverViewController: GeneralViewController {
             
             print(response["status"])
             if response["status"] as? String == "0" {
+                self.dismiss(animated: true, completion: nil)
                self.navigationController?.popViewController(animated: true)
             }
         })
@@ -157,6 +158,7 @@ class DetailsSignUpDriverViewController: GeneralViewController {
             
             if response["status"] as? String == "0" {
                 DispatchQueue.main.async(execute: {
+                    self.dismiss(animated: true, completion: nil)
                     let _ = self.navigationController?.popViewController(animated: true)
                 })
             }else {
@@ -178,6 +180,7 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
+            self.dismiss(animated: true, completion: nil)
             self.navigationController?.popViewController(animated: true)
             print("you have pressed OK button");
         }
@@ -331,6 +334,7 @@ class DetailsSignUpDriverViewController: GeneralViewController {
     
     //MARK: - Button Action
     @IBAction func back(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
         self.navigationController?.popViewController(animated: true)
     }
 

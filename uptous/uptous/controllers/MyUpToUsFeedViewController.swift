@@ -40,6 +40,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     var filterStatus = false
     var topMenuStatus = 0
     @IBOutlet weak var notifNoRecordsView: UIView!
+    var topMenuSelected = 0
     
     
     @IBOutlet weak var searchBar: UISearchBar!
@@ -83,14 +84,9 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         static var rowHeight:CGFloat! = 310
     }
     
-    //    private struct  personalAnnouncementCellConstants {
-    //        static var cellIdentifier:String = "PersonalAnnouncementCell"
-    //        static var rowHeight:CGFloat! = 310
-    //    }
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         communityView.isHidden = true
         self.searchBar.delegate = self
         //MARK:- For UI Design Notification
@@ -127,7 +123,6 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }else{
             headingBtn.setTitle("Feed - \(UserPreferences.SelectedCommunityName)", for: .normal)
         }
-
         messageBtn.isHidden = true
         pictureBtn.isHidden = true
         directBtn.isHidden = true
@@ -222,10 +217,26 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     //MARk:- Top Menu Community
     @IBAction func topMenuButtonClick(_ sender: UIButton) {
-        fetchCommunity()
-        appDelegate.tabbarView?.isHidden = true
-        communityView.isHidden = false
+        if topMenuSelected == 0 {
+            headingBtn.setImage(UIImage(named: "top-up-arrow"), for: .normal)
+            fetchCommunity()
+            appDelegate.tabbarView?.isHidden = true
+            communityView.isHidden = false
+            topMenuSelected = 1
+        }else {
+            headingBtn.setImage(UIImage(named: "top-down-arrow"), for: .normal)
+            communityView.isHidden = true
+            appDelegate.tabbarView?.isHidden = false
+            topMenuSelected = 0
+        }
      }
+    
+    @IBAction func closeMenuButtonClick(_ sender: UIButton) {
+        headingBtn.setImage(UIImage(named: "top-down-arrow"), for: .normal)
+        communityView.isHidden = true
+        appDelegate.tabbarView?.isHidden = false
+        topMenuSelected = 0
+    }
     
     //MARK: Fetch Community Records
     func fetchCommunity() {
@@ -252,11 +263,6 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
             alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
             //self.present(alert, animated: true, completion: nil)
         }
-    }
-    
-    @IBAction func closeMenuButtonClick(_ sender: UIButton) {
-        communityView.isHidden = true
-        appDelegate.tabbarView?.isHidden = false
     }
     
     
@@ -586,35 +592,60 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }) {
             (error) -> Void in
         }
-        
     }
+    
+    //MARK: Fetch Driver Records
+    func fetchDriverItems(data1: Feed, signUpType: String) {
+        let apiName = SignupItems + ("\(data1.newsItemId!)")
+        
+        DataConnectionManager.requestGETURL1(api: apiName, para: ["":""], success: {
+            (response) -> Void in
+            let driverDatas = (response as? NSArray)!
+            let dic = driverDatas.object(at: 0) as? NSDictionary
+            let dataSheet = SignupSheet(info: dic)
+            
+            //appDelegate.globalSignUpData = data
+            
+            if dataSheet.contact == "" && dataSheet.contact2 == "" {
+                let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpType1ViewController") as! SignUpType1ViewController
+                //controller.data = dataSheet
+                controller.data1 = data1
+                controller.signUpType = signUpType
+                self.present(controller, animated: true, completion: nil)
+            }else {
+                let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpType3ViewController") as! SignUpType3ViewController
+                //controller.data = dataSheet
+                controller.data1 = data1
+                controller.signUpType = signUpType
+                self.present(controller, animated: true, completion: nil)
+            }
+            
+            //self.updateData(SignupSheet(info: dic))
+            //self.itemsDatas = (dic?.object(forKey: "items")) as! NSArray
+            //self.tableView.reloadData()
+        }) {
+            (error) -> Void in
+            
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
     
     func signupType(newsType: String,event: Feed) {
         if (newsType == "Drivers") {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpDriverViewController") as! SignUpDriverViewController
-            controller.data1 = event
-            self.navigationController?.pushViewController(controller, animated: true)
+            fetchDriverItems(data1: event , signUpType: "103")
             
         }else if (newsType == "RSVP" || newsType == "Vote") {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpRSVPViewController") as! SignUpRSVPViewController
-            controller.data1 = event
-            controller.rsvpTypeFromFeed = newsType
-            self.navigationController?.pushViewController(controller, animated: true)
+            fetchDriverItems(data1: event , signUpType: "102")
             
-        }/*else if (newsType == "Ongoing" || newsType == "Ongoing Volunteering") {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "OnGoingSignUpsViewController") as! OnGoingSignUpsViewController
-            controller.data1 = event
-            self.navigationController?.pushViewController(controller, animated: true)
-            
-        }*/else if (newsType == "Shifts" || newsType == "Snack" || newsType == "Games" || newsType == "Multi Game/Event RSVP" || newsType == "Snack Schedule") {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "ShiftsSigUpsViewController") as! ShiftsSigUpsViewController
-            controller.data1 = event
-            self.navigationController?.pushViewController(controller, animated: true)
+        }else if (newsType == "Shifts" || newsType == "Snack" || newsType == "Games" || newsType == "Multi Game/Event RSVP" || newsType == "Snack Schedule") {
+            fetchDriverItems(data1: event , signUpType: "100")
             
         }else if (newsType == "Volunteer" || newsType == "Potluck" || newsType == "Wish List" || newsType == "Potluck/Party" || newsType == "Ongoing" || newsType == "Ongoing Volunteering") {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpOpenViewController") as! SignUpOpenViewController
-            controller.data1 = event
-            self.navigationController?.pushViewController(controller, animated: true)
+            fetchDriverItems(data1: event , signUpType: "101")
+            
         }else {
             let alertView = UIAlertController(title: "UpToUs", message: "We're sorry but for now, this type of sign-up is not accessible with the app", preferredStyle: .alert)
             alertView.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (alertAction) -> Void in
@@ -925,6 +956,7 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if tableView == communityTableView {
+            topMenuSelected = 0
             let data = self.communityList[(indexPath as NSIndexPath).row] as? Community
             if data?.name == "All Communities" {
                 topMenuStatus = 0

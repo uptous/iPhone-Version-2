@@ -10,16 +10,17 @@ import UIKit
 
 protocol EventCellDelegate {
     func expandClick(_: NSInteger)
+    func openMapForLocation1(_: NSInteger)
 }
 
 class EventCollapseTableViewCell: UITableViewCell {
 
     @IBOutlet weak var lblTitle: UILabel!
-    @IBOutlet weak var locationBtn: UIButton!
     @IBOutlet weak var viewExpendableBtn: UIButton!
     @IBOutlet weak var lblStartTime: UILabel!
     @IBOutlet weak var lblEndTime: UILabel!
     @IBOutlet weak var communityLabel: UILabel!
+    @IBOutlet weak var locationLabel: UILabel!
     @IBOutlet weak var cellView: UIView!
     var delegate: EventCellDelegate!
     @IBOutlet weak var expandBtn: UIButton!
@@ -33,7 +34,7 @@ class EventCollapseTableViewCell: UITableViewCell {
         cellView.layer.borderColor = UIColor.lightGray.cgColor
         cellView.layer.borderWidth = 1.5
         cellView.layer.cornerRadius = 10.0
-        locationBtn.contentHorizontalAlignment = .left
+        //locationBtn.contentHorizontalAlignment = .left
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -44,6 +45,10 @@ class EventCollapseTableViewCell: UITableViewCell {
    
     @IBAction func expandClick(_ sender: UIButton) {
         delegate.expandClick(sender.tag)
+    }
+    
+    @IBAction func locationClick(_ sender: UIButton) {
+        delegate.openMapForLocation1(sender.tag)
     }
     
     func updateData(_ data: Event, communityList:NSMutableArray) {
@@ -79,8 +84,6 @@ class EventCollapseTableViewCell: UITableViewCell {
                 startDateValue = startDate
                 endDateValue = endDate
             }
-            
-            
         }else {
             startDateValue =  "\(startDate1)" + "  \(startDate2)"
             endDateValue =  "\(endDate1)" + "  \(endDate2)"
@@ -94,11 +97,11 @@ class EventCollapseTableViewCell: UITableViewCell {
             }*/
             
         }
-        
-        
+        //let address = "\(data.address!), " + "\(data.city!), " + "\(data.state!), " + "\(data.country!), " + "\(data.zipCode!)"
+        locationLabel.text = data.location!
         lblStartTime.text =  startDateValue//Custom.dayStringFromTime2(data.startTime!)
         lblEndTime.text =  endDateValue//Custom.dayStringFromTime2(data.endTime!)
-        locationBtn.setTitle(data.location!, for: .normal)
+        //locationBtn.setTitle(data.location!, for: .normal)
 
         /*let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue]
         let underlineAttributedString = NSAttributedString(string: data.location!, attributes: underlineAttribute)

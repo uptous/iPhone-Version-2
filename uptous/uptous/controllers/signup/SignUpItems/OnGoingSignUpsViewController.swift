@@ -33,6 +33,7 @@ class OnGoingSignUpsViewController: GeneralViewController {
     @IBOutlet weak var owner1NameLbl: UILabel!
     @IBOutlet weak var owner2View: UIView!
     @IBOutlet weak var owner2NameLbl: UILabel!
+    @IBOutlet weak var descriptionTextView: UITextView!
     
     
     var placeHolderText = "Type comments here.."
@@ -224,7 +225,7 @@ extension OnGoingSignUpsViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let dic = self.itemsDatas[(indexPath as NSIndexPath).row] as? NSDictionary
-        print(dic?.object(forKey: "volunteers"))
+        //print(dic?.object(forKey: "volunteers"))
         let item = Items(info: dic!)
         if item.volunteerStatus == "Open" {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "ItemDetailsEditingMsgViewController") as! ItemDetailsEditingMsgViewController
@@ -235,7 +236,8 @@ extension OnGoingSignUpsViewController: UITableViewDelegate, UITableViewDataSour
             }else {
                 controller.sheetDataID = ("\(data.id!)")
             }
-            self.navigationController?.pushViewController(controller, animated: true)
+            self.present(controller, animated: true, completion: nil)
+            //self.navigationController?.pushViewController(controller, animated: true)
             
         }else if item.volunteerStatus == "Volunteered" || item.volunteerStatus == "Full"{
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReadOnlyCommentViewController") as! ReadOnlyCommentViewController
@@ -246,8 +248,8 @@ extension OnGoingSignUpsViewController: UITableViewDelegate, UITableViewDataSour
             }else {
                 controller.sheetDataID = ("\(data.id!)")
             }
-            
-            self.navigationController?.pushViewController(controller, animated: true)
+            self.present(controller, animated: true, completion: nil)
+            //self.navigationController?.pushViewController(controller, animated: true)
             
         }
     }

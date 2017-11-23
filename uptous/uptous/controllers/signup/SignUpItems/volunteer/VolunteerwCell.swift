@@ -8,6 +8,8 @@
 
 import UIKit
 
+
+
 class VolunteerwCell: UITableViewCell {
 
     @IBOutlet weak var volunteeredView: UIView!
@@ -21,7 +23,6 @@ class VolunteerwCell: UITableViewCell {
     @IBOutlet weak var msg1Lbl: UILabel!
     @IBOutlet weak var msg2Lbl: UILabel!
     @IBOutlet weak var gifImageView: UIImageView!
-
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -29,6 +30,8 @@ class VolunteerwCell: UITableViewCell {
         cornerView(fullView)
         cornerView(openView)
     }
+    
+    
     
     func updateView(_ data: Items) {
         let attributedStr = NSMutableAttributedString()

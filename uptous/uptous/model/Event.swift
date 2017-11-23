@@ -32,6 +32,12 @@ class Event: NSObject {
     var isExpendable : Bool?
     var communityId: Int?
     
+    var address: String?
+    var city: String?
+    var country: String?
+    var state: String?
+    var zipCode: String?
+    
     
     init(info: NSDictionary?) {
         super.init()
@@ -45,6 +51,12 @@ class Event: NSObject {
         self.allDay = info?.object(forKey: "allDay") as? Bool ?? false
         self.ID = info?.object(forKey: "id") as? Int ?? 0
         self.isExpendable = true
+        
+        self.address = info?.object(forKey: "address") as? String ?? ""
+        self.city = info?.object(forKey: "city") as? String ?? ""
+        self.country = info?.object(forKey: "country") as? String ?? ""
+        self.state = info?.object(forKey: "state") as? String ?? ""
+        self.zipCode = info?.object(forKey: "zipCode") as? String ?? ""
         
     }
 }

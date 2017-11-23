@@ -162,23 +162,15 @@ class PhotosCell: UITableViewCell {
             attributedStr.append(attributedString1)
         }
         groupNameLbl.attributedText = attributedStr
-        print(attributedStr)
-        print(groupNameLbl.attributedText)
-
         
         let replyName = data.ownerName?.components(separatedBy: " ")[0]
         replyToBtn.setTitle(("Reply to" + " " + replyName!), for: UIControlState())
         
         if let newsItemPhotoUrl = data.newsItemPhoto {
-            //CustomImgView.setUserAvatar(newsItemPhotoUrl,imgView: newsItemPhotoImgView)
-            
             let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
                 self.newsItemPhotoImgView.image = image
-                //self.newsItemPhotoImgView.image = self.cropToBounds(image: image!,width:Double(self.contentsView.frame.size.width),height:195)
             }
             self.newsItemPhotoImgView.sd_setImage(with: URL(string:newsItemPhotoUrl) as URL!, completed:block)
-            
-            
         }
         
         if data.newsItemDescription != "" {
@@ -205,7 +197,7 @@ class PhotosCell: UITableViewCell {
         }
         let decodedString = data.newsItemName?.removingPercentEncoding!
         newsItemNameLbl.text =   decodedString      // newsItemDescriptionLbl.text = data.newsItemDescription!
-        dateLbl.text = ("\(Custom.dayStringFromTime(data.createDate!))")
+        dateLbl.text = ("\(Custom.dayStringFromTime(data.modifiedDate!))")
     }
     
     //MARK: - Crop Photo

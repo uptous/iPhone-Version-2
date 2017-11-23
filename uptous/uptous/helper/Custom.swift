@@ -59,7 +59,7 @@ class Custom: NSObject {
         let myDate = Date(timeIntervalSince1970:  epocTime)
         dateFormatter.timeZone = NSTimeZone(name: "PST") as TimeZone!
         //dateFormatter.locale = Locale(identifier: Locale.current.identifier)
-        dateFormatter.dateFormat = "MMM d, yyyy"
+        dateFormatter.dateFormat = "MMM d, yyyy, h:mm a"
         
         return dateFormatter.string(from: myDate)
     }

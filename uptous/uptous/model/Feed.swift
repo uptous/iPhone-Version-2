@@ -17,7 +17,7 @@ class Feed: NSObject {
     var ownerBackgroundColor: String?
     var ownerTextColor: String?
     var createDate: Double?
-    var modifiedDate: String?
+    var modifiedDate: Double?
     var communityName: String?
     var communityLogoUrl: String?
     var communityBackgroundColor: String?
@@ -43,7 +43,7 @@ class Feed: NSObject {
         self.ownerBackgroundColor = info?.object(forKey: "ownerBackgroundColor") as? String ?? ""
         self.ownerTextColor = info?.object(forKey: "ownerTextColor") as? String ?? ""
         self.createDate = info?.object(forKey: "createDate") as? Double ?? 0
-        self.modifiedDate = info?.object(forKey: "modifiedDate") as? String ?? ""
+        self.modifiedDate = info?.object(forKey: "modifiedDate") as? Double ?? 0
         self.communityName = info?.object(forKey: "communityName") as? String ?? ""
         self.communityLogoUrl = info?.object(forKey: "communityLogoUrl") as? String ?? ""
         self.communityBackgroundColor = info?.object(forKey: "communityBackgroundColor") as? String ?? ""

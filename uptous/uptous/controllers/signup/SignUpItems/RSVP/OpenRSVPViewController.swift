@@ -99,9 +99,6 @@ class OpenRSVPViewController: GeneralViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        //self.tableView.hidden = true
-        
-
         tableView.estimatedRowHeight = 110
         tableView.rowHeight = UITableViewAutomaticDimension
     }
@@ -118,6 +115,7 @@ class OpenRSVPViewController: GeneralViewController {
             
             if response["status"] as? String == "0" {
                 DispatchQueue.main.async(execute: {
+                    self.dismiss(animated: true, completion: nil)
                     let _ = self.navigationController?.popViewController(animated: true)
                 })
             }else {
@@ -140,6 +138,7 @@ class OpenRSVPViewController: GeneralViewController {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
+            self.dismiss(animated: true, completion: nil)
             self.navigationController?.popViewController(animated: true)
             print("you have pressed OK button");
         }
@@ -292,6 +291,7 @@ class OpenRSVPViewController: GeneralViewController {
     
     //MARK: - Button Action
     @IBAction func backBtnClick(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
         self.navigationController?.popViewController(animated: true)
     }
     

@@ -8,6 +8,8 @@
 
 import UIKit
 
+
+
 class SignUpDriversCell: UITableViewCell {
 
     @IBOutlet weak var volunteeredView: UIView!
@@ -24,10 +26,9 @@ class SignUpDriversCell: UITableViewCell {
     @IBOutlet weak var fullDateLbl: UILabel!
     @IBOutlet weak var volunteeredLbl: UILabel!
     @IBOutlet weak var gifImageView: UIImageView!
-
-
     @IBOutlet weak var ownerPhotoImgView: CircularImageView!
     @IBOutlet weak var identifierView: GroupIdentifierView!
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -35,6 +36,8 @@ class SignUpDriversCell: UITableViewCell {
         cornerView(fullView)
         cornerView(openView)
     }
+    
+    
     
     func updateView(_ data: Items) {
         let attributedStr = NSMutableAttributedString()

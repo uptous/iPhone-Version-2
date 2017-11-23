@@ -17,7 +17,13 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
     @IBOutlet weak var titleCreateLable : UILabel!
     @IBOutlet weak var headingLable : UILabel!
     
-    
+    //Set property of UICollection
+    let columnLayout = ColumnFlowLayout(
+        cellsPerRow: 3,
+        minimumInteritemSpacing: 10,
+        minimumLineSpacing: 10,
+        sectionInset: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    )
     
     var itemsDatas = NSMutableArray()
     var currentSelectedIndex = 0
@@ -38,7 +44,6 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         collectionView.register(nibWishList, forCellWithReuseIdentifier: mediaphotoconstant.cellIdentifier as String)
         collectionView.delegate = self
         collectionView.dataSource = self
-//headingLable.text = ("\(data.title!) message")
         
         let leftSwipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(DetailsLibraryViewController.swipeLeft(sender:)))
         leftSwipeGesture.direction = .left
@@ -107,15 +112,12 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         })
     }
 
-
-    
     override func viewWillAppear(_ animated: Bool) {
         fetchRecords()
     }
     
     @IBAction func back(_ sender: UIButton) {
-        //self.navigationController?.popViewController(animated: true)
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: false, completion: nil)
     }
     
     //MARK: Fetch Records
@@ -126,8 +128,6 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         }else{
             apiName = AlbumLibrary + ("\(albumID!)")
         }
-        
-        
         DataConnectionManager.requestGETURL(api: apiName!, para: ["":""], success: {
             (response) -> Void in
             print(response)
@@ -146,8 +146,6 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
                 self.titleLable.text = data?.caption
                 self.titleCreateLable.text = ("\(Custom.dayStringFromTime((data?.createTime!)!))")
             }
-            
-            
         }) {
             (error) -> Void in
             
@@ -164,7 +162,6 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
     }
     
     func downloadImage(mediapath: String, cell: MediaCollectionCell, index : Int) {
-        
         let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
             cell.thumnnailv.image = image
             if index == self.currentSelectedIndex {
@@ -179,10 +176,7 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         }
         cell.activityindicator.isHidden =  false
         cell.activityindicator.startAnimating()
-        
         cell.thumnnailv.sd_setImage(with: URL(string:mediapath) as URL!, completed:block)
-        
-        
     }
 
     
@@ -247,7 +241,7 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         return CGSize(width: 80, height: 80)
     }
     
-    /*func collectionView(_ collectionView: UICollectionView,
+    func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
         
@@ -266,7 +260,7 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         let edgeInsets = (collectionViewWidth - totalCellsWidth) / 2.0
         
         return edgeInsets > 0 ? UIEdgeInsetsMake(0, edgeInsets, 0, edgeInsets) : UIEdgeInsetsMake(0, cellSpacing, 0, cellSpacing)
-    }*/
+    }
     
 
     

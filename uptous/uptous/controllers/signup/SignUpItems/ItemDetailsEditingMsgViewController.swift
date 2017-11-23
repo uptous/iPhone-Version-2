@@ -123,7 +123,9 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
     
     
     @IBAction func back(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
         DispatchQueue.main.async(execute: {
+            self.dismiss(animated: true, completion: nil)
             let _ = self.navigationController?.popViewController(animated: true)
         })
     }
@@ -157,7 +159,8 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
             
             print(response["status"])
             if response["status"] as? String == "0" {
-                self.navigationController?.popViewController(animated: true)
+                //self.navigationController?.popViewController(animated: true)
+                self.dismiss(animated: true, completion: nil)
             }
         })
     }
@@ -175,7 +178,8 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
             
             if response["status"] as? String == "0" {
                 DispatchQueue.main.async(execute: {
-                    let _ = self.navigationController?.popViewController(animated: true)
+                    self.dismiss(animated: true, completion: nil)
+                   // let _ = self.navigationController?.popViewController(animated: true)
                 })
             }else {
                 self.postCounter = self.postCounter + 1
@@ -195,7 +199,8 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
-            self.navigationController?.popViewController(animated: true)
+            self.dismiss(animated: true, completion: nil)
+            //self.navigationController?.popViewController(animated: true)
             print("you have pressed OK button");
         }
         alertController.addAction(OKAction)

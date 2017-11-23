@@ -92,7 +92,9 @@ class ReadOnlyCommentViewController: GeneralViewController {
     }
     
     @IBAction func back(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
         DispatchQueue.main.async(execute: {
+            self.dismiss(animated: true, completion: nil)
             let _ = self.navigationController?.popViewController(animated: true)
         })
     }
@@ -120,6 +122,7 @@ class ReadOnlyCommentViewController: GeneralViewController {
             
             if response["status"] as? String == "0" {
                 DispatchQueue.main.async(execute: {
+                    self.dismiss(animated: true, completion: nil)
                     let _ = self.navigationController?.popViewController(animated: true)
                 })
             }else {

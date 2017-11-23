@@ -40,6 +40,7 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
     var topMenuStatus = 0
     var communityList = NSMutableArray()
     @IBOutlet weak var webView: UIWebView!
+    var topMenuSelected = 0
 
 
     override func viewDidLoad() {
@@ -57,29 +58,40 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
             backButton.isHidden = true
             menuButton.isHidden = false
         }
-        
         appDelegate.tabbarView?.isHidden = false
-        /*screenSize = UIScreen.main.bounds
-        screenWidth = screenSize.width
-        screenHeight = screenSize.height
         
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.reloadData()*/
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        searchBar.text = ""
-        if UserPreferences.SelectedCommunityName == "" {
-            headingBtn.setTitle("Library - All Communities", for: .normal)
-        }else{
-            headingBtn.setTitle("Library - \(UserPreferences.SelectedCommunityName)", for: .normal)
-        }
-        if selectedSegment == "0" {
-            self.fetchLibrary()
+        if UserPreferences.DeepLinkingStatus == "" {
+            searchBar.text = ""
+            if UserPreferences.SelectedCommunityName == "" {
+                headingBtn.setTitle("Library - All Communities", for: .normal)
+            }else{
+                headingBtn.setTitle("Library - \(UserPreferences.SelectedCommunityName)", for: .normal)
+            }
+            if selectedSegment == "0" {
+                self.fetchLibrary()
+            }else {
+                self.fetchFiles()
+            }
         }else {
-            self.fetchFiles()
+            getDeepLinkingData(url: UserPreferences.DeepLinkingStatus)
+            
         }
+    }
+    
+    func getDeepLinkingData(url: String) {
+        /*let records: Library!
+        if(searchActive) {
+            records = self.filterListArr[(indexPath as NSIndexPath).row]
+        }else {
+            records = self.fullListArr[(indexPath as NSIndexPath).row]
+        }
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "DetailsLibraryViewController") as! DetailsLibraryViewController
+        controller.data = records
+        self.present(controller, animated: true, completion: nil)*/
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -88,9 +100,25 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
     
     //MARk:- Top Menu Community
     @IBAction func topMenuButtonClick(_ sender: UIButton) {
-        fetchCommunity()
-        appDelegate.tabbarView?.isHidden = true
-        communityView.isHidden = false
+        if topMenuSelected == 0 {
+            headingBtn.setImage(UIImage(named: "top-up-arrow"), for: .normal)
+            fetchCommunity()
+            appDelegate.tabbarView?.isHidden = true
+            communityView.isHidden = false
+            topMenuSelected = 1
+        }else {
+            headingBtn.setImage(UIImage(named: "top-down-arrow"), for: .normal)
+            communityView.isHidden = true
+            appDelegate.tabbarView?.isHidden = false
+            topMenuSelected = 0
+        }
+    }
+    
+    @IBAction func closeMenuButtonClick(_ sender: UIButton) {
+        headingBtn.setImage(UIImage(named: "top-down-arrow"), for: .normal)
+        communityView.isHidden = true
+        appDelegate.tabbarView?.isHidden = false
+        topMenuSelected = 0
     }
     
     //MARK: Fetch Community Records
@@ -121,11 +149,6 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
         }
     }
     
-    @IBAction func closeMenuButtonClick(_ sender: UIButton) {
-        communityView.isHidden = true
-        appDelegate.tabbarView?.isHidden = false
-    }
-
     
     // MARK: UISearchBarDelegate functions
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -145,7 +168,6 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
         searchBar.resignFirstResponder()
         searchActive = false
     }
-    
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
@@ -321,7 +343,6 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CollectionCell
         if selectedSegment == "0" {
-            //let data = self.itemsDatas[(indexPath as NSIndexPath).row] as? Library
             let data: Library!
             if(searchActive) {
                 data = self.filterListArr[(indexPath as NSIndexPath).row]
@@ -329,41 +350,11 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
                 data = self.fullListArr[(indexPath as NSIndexPath).row]
             }
             cell.updateView(data!)
-            
         }
-        /*else {
-            //let data = self.itemsDatas[(indexPath as NSIndexPath).row] as? Files
-            let data: Files!
-            if(searchActive) {
-                data = self.filterListArr1[(indexPath as NSIndexPath).row]
-            }else {
-                data = self.fullListArr1[(indexPath as NSIndexPath).row]
-            }
-            cell.fileUpdateView(data!)
-        }*/
         return cell
     }
     
-     
-    /*func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        let cellSpacing = CGFloat(7) //Define the space between each cell
-        let leftRightMargin = CGFloat(20) //If defined in Interface Builder for "Section Insets"
-        let numColumns = CGFloat(3) //The total number of columns you want
-        
-        let totalCellSpace = cellSpacing * (numColumns - 1)
-        //collectionViewLayout.sectionInset = UIEdgeInsets(top: 0, left: 5, bottom: 20, right: 5)
-
-        
-        let screenWidth = UIScreen.main.bounds.width
-        let width = (screenWidth - leftRightMargin - totalCellSpace) / numColumns
-        let height = CGFloat(140) //whatever height you want
-        
-        return CGSize(width: width, height: height)
-    }*/
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
         if selectedSegment == "0" {
             let records: Library!
             if(searchActive) {
@@ -372,51 +363,8 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
                 records = self.fullListArr[(indexPath as NSIndexPath).row]
             }
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "DetailsLibraryViewController") as! DetailsLibraryViewController
-            //let records = self.itemsDatas[(indexPath as NSIndexPath).row] as? Library
             controller.data = records
             self.present(controller, animated: true, completion: nil)
-            //self.navigationController?.pushViewController(controller, animated: true)
-            
-        }
-        /*else {
-            let records: Files!
-            if(searchActive) {
-                records = self.filterListArr1[(indexPath as NSIndexPath).row]
-            }else {
-                records = self.fullListArr1[(indexPath as NSIndexPath).row]
-            }
-            self.openPDFFile(path: records.path!,fileName: records.title!)
-            //let controller = self.storyboard?.instantiateViewController(withIdentifier: "FileListViewController") as! FileListViewController
-            //let records = self.itemsDatas[(indexPath as NSIndexPath).row] as? Library
-            //controller.data = records
-            //self.present(controller, animated: true, completion: nil)
-        } */
-    }
-    
-    func openPDFFile(path: String,fileName: String) {
-        let fullNameFile = fileName.components(separatedBy: ".")
-        let docFile: String = fullNameFile[1]
-        if docFile == "doc" || docFile == "docx" || docFile == "JPG" || docFile == "xls" || docFile == "png" || docFile == "tif" || docFile == "zip" || docFile == "jpg" || docFile == "MOV" || docFile == "MP3" || docFile == "mp3" || docFile == "jpeg"  || docFile == "tif" {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "FileListViewController") as! FileListViewController
-            controller.filePath = path
-            self.present(controller, animated: true, completion: nil)
-            
-        }else {
-            let url : NSURL! = NSURL(string: path)
-            PDFDownload.loadFileAsync(url: url!, completion:{(path) in
-                print("pdf downloaded to: \(path)")
-                if path.1 == nil {
-                    // Get the directory contents urls (including subfolders urls)
-                    if let document = ReaderDocument.withDocumentFilePath(path.0, password: "") {
-                        let readerViewController: ReaderViewController = ReaderViewController(readerDocument: document)
-                        readerViewController.delegate = self
-                        // Set the ReaderViewController delegate to self
-                        self.navigationController!.pushViewController(readerViewController, animated: true)
-                    }
-                } else {
-                    print(path.1?.localizedDescription ?? "Error Occured")
-                }
-            })
         }
     }
     
@@ -427,10 +375,9 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
         }else {
             data = self.fullListArr1[indexPath]
         }
-        
         let docFile = data.path?.components(separatedBy: ".").last
         
-        if docFile == "doc" || docFile == "docx" || docFile == "pdf" || docFile == "JPG" || docFile == "png" || docFile == "xls" || docFile == "xlsx" || docFile == "MOV" || docFile == "MP3" || docFile == "mp3"  || docFile == "jpg"  || docFile == "PNG"  || docFile == "mov"  || docFile == "jpeg"  || docFile == "tif" {
+        if docFile == "doc" || docFile == "docx" || docFile == "pdf" || docFile == "PDF" || docFile == "JPG" || docFile == "png" || docFile == "xls" || docFile == "xlsx" || docFile == "MOV" || docFile == "MP3" || docFile == "mp3"  || docFile == "jpg"  || docFile == "PNG" || docFile == "mov" {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "FileListViewController") as! FileListViewController
             controller.filePath = data.path
             self.present(controller, animated: true, completion: nil)
@@ -442,30 +389,6 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
              self.present(alert, animated: true, completion: nil)
             })
         }
-
-    
-       /* let fullNameFile = data.title?.components(separatedBy: ".")
-        if fullNameFile?.count == 1 {
-            return
-        }
-        print("data.title==>\(data.title)")
-        let docFile: String = fullNameFile![1]
-        
-        
-        if docFile == "zip" {
-            DispatchQueue.main.async(execute: { () -> Void in
-                let alert = UIAlertController(title: "Alert", message: "Files in this format cannot be downloaded to the iPhone", preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            })
-            
-        }else {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "FileListViewController") as! FileListViewController
-            controller.filePath = data.path
-            self.present(controller, animated: true, completion: nil)
- 
-        }*/
-        
     }
     
     func dismiss(_ viewController: ReaderViewController!) {
@@ -485,7 +408,7 @@ extension MyUpToUsLibraryViewController: UITableViewDelegate,UITableViewDataSour
         }else {
             if(searchActive) {
                 return self.filterListArr1.count
-            }else {
+            } else {
                 return self.fullListArr1.count
             }
         }
@@ -517,6 +440,7 @@ extension MyUpToUsLibraryViewController: UITableViewDelegate,UITableViewDataSour
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView == communityTableView {
+            topMenuSelected = 0
             let data = self.communityList[(indexPath as NSIndexPath).row] as? Community
             if data?.name == "All Communities" {
                 topMenuStatus = 0

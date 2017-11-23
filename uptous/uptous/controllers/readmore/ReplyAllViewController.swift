@@ -70,18 +70,13 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
         Custom.fullCornerView(ownerView)
         ownerPhotoImgView.layer.cornerRadius = 30.0
         ownerPhotoImgView.layer.masksToBounds = true
-        
-        tableView.estimatedRowHeight = 110
-        tableView.rowHeight = UITableViewAutomaticDimension
-        
-        self.tableView.layoutIfNeeded()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.tableView.isHidden = true
         
-        
+        tableView.estimatedRowHeight = 110
+        tableView.rowHeight = UITableViewAutomaticDimension
     }
     
     //MARK:- Reply Post
@@ -127,7 +122,7 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
             
             let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
-            //self.present(alert, animated: true, completion: nil)
+            self.present(alert, animated: true, completion: nil)
         }
     }
 
@@ -266,7 +261,9 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
             detailHeightContraint.constant = 100
             detailViewHeightContraint.constant = detailViewHeightContraint.constant + 60
         }*/
-        webView.loadHTMLString(data.newsItemDescription!,baseURL: nil)
+        let font = UIFont.init(name: "Helvetica Neue", size: 14.0)
+        self.webView.loadHTMLString("<span style=\"font-family: \(font!.fontName); font-size: \(font!.pointSize); \">\(data.newsItemDescription!)</span>", baseURL: nil)
+        //webView.loadHTMLString(data.newsItemDescription!,baseURL: nil)
        /* let font = UIFont(name: "Helvetica Neue", size: 16.0)
         let height = Custom.heightForView(text: data.newsItemDescription!, font: font!, width: webView.frame.size.width)
         
@@ -359,7 +356,6 @@ extension ReplyAllViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.commentList.count
     }
-
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ReplyAllCell") as! ReplyAllCell

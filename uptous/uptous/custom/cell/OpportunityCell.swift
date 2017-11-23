@@ -131,7 +131,7 @@ class OpportunityCell: UITableViewCell {
         newsItemNameLbl.text = data.newsItemName
         newsItemDescriptionLbl.text = data.newsItemDescription!
         //groupNameLbl.text = data.ownerName! + " in: " + data.communityName!
-        dateLbl.text = ("\(Custom.dayStringFromTime(data.createDate!))")
+        dateLbl.text = ("\(Custom.dayStringFromTime(data.modifiedDate!))")
         if data.comments?.count > 0 {
             comment1Btn.isHidden = false
             if data.comments?.count == 1 {

@@ -7,39 +7,72 @@
 //
 
 import UIKit
+//import IBAnimatable
+//import AnimatedTextInput
+//import AnimatableView
 
 
 class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
     @IBOutlet var captionTextField : UITextField!
     @IBOutlet var fileTextField : UITextField!
+    @IBOutlet var addNewAlbumTextField : UITextField!
+    @IBOutlet var addNewAlbumButton : UIButton!
+    @IBOutlet var communityNameTextField : UITextField!
+    @IBOutlet var dropdownButton: UIButton!
+    @IBOutlet weak var displayImage : UIImageView!
+    @IBOutlet weak var displayImage1 : UIImageView!
+    @IBOutlet weak var displayImage2 : UIImageView!
+    @IBOutlet weak var displayImage3 : UIImageView!
+    @IBOutlet weak var displayImage4 : UIImageView!
+    @IBOutlet var addMoreButton: UIButton!
+    
+    //@IBOutlet weak var albumView1 : AnimatableView!
+    @IBOutlet weak var albumView2 : UIView!
+    @IBOutlet weak var albumView3 : UIView!
+    @IBOutlet weak var albumView4 : UIView!
+    @IBOutlet weak var albumView5 : UIView!
+    
+    var selectedAlbumStatus = ""
+    var selectedAlbumID = 0
+    var uploadedAlbumID = 0
+    var selectedImg = 0
+    var allImageData = [Any]()
+    
     var communityTableView = UITableView()
+    var communityAlbumTableView = UITableView()
+    
     var communityList = [String]()
+    var albumList = [String]()
+    var albumListID = [Int]()
     var list = [AnyObject]()
     var selectedCommunityID: Int?
     var menuView : UIView!
+    var albumMenuView : UIView!
     var imageData : String!
+    var imageData1 : String!
+    var imageData2 : String!
+    var imageData3 : String!
+    var imageData4 : String!
     var selectedCommunity = "0"
 
-    @IBOutlet var communityNameTextField : UITextField!
-    
-    @IBOutlet var dropdownButton: UIButton!
-    @IBOutlet weak var displayImage : UIImageView!
-
-    private var imagePicker : UIImagePickerController!
+     private var imagePicker : UIImagePickerController!
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        //albumView2.isHidden = true
+        addMoreButton.isEnabled = false
         imagePicker = UIImagePickerController()
         imagePicker.delegate = self
+        addNewAlbumButton.isEnabled = false
         fetchCommunity()
-        
         let tap : UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ImagePostViewController.dismissKeyboard))
-        //view.addGestureRecognizer(tap)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(ImagePostViewController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+         NotificationCenter.default.addObserver(self, selector: #selector(ImagePostViewController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(ImagePostViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
+        menuView = UIView()
+        albumMenuView = UIView()
     }
     
     //MARK:- Dismiss Keyboard
@@ -47,18 +80,21 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
         //view.endEditing(true)
     }
     
-    @IBAction func uploadButtonClick(_ sender: UIButton) {
-        
-        
-        if captionTextField.text != "" &&  fileTextField.text != "" && selectedCommunity != "" {
-            /*if self.view.frame.origin.y == 0{
-                self.view.frame.origin.y -= 30
-            }*/
-            var stringPost = "caption=" + captionTextField.text!
-            stringPost += "&filname=" + fileTextField.text!
-            stringPost += "&photo=" + ("\(imageData!)")
-            
-            let urlString = PostImageMessage + ("\(selectedCommunityID!)") + ("/title/\(fileTextField.text!)")
+    override func viewWillAppear(_ animated: Bool) {
+        menuView.isHidden = true
+        albumMenuView.isHidden = true
+    }
+    
+    @IBAction func addMoreButtonClick(_ sender: UIButton) {
+        albumView2.isHidden = true
+    }
+    
+    func uploadExitingAlbum(imgData: String) {
+        var stringPost = ""
+        if selectedAlbumID != 0 {
+            let urlString = PostImageMessage + ("\(selectedCommunityID!)") + ("/album/\(selectedAlbumID)")
+            stringPost += "&filname=" + addNewAlbumTextField.text!
+            stringPost += "&photo=" + ("\(imgData)")
             
             DataConnectionManager.requestPOSTURL1(api: urlString, stringPost: stringPost, success: {
                 (response) -> Void in
@@ -75,22 +111,144 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
                     self.present(alert, animated: true, completion: nil)
                 }
             })
-        }else {
-            let alert = UIAlertController(title: "Alert", message: "Field missing", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
         }
+    }
+    
+    func uploadImage(imgData: String) {
+        var stringPost = ""
+        let urlString = PostImageMessage + ("\(selectedCommunityID!)") + ("/title/\(fileTextField.text!)")
+    
+        stringPost = "caption=" + captionTextField.text!
+        stringPost += "&filname=" + fileTextField.text!
+        stringPost += "&photo=" + ("\(imgData)")
         
-
+        DataConnectionManager.requestPOSTURL1(api: urlString, stringPost: stringPost, success: {
+            (response) -> Void in
+            print(response)
+            
+            if response["status"] as? String == "0" {
+                self.uploadedAlbumID = Int(response["albumId"] as! String)!//response["albumId"] as! Int
+                DispatchQueue.main.async(execute: {
+                    if self.displayImage1.image != nil {
+                        self.selectedAlbumID = self.uploadedAlbumID
+                        self.uploadExitingAlbum(imgData: self.imageData1)
+                    }
+                    
+                    if self.displayImage2.image != nil {
+                        self.selectedAlbumID = self.uploadedAlbumID
+                        self.uploadExitingAlbum(imgData: self.imageData2)
+                    }
+                    
+                    if self.displayImage3.image != nil {
+                        self.selectedAlbumID = self.uploadedAlbumID
+                        self.uploadExitingAlbum(imgData: self.imageData3)
+                    }
+                    
+                    if self.displayImage4.image != nil {
+                        self.selectedAlbumID = self.uploadedAlbumID
+                        self.uploadExitingAlbum(imgData: self.imageData4)
+                    }
+                    
+                    self.dismiss(animated: true, completion: {
+                    
+                    })
+                })
+                
+            }else {
+                let msg = response["message"] as? String
+                let alert = UIAlertController(title: "Alert", message: msg, preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+        })
+    }
+    
+    @IBAction func uploadButtonClick(_ sender: UIButton) {
+        if (selectedAlbumStatus == "1") {
+            if (fileTextField.text != "") {
+                //Uploading multiple images
+                if displayImage.image != nil {
+                    self.uploadImage(imgData: imageData)
+                }
+                
+            }else {
+                let alert = UIAlertController(title: "Alert", message: "Fields are  missing", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+            
+        }else if (selectedAlbumStatus == "2") {
+            if displayImage.image != nil {
+                self.uploadExitingAlbum(imgData: imageData)
+            }
+            
+            if displayImage1.image != nil {
+                self.uploadExitingAlbum(imgData: imageData1)
+            }
+            
+            if displayImage2.image != nil {
+                self.uploadExitingAlbum(imgData: imageData2)
+            }
+            
+            if displayImage3.image != nil {
+                self.uploadExitingAlbum(imgData: imageData3)
+            }
+            
+            if displayImage4.image != nil {
+                self.uploadExitingAlbum(imgData: imageData4)
+            }
+        }
+    }
+    
+    @IBAction func fetchAlbumClick(_ sender: UIButton) {
+        menuView.isHidden = true
+        albumMenuView.isHidden = false
+        albumMenuView.frame = CGRect(x: addNewAlbumButton.frame.origin.x, y: addNewAlbumButton.frame.origin.y+35, width: addNewAlbumButton.frame.size.width, height: 300)
+        albumMenuView.backgroundColor = UIColor.white
+        self.view.addSubview(albumMenuView)
+        
+        communityAlbumTableView.frame = CGRect(x: 0, y: 0, width: addNewAlbumButton.frame.size.width, height: 300)
+        // Delegates and data Source
+        communityAlbumTableView.dataSource = self
+        communityAlbumTableView.delegate = self
+        communityAlbumTableView.register(DropperCell.self, forCellReuseIdentifier: "cell")
+        // Styling
+        communityAlbumTableView.backgroundColor = UIColor.lightGray
+        communityAlbumTableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
+        communityAlbumTableView.bounces = false
+        communityAlbumTableView.layer.cornerRadius = 9.0
+        communityAlbumTableView.clipsToBounds = true
+        albumMenuView.addSubview(communityAlbumTableView)
+    }
+    
+    //MARK: Fetch Community Records
+    func fetchAlbumBasedCommunity(communityID: Int) {
+        addNewAlbumButton.isEnabled = true
+        addNewAlbumTextField.isEnabled = true
+        self.albumList.append("ADD NEW ALBUM")
+        self.albumListID.append(0)
+        //addNewAlbumTextField.text = "ADD NEW ALBUM"
+        let url = FetchAlbumAPI + "\(communityID)"
+        DataConnectionManager.requestGETURL(api: url, para: ["":""], success: {
+            (response) -> Void in
+            let item = response as! NSArray
+            for index in 0..<item.count {
+                let dic = item.object(at: index) as! NSDictionary
+                let item = CommunityAlbum(info: dic)
+                self.albumList.append(item.title!)
+                self.albumListID.append(item.Id!)
+            }
+            self.communityAlbumTableView.reloadData()
+        }) {
+            (error) -> Void in
+        }
     }
     
     //MARK: Fetch Community Records
     func fetchCommunity() {
         DataConnectionManager.requestGETURL(api: TopMenuCommunity, para: ["":""], success: {
             (response) -> Void in
-            print(response)
-            
-            let item = response as! NSArray
+           let item = response as! NSArray
             for index in 0..<item.count {
                 let dic = item.object(at: index) as! NSDictionary
                 let item = Community(info: dic)
@@ -103,10 +261,10 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
     }
     
     @IBAction func menuButtonClick(_ sender: UIButton) {
-        
+        albumMenuView.isHidden = true
+        menuView.isHidden = false
         if selectedCommunity == "0" {
             selectedCommunity = "1"
-            menuView = UIView()
             menuView.frame = CGRect(x: dropdownButton.frame.origin.x, y: dropdownButton.frame.origin.y+35, width: dropdownButton.frame.size.width, height: 300)
             menuView.backgroundColor = UIColor.white
             self.view.addSubview(menuView)
@@ -134,37 +292,35 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
         self.dismiss(animated: true, completion: nil)
     }
     
-    
-    @IBAction func uploadNewPicture(sender: UIButton) {
-        imagePicker.allowsEditing = false
-        imagePicker.sourceType = .photoLibrary
-        imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
-        imagePicker.modalPresentationStyle = .popover
-        present(imagePicker, animated: true, completion: nil)
-    }
-    
-    @IBAction func takeNewPicture(sender: UIButton) {
-        if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            imagePicker.allowsEditing = false
-            imagePicker.sourceType = UIImagePickerControllerSourceType.camera
-            imagePicker.cameraCaptureMode = .photo
-            imagePicker.modalPresentationStyle = .fullScreen
-            present(imagePicker,animated: true,completion: nil)
-        }
-    }
-    
     //MARK: - Delegates
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
         var chosenImage = UIImage()
         chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
-        self.displayImage.contentMode = .scaleAspectFill //3
-        let fixOrientationImage=chosenImage.fixOrientation()
-        self.displayImage.image = fixOrientationImage
-        chosenImage = fixOrientationImage!
+        //self.displayImage.contentMode = .scaleAspectFill //3
+        //let fixOrientationImage=chosenImage.fixOrientation1()
+        //self.displayImage.image = fixOrientationImage
+        //chosenImage = fixOrientationImage
 
-        imageData = UIImageJPEGRepresentation(chosenImage, 0.9)?.base64EncodedString()
-        self.displayImage.image = cropToBounds(image: chosenImage,width:130,height:130)
+        if selectedImg == 0 {
+            imageData = UIImageJPEGRepresentation(chosenImage, 0.5)?.base64EncodedString()
+            self.displayImage.image = chosenImage
+            addMoreButton.isEnabled = true
+            //albumView2.isHidden = true
+        }else if selectedImg == 1 {
+            imageData1 = UIImageJPEGRepresentation(chosenImage, 0.5)?.base64EncodedString()
+            self.displayImage1.image = chosenImage
+        }else if selectedImg == 2 {
+            imageData2 = UIImageJPEGRepresentation(chosenImage, 0.5)?.base64EncodedString()
+            self.displayImage2.image = chosenImage
+        }else if selectedImg == 3 {
+            imageData3 = UIImageJPEGRepresentation(chosenImage, 0.5)?.base64EncodedString()
+            self.displayImage3.image = chosenImage
+        }else if selectedImg == 4 {
+            imageData4 = UIImageJPEGRepresentation(chosenImage, 0.5)?.base64EncodedString()
+            self.displayImage4.image = chosenImage
+        }
+        
         dismiss(animated:true, completion: nil)
     }
     
@@ -225,7 +381,66 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
             }
         }
     }
-
+    
+     func uploadNewPicture() {
+        imagePicker.allowsEditing = false
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
+        imagePicker.modalPresentationStyle = .popover
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+     func takeNewPicture() {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            imagePicker.allowsEditing = false
+            imagePicker.sourceType = UIImagePickerControllerSourceType.camera
+            imagePicker.cameraCaptureMode = .photo
+            imagePicker.modalPresentationStyle = .fullScreen
+            present(imagePicker,animated: true,completion: nil)
+        }
+    }
+    
+    @IBAction func selectImg(_ sender: UIButton) {
+        if sender.tag == 100 {
+            selectedImg = 0
+            showActionSheet()
+        }else if sender.tag == 101 {
+            selectedImg = 1
+           showActionSheet()
+        }else if sender.tag == 102 {
+            selectedImg = 2
+            showActionSheet()
+        }else if sender.tag == 103 {
+            selectedImg = 3
+            showActionSheet()
+        }else if sender.tag == 104 {
+            selectedImg = 4
+            showActionSheet()
+        }
+    }
+    
+    //MARK:- All Action Sheet
+    func showActionSheet() {
+        let optionMenu = UIAlertController(title: nil, message: "Choose Option", preferredStyle: .actionSheet)
+        
+        //Add Friend Popup
+        let click = UIAlertAction(title: "Open Camera", style: .default, handler: {
+            (alert: UIAlertAction!) -> Void in
+            self.takeNewPicture()
+        })
+        
+        let library = UIAlertAction(title: "Open Gallery", style: .default, handler: {
+            (alert: UIAlertAction!) -> Void in
+            self.uploadNewPicture()
+        })
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {
+            (alert: UIAlertAction!) -> Void in
+        })
+        optionMenu.addAction(click)
+        optionMenu.addAction(library)
+        optionMenu.addAction(cancelAction)
+        self.present(optionMenu, animated: true, completion: nil)
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -235,44 +450,10 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
 
 //MARK: TextField Delegate
 extension ImagePostViewController: UITextFieldDelegate {
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
-    
-    /*func textFieldDidBeginEditing(_ textField: UITextField) {
-        let moveValue : CGFloat = 0.0
-        animateViewMoving(up: true, moveValue: moveValue)
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        var moveValue : CGFloat = 0.0
-        switch textField.tag {
-        case 100:
-            moveValue = 0.0
-            break
-        case 101:
-            moveValue = 60.0
-            break
-        case 102:
-            moveValue = 100.0
-        default:
-            break
-        }
-        animateViewMoving(up: false, moveValue: moveValue)
-    }
-    
-    func animateViewMoving (up:Bool, moveValue :CGFloat){
-        let movementDuration:TimeInterval = 0.3
-        let movement:CGFloat = ( up ? -moveValue : moveValue)
-        UIView.beginAnimations( "animateView", context: nil)
-        UIView.setAnimationBeginsFromCurrentState(true)
-        UIView.setAnimationDuration(movementDuration )
-        self.view.frame = self.view.frame.offsetBy(dx: 0,  dy: movement)
-        UIView.commitAnimations()
-    }*/
-
 }
 
 extension ImagePostViewController: UITableViewDelegate, UITableViewDataSource {
@@ -294,20 +475,26 @@ extension ImagePostViewController: UITableViewDelegate, UITableViewDataSource {
         //cell.last = items.count - 1  // Sets the last item to the cell
         cell.indexPath = indexPath as NSIndexPath? // Sets index path to the cell
         cell.borderColor = border.color // Sets the border color for the seperator
-        // let item = items[indexPath.row]
         cell.backgroundColor = UIColor.white
         cell.textItem.textColor = UIColor.black
         cell.textItem.numberOfLines = 2
         cell.textItem.textAlignment = .center
         cell.textItem.font = UIFont.systemFont(ofSize: 16.0)
         cell.cellType = .Text
-        cell.textItem.text = self.communityList[indexPath.row]
-        
+        if tableView == communityAlbumTableView {
+            cell.textItem.text = self.albumList[indexPath.row]
+        }else {
+            cell.textItem.text = self.communityList[indexPath.row]
+        }
         return cell
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.communityList.count
+        if tableView == communityAlbumTableView {
+            return self.albumList.count
+        }else {
+            return self.communityList.count
+        }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -315,10 +502,30 @@ extension ImagePostViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let community = self.list[indexPath.row] as! Community
-        selectedCommunityID = community.communityId
-        communityNameTextField.text = community.name
-        self.menuView.removeFromSuperview()
+        if tableView == communityAlbumTableView {
+            let album = self.albumList[indexPath.row] //as! CommunityAlbum
+            if album == "ADD NEW ALBUM" {
+                captionTextField.isHidden = false
+                fileTextField.isHidden = false
+                selectedAlbumStatus = "1"
+            }else {
+                fileTextField.text = ""
+                captionTextField.isHidden = true
+                fileTextField.isHidden = true
+                selectedAlbumStatus = "2"
+            }
+            selectedAlbumID = self.albumListID[indexPath.row]
+            addNewAlbumTextField.text = ""
+            addNewAlbumTextField.text = album
+            self.albumMenuView.removeFromSuperview()
+        }else {
+            let community = self.list[indexPath.row] as! Community
+            selectedCommunityID = community.communityId
+            communityNameTextField.text = community.name
+            self.fetchAlbumBasedCommunity(communityID: selectedCommunityID!)
+            self.menuView.removeFromSuperview()
+        }
+        
     }
 }
 
@@ -385,4 +592,19 @@ extension UIImage {
     }
 }
 
+extension Data {
+    var attributedString: NSAttributedString? {
+        do {
+            return try NSAttributedString(data: self, options:[NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
+        } catch {
+            print(error)
+        }
+        return nil
+    }
+}
+extension String {
+    var data: Data {
+        return Data(utf8)
+    }
+}
 

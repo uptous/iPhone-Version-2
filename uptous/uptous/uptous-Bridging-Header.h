@@ -8,7 +8,7 @@
 #import "HPTextViewInternal.h"
 #import "NSDate+NVTimeAgo.h" 
 //#import <AFNetworking/AFNetworking.h>
-#import <RSKImageCropper/RSKImageCropper.h>
+//#import <RSKImageCropper/RSKImageCropper.h>
 #import "ReaderViewController.h"
 //#import <Reachability/Reachability.h>
 //#import <EDHFinder/EDHFinder.h>

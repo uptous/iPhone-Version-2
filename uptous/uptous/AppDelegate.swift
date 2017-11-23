@@ -8,6 +8,9 @@
 
 import UIKit
 import CoreData
+import GoogleMaps
+import Fabric
+import Crashlytics
 
 
 @UIApplicationMain
@@ -17,13 +20,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var loginHeaderCredentials: [String: String]!
     var loginHeader64Credentials: String!
     var tabbarView: CustomTabBarView?
+    var globalSignUpData: SignupSheet!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
                 // Override point for customization after application launch.
+        GMSServices.provideAPIKey("\(GoogleAPIKey)")
         
+        Fabric.with([Crashlytics.self])
         return true
     }
     
+    func application(_ application: UIApplication,
+                     continue userActivity: NSUserActivity,
+                     restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+        
+        let alert = UIAlertController(title: "Alert", message: "Deep Linking Working.", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (alert) in
+            // let login = LoginViewController(nibName: "LoginViewController", bundle: nil)
+            
+        }))
+        //UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+        // 1
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+            let url = userActivity.webpageURL,
+            let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+                
+                return false
+        }
+        
+        UserPreferences.DeepLinkingStatus = "\(userActivity.webpageURL!)"
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let loadingController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+        let nvgController = UINavigationController.init(rootViewController: loadingController)
+        nvgController.isNavigationBarHidden = true
+        
+        self.window?.rootViewController = nvgController
+        self.window?.makeKeyAndVisible()
+        
+        
+        return false
+    }
     
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

@@ -10,6 +10,7 @@ import UIKit
 
 protocol EventExpandCellDelegate {
     func collapseClick(_: NSInteger)
+    func openMapForLocation(_: NSInteger)
 }
 
 class CalendarTableViewCell: UITableViewCell {
@@ -17,26 +18,33 @@ class CalendarTableViewCell: UITableViewCell {
     @IBOutlet weak var lblTeacherName: UILabel!
     @IBOutlet weak var lblTitle: UILabel!
     @IBOutlet weak var locationBtn: UIButton!
-    @IBOutlet weak var detailHeightContraint: NSLayoutConstraint!
-    @IBOutlet weak var detailViewHeightContraint: NSLayoutConstraint!
-    @IBOutlet weak var viewExpendableBtn: UIButton!
     @IBOutlet weak var lblStart: UILabel!
     @IBOutlet weak var lblEnd: UILabel!
     @IBOutlet weak var cellView: UIView!
     @IBOutlet weak var communityLabel: UILabel!
     var delegate: EventExpandCellDelegate!
     @IBOutlet weak var collapseBtn: UIButton!
+    @IBOutlet weak var descriptionTextView: UITextView!
+    @IBOutlet weak var descTableView: UITableView!
     
-    @IBOutlet weak var webView: UIWebView!
+    var desc = ""
 
-   
-   
+    fileprivate struct signUpCellConstants {
+        static var cellIdentifier:String = "cell"
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         self.clipsToBounds = true
         Custom.cornerView(cellView)
         // Initialization code
         locationBtn.contentHorizontalAlignment = .left
+        
+        let signUPNib = UINib(nibName: "DescCell", bundle: nil)
+        descTableView.register(signUPNib, forCellReuseIdentifier: signUpCellConstants.cellIdentifier as String)
+        
+        descTableView.estimatedRowHeight = 45
+        descTableView.rowHeight = UITableViewAutomaticDimension
     }
    
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -44,13 +52,23 @@ class CalendarTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
     @IBAction func collapse(_ sender: UIButton) {
         delegate.collapseClick(sender.tag)
     }
     
+    @IBAction func locationClick(_ sender: UIButton) {
+        delegate.openMapForLocation(sender.tag)
+    }
+    
+    func viewDidLayoutSubviews() {
+        //super.viewDidLayoutSubviews()
+        descriptionTextView.setContentOffset(CGPoint.zero, animated: false)
+    }
     
     func updateData(_ data: Event, communityList:NSMutableArray) {
-        
+        //descriptionTextView.contentOffset = CGPoint.zero
+        //descriptionTextView.setContentOffset(CGPoint.zero, animated: false)
         for i in 0..<communityList.count {
             let community = communityList.object(at: i) as? Community
             if community?.communityId == data.communityId {
@@ -61,22 +79,9 @@ class CalendarTableViewCell: UITableViewCell {
                 }
             }
         }
-        
+        desc = data.eventDescription!
         lblTitle.text = data.title!
-        //webView.loadHTMLString(data.eventDescription!,baseURL: nil)
-
-        var attrStr = try! NSAttributedString(
-            data: (data.eventDescription!).data(using: String.Encoding.unicode, allowLossyConversion: true)!,
-            options: [ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType],
-            documentAttributes: nil)
-        //attrStr = [ NSFontAttributeName: UIFont(name: "Helvetica Neue Regular", size: 18.0)! ]
-        //lblDetailDesc.attributedText = attrStr
-        
-        lblDetailDesc.text = (data.eventDescription!).html2String
-        
-        
-        
-        //lblDetailDesc.text = data.eventDescription!
+        //descriptionTextView.text = data.eventDescription!
         let startDate = Custom.dayStringFromTime2(data.startTime!)
         let endDate = Custom.dayStringFromTime2(data.endTime!)
         let startTime = Custom.dayStringFromTime4(data.startTime!)
@@ -103,30 +108,12 @@ class CalendarTableViewCell: UITableViewCell {
             endDateValue =  "\(endDate1)" + "  \(endDate2)"
         }
         
-        
-        
         lblStart.text =  startDateValue//Custom.dayStringFromTime2(data.startTime!)
         lblEnd.text =  endDateValue//Custom.dayStringFromTime2(data.endTime!)
+        let address = "\(data.address!), " + "\(data.city!), " + "\(data.state!), " + "\(data.country!), " + "\(data.zipCode!)"
         locationBtn.setTitle(data.location!, for: .normal)
-       /* let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue]
-        let underlineAttributedString = NSAttributedString(string: data.location!, attributes: underlineAttribute)
-        locationBtn.setAttributedTitle(underlineAttributedString, for: UIControlState.normal)
-        
-        /*if data.isExpendable == true {
-            viewExpendableBtn.setImage(UIImage(named:"up-arrow")!, for: UIControlState.normal)
-        }else {
-            viewExpendableBtn.setImage(UIImage(named:"down-arrow")!, for: UIControlState.normal)
-        }*/
-        detailHeightContraint.constant = calculateHeight(data.eventDescription!, width: lblDetailDesc.frame.size.width)*/
-        //print(calculateHeight(data.eventDescription!, width: lblDetailDesc.frame.size.width))
-        //detailHeightContraint.constant = calculateHeight(data.eventDescription!, width: lblDetailDesc.frame.size.width)
-        //detailViewHeightContraint.constant = 350
-        DispatchQueue.main.async(execute: {
-           // self.webView.loadHTMLString(data.eventDescription!,baseURL: nil)
-        })
+       descTableView.reloadData()
     }
-    
-  
 
     //Mark : Get Label Height with text
      func calculateHeight(_ text:String, width:CGFloat) -> CGFloat {
@@ -141,3 +128,23 @@ class CalendarTableViewCell: UITableViewCell {
     }
     
 }
+
+//MARK:- TableView
+extension CalendarTableViewCell: UITableViewDelegate, UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: signUpCellConstants.cellIdentifier ) as! DescCell
+        cell.descLbl.text = desc
+        
+        return cell
+    }
+}
+

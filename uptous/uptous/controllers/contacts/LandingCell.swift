@@ -72,9 +72,12 @@ class LandingCell: UITableViewCell {
             ownerView.isHidden = true
             if let avatarUrl = data.photo {
                 ownerPhotoImgView.isHidden = false
+                ownerPhotoImgView.setShowActivityIndicator(true)
+                ownerPhotoImgView.setIndicatorStyle(.gray)
                 //ownerPhotoImgView.setUserAvatar(avatarUrl)
                 let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
                     self.ownerPhotoImgView.image = image
+                    self.ownerPhotoImgView.setShowActivityIndicator(false)
                 }
                 ownerPhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
             }

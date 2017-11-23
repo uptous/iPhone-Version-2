@@ -39,8 +39,10 @@ let Invites: String = ("\(BASE_URL)invites")
 let AcceptInvite: String = ("\(BASE_URL)invites/")
 let TotalContacts: String = ("\(BASE_URL)members/total")
 let ContactUpdateAPI:String = ("\(BASE_URL)members/check")
+let SignUpAPI:String = "https://www.uptous.com/communitySignup/"
+let FetchAlbumAPI:String = ("\(BASE_URL)photoalbums/community/")
 
-
+var GoogleAPIKey = "AIzaSyAntqo4DuWKlv2Ah9ac4LTurSsXEYEGdwg"
 var appDelegate = UIApplication.shared.delegate as! AppDelegate
 
 

@@ -13,44 +13,190 @@ class LoginViewController: GeneralViewController {
 
     @IBOutlet weak var emailTxtField: UITextField!
     @IBOutlet weak var passwordTxtField: UITextField!
+    @IBOutlet weak var signInBtn: UIButton!
     
     let defaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view. // 
+        // Do any additional setup after loading the view. // yuval.spector@uptous.com
         //emailTxtField.text! = "asmithutu@gmail.com"
         //passwordTxtField.text! = "alpha123"
-        
+        //emailTxtField.text! = "yuval.spector@uptous.com"
+        //passwordTxtField.text! = "postgres"  //
         
         //emailTxtField.text! = "testp2@uptous.com"
         //passwordTxtField.text! = "alpha1"  //
+        //emailTxtField.text! = "kalanit@stanford.edu"
+        //passwordTxtField.text! = "140796"
         
-        emailTxtField.becomeFirstResponder()
+        //emailTxtField.text! = "testp1@uptous.com"
+        //passwordTxtField.text! = "alpha1"  //
+        
+        //emailTxtField.becomeFirstResponder()
+        let paddingView = UIView(frame: CGRect.init(x: 0, y: 0, width: 10, height:self.emailTxtField.frame.height ))
+        emailTxtField.leftView = paddingView
+        emailTxtField.leftViewMode = UITextFieldViewMode.always
+        
+        let paddingView1 = UIView(frame: CGRect.init(x: 0, y: 0, width: 10, height:self.passwordTxtField.frame.height ))
+        passwordTxtField.leftView = paddingView1
+        passwordTxtField.leftViewMode = UITextFieldViewMode.always
         
         if UserPreferences.LoginStatus ==  "Registered" {
             self.alreadyLoggedIn()
         }
-    
+        signInBtn.layer.cornerRadius = 3
+        
+        //let myColor : UIColor = UIColor( red: 0.5, green: 0.5, blue:0, alpha: 1.0 )
+        emailTxtField.layer.masksToBounds = true
+        emailTxtField.layer.borderColor = UIColor.lightGray.cgColor //myColor.cgColor
+        emailTxtField.layer.borderWidth = 1.0
+        emailTxtField.layer.cornerRadius = 3.0
+        
+        passwordTxtField.layer.masksToBounds = true
+        passwordTxtField.layer.borderColor = UIColor.lightGray.cgColor//myColor.cgColor
+        passwordTxtField.layer.borderWidth = 1.0
+        passwordTxtField.layer.cornerRadius = 3.0
     }
     
     override func viewWillAppear(_ animated: Bool) {
         emailTxtField.text! = ""
         passwordTxtField.text! = ""
-        emailTxtField.becomeFirstResponder()
+        //emailTxtField.becomeFirstResponder()
+    }
+    
+    @IBAction func forgetPasswordBtnClick(_ sender: UIButton) {
+        let url = URL(string: "https://www.uptous.com/mobileForgotPassword")
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url!)
+        }
+    }
+    
+    @IBAction func signUpBtnClick(_ sender: UIButton) {
+        let url = URL(string: "https://www.uptous.com/mobileSignup")
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url!)
+        }
     }
     
     @IBAction func signInBtnClick(_ sender: UIButton) {
        login()
     }
     
+    //MARK: Fetch Driver Records
+    func fetchSignUpItems(ID: String) {
+        let apiName = SignupItems + ("\(ID)")
+        
+        DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
+            (response) -> Void in
+            print(response)
+            let signUpDatas = (response as? NSArray)!
+            let dic = signUpDatas.object(at: 0) as? NSDictionary
+            let dataSheet = SignupSheet(info: dic)
+            
+            //appDelegate.globalSignUpData = data
+            
+            if dataSheet.contact == "" && dataSheet.contact2 == "" {
+                let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpType1ViewController") as! SignUpType1ViewController
+                controller.data = dataSheet
+                //controller.data1 = data1
+                if (dataSheet.type! == "Drivers") {
+                    controller.signUpType = "103"
+                    
+                }else if (dataSheet.type! == "RSVP" || dataSheet.type! == "Vote") {
+                    controller.signUpType = "102"
+                    
+                }else if (dataSheet.type! == "Shifts" || dataSheet.type! == "Snack" || dataSheet.type! == "Games" || dataSheet.type! == "Multi Game/Event RSVP" || dataSheet.type! == "Snack Schedule") {
+                    controller.signUpType = "100"
+                    
+                }else if (dataSheet.type! == "Volunteer" || dataSheet.type! == "Potluck" || dataSheet.type! == "Wish List" || dataSheet.type! == "Potluck/Party" || dataSheet.type! == "Ongoing Volunteering") {
+                    controller.signUpType = "101"
+                }
+                
+                self.present(controller, animated: true, completion: nil)
+            }else {
+                let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpType3ViewController") as! SignUpType3ViewController
+                controller.data = dataSheet
+                if (dataSheet.type! == "Drivers") {
+                    controller.signUpType = "103"
+                    
+                }else if (dataSheet.type! == "RSVP" || dataSheet.type! == "Vote") {
+                    controller.signUpType = "102"
+                    
+                }else if (dataSheet.type! == "Shifts" || dataSheet.type! == "Snack" || dataSheet.type! == "Games" || dataSheet.type! == "Multi Game/Event RSVP" || dataSheet.type! == "Snack Schedule") {
+                    controller.signUpType = "100"
+                    
+                }else if (dataSheet.type! == "Volunteer" || dataSheet.type! == "Potluck" || dataSheet.type! == "Wish List" || dataSheet.type! == "Potluck/Party" || dataSheet.type! == "Ongoing Volunteering") {
+                    controller.signUpType = "101"
+                }
+                self.present(controller, animated: true, completion: nil)
+            }
+            
+        }) {
+            (error) -> Void in
+            
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
     func alreadyLoggedIn() {
+        
         print(UserPreferences.LoginHeaderCodition)
+        print(UserPreferences.DeepLinkingStatus)
         appDelegate.loginHeaderCredentials = UserPreferences.LoginHeaderCodition
         let controller = self.storyboard?.instantiateViewController(withIdentifier: MainStoryBoard.ViewControllerIdentifiers.tabbarViewController) as! TabBarViewController
-        controller.selectedIndex = 0
         
-        self.navigationController?.pushViewController(controller, animated: true)
+        if UserPreferences.DeepLinkingStatus == "" {
+            controller.selectedIndex = 0
+            self.navigationController?.pushViewController(controller, animated: false)
+        }else {
+            let array = "\(UserPreferences.DeepLinkingStatus)".components(separatedBy: "/")
+            if array[3] == "communitySignup" {
+                controller.selectedIndex = 2
+                
+                appDelegate.tabbarView?.deselectButton()
+                appDelegate.tabbarView?.signupBtn.isSelected = true
+                appDelegate.tabbarView?.newsFeedBtn1.isHidden = true
+                appDelegate.tabbarView?.contactsBtn1.isHidden = true
+                appDelegate.tabbarView?.signupBtn1.isHidden = false
+                appDelegate.tabbarView?.libraryBtn1.isHidden = true
+                appDelegate.tabbarView?.calendarBtn1.isHidden = true
+                
+                self.fetchSignUpItems(ID: array[5])
+                self.navigationController?.pushViewController(controller, animated: false)
+                UserPreferences.DeepLinkingStatus = ""
+                
+            }else if array[3] == "communityAlbum" {
+                controller.selectedIndex = 3
+                appDelegate.tabbarView?.deselectButton()
+                appDelegate.tabbarView?.libraryBtn.isSelected = true
+                
+                appDelegate.tabbarView?.newsFeedBtn1.isHidden = true
+                appDelegate.tabbarView?.contactsBtn1.isHidden = true
+                appDelegate.tabbarView?.signupBtn1.isHidden = true
+                appDelegate.tabbarView?.libraryBtn1.isHidden = false
+                appDelegate.tabbarView?.calendarBtn1.isHidden = true
+                
+                let pushVC = self.storyboard?.instantiateViewController(withIdentifier: "DetailsLibraryViewController") as! DetailsLibraryViewController
+                pushVC.albumID = array[5]
+                self.present(pushVC, animated: false, completion: nil)
+                self.navigationController?.pushViewController(controller, animated: false)
+                UserPreferences.DeepLinkingStatus = ""
+                
+            }else if array[3] == "communityInvite" {
+                controller.selectedIndex = 0
+                let pushVC = self.storyboard?.instantiateViewController(withIdentifier: "InviteViewController") as! InviteViewController
+                self.present(pushVC, animated: false, completion: nil)
+                self.navigationController?.pushViewController(controller, animated: false)
+                UserPreferences.DeepLinkingStatus = ""
+            }
+        }
     }
     
     func login() {
@@ -67,10 +213,6 @@ class LoginViewController: GeneralViewController {
             appDelegate.loginHeaderCredentials = ["Authorization": "Basic \(base64Credentials)"]
             ActivityIndicator.show()
             Alamofire.request(LoginAPI, method: .get, parameters: nil, encoding: URLEncoding(destination: .methodDependent), headers: appDelegate.loginHeaderCredentials).responseJSON { (response:DataResponse<Any>) in
-                
-                print(response.result)
-                print(response)
-                
                 ActivityIndicator.hide()
                 switch(response.result) {
                 case .success(_):
@@ -79,18 +221,19 @@ class LoginViewController: GeneralViewController {
                         let result = response.result.value as? NSDictionary
                         if (result?.object(forKey: "result"))! as! String == "Authenticated" {
                             
-                            self.getTotalContacts()
-                            self.checkNewContact()
+//                            self.getTotalContacts()
+//                            self.checkNewContact()
                             self.checkNewFeed()
                             UserPreferences.LoginHeaderCodition = appDelegate.loginHeaderCredentials
                             UserPreferences.LoginStatus = "Registered"
                             UserPreferences.LoginID = username
                             UserPreferences.Password = password
                             
-                            let controller = self.storyboard?.instantiateViewController(withIdentifier: MainStoryBoard.ViewControllerIdentifiers.tabbarViewController) as! TabBarViewController
+                            self.alreadyLoggedIn()
+                            /*let controller = self.storyboard?.instantiateViewController(withIdentifier: MainStoryBoard.ViewControllerIdentifiers.tabbarViewController) as! TabBarViewController
                             controller.selectedIndex = 0
                             
-                            self.navigationController?.pushViewController(controller, animated: true)
+                            self.navigationController?.pushViewController(controller, animated: true)*/
                         }else {
                             DispatchQueue.main.async(execute: { () -> Void in
                                 let alert = UIAlertController(title: "Alert", message: "Authentication failed. Please try again or reset your password at www.uptous.com", preferredStyle: UIAlertControllerStyle.alert)
@@ -102,12 +245,6 @@ class LoginViewController: GeneralViewController {
                     break
                     
                 case .failure(_):
-                    
-                    /*if response.result.isFailure {
-                     let error : Error = response.result.error!
-                     failure(error)
-                     
-                     }*/
                     let alert = UIAlertController(title: "Alert", message: "Authentication failed. Please try again or reset your password at www.uptous.com", preferredStyle: UIAlertControllerStyle.alert)
                     alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
@@ -115,37 +252,6 @@ class LoginViewController: GeneralViewController {
                     
                 }
             }
-            
-            /*DataConnectionManager.requestGETURL(api: LoginAPI, para: ["":""], success: {
-                (response) -> Void in
-                print(response)
-                
-                let result = response as? NSDictionary
-                if (result?.object(forKey: "result"))! as! String == "Authenticated" {
-                    self.checkNewFeed()
-                    UserPreferences.LoginID = username
-                    UserPreferences.Password = password
-                    
-                    let controller = self.storyboard?.instantiateViewController(withIdentifier: MainStoryBoard.ViewControllerIdentifiers.tabbarViewController) as! TabBarViewController
-                    controller.selectedIndex = 0
-                    
-                    self.navigationController?.pushViewController(controller, animated: true)
-                }else {
-                    DispatchQueue.main.async(execute: { () -> Void in
-                        let alert = UIAlertController(title: "Alert", message: "Not Valid User", preferredStyle: UIAlertControllerStyle.alert)
-                        alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
-                    })
-                }
-            }) {
-                
-                (error) -> Void in
-                
-                let alert = UIAlertController(title: "Alert", message: "Not Valid User", preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            }*/
-            
         }else {
             
             BaseUIView.toast("Please enter email or password")
@@ -170,8 +276,6 @@ class LoginViewController: GeneralViewController {
     func checkNewContact() {
         DataConnectionManager.requestGETURL1(api: ContactUpdateAPI, para: ["":""], success: {
             (response) -> Void in
-            print("First Time==>\(response)")
-            
             let data = response as? NSDictionary
             self.defaults.set(data?.object(forKey: "lastContactChange"), forKey: "LastModifiedContact")
             self.defaults.synchronize()
@@ -179,42 +283,6 @@ class LoginViewController: GeneralViewController {
             (error) -> Void in
         }
     }
-    
-
-    
-    
-    //MARK: Fetch Records
-    func getTotalContacts() {
-        DataConnectionManager.requestGETURL1(api: TotalContacts, para: ["":""], success: {
-            (response) -> Void in
-            print(response)
-            let item = response as! NSDictionary
-            let totalContacts = Int((item.object(forKey: "total") as? String)!)!
-            self.search(textLimit: totalContacts)
-        }) {
-            (error) -> Void in
-        }
-    }
-    
-    //MARK:- SEARCH API HIT
-    func search(textLimit: Int){
-        
-        let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(textLimit)") + ("/offset/0")
-        
-        DataConnectionManager.requestGETURL1(api: api, para: ["":""], success: {
-            (jsonResult) -> Void in
-            print(jsonResult)
-            
-            let listArr = jsonResult as! NSArray
-            print("listArr ==>\(listArr.count)")
-            UserPreferences.AllContactList = listArr
-            
-        }) {
-            (error) -> Void in
-        }
-    }
-    
-
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -226,7 +294,7 @@ extension LoginViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        login()
+        //login()
         return true
     }
 }
