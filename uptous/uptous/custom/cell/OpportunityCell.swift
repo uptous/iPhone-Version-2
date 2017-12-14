@@ -63,7 +63,7 @@ class OpportunityCell: UITableViewCell {
         contentsView.layer.borderWidth = CGFloat(1.0)
         contentsView.layer.cornerRadius = 8.0
         //commentLbl.hidden = true
-        ownerPhotoImgView.layer.cornerRadius = 30.0
+        ownerPhotoImgView.layer.cornerRadius = 25.0
         ownerPhotoImgView.layer.masksToBounds = true
     }
     

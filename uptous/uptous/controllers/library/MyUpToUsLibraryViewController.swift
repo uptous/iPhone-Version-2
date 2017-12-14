@@ -16,6 +16,9 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
     @IBOutlet weak var menuButton : UIButton!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var fileLabel: UILabel!
+    @IBOutlet weak var message1View: UIView!
+    @IBOutlet weak var message2View: UIView!
+
 
     
     @IBOutlet weak var searchBar: UISearchBar!
@@ -44,25 +47,24 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
 
 
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         communityView.isHidden = true
         tableView.isHidden = true
-       // fileLabel.isHidden = true
-
         if screenComeFrom == "feed" {
             backButton.isHidden = false
             menuButton.isHidden = true
-
         }else {
             backButton.isHidden = true
             menuButton.isHidden = false
         }
         appDelegate.tabbarView?.isHidden = false
-        
+        message1View.isHidden = true
+        message2View.isHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        message1View.isHidden = true
+        message2View.isHidden = true
         if UserPreferences.DeepLinkingStatus == "" {
             searchBar.text = ""
             if UserPreferences.SelectedCommunityName == "" {
@@ -263,13 +265,17 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
             }
             
             if self.fullListArr.count > 0 {
+                self.message1View.isHidden = true
+                self.message2View.isHidden = true
                 self.collectionView.isHidden = false
                 self.collectionView.reloadData()
             }else {
+                self.message1View.isHidden = false
+                self.message2View.isHidden = true
                 self.collectionView.isHidden = true
-                let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertControllerStyle.alert)
+                /*let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+                self.present(alert, animated: true, completion: nil)*/
             }
             
         }) {
@@ -307,14 +313,18 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
             }
             
             if self.fullListArr1.count > 0 {
+                self.message1View.isHidden = true
+                self.message2View.isHidden = true
                 self.tableView.isHidden = false
                 self.tableView.reloadData()
 
             }else {
                 self.tableView.isHidden = true
-                let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertControllerStyle.alert)
+                self.message1View.isHidden = true
+                self.message2View.isHidden = false
+                /*let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+                self.present(alert, animated: true, completion: nil)*/
             }
             
         }) {

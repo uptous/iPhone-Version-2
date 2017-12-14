@@ -68,7 +68,7 @@ class PhotosCell: UITableViewCell {
         //commentLbl.hidden = true
         //readMoreBtn.isHidden = true
         Custom.fullCornerView(ownerView)
-        ownerPhotoImgView.layer.cornerRadius = 30.0
+        ownerPhotoImgView.layer.cornerRadius = 25.0
         ownerPhotoImgView.layer.masksToBounds = true
     }
     

@@ -48,7 +48,6 @@ class AnnouncementCell: UITableViewCell {
     @IBOutlet weak var replyAllBtn: UIButton!
     @IBOutlet weak var postBtn: UIButton!
     @IBOutlet weak var replyToBtn: UIButton!
-    @IBOutlet weak var identifierView: GroupIdentifierView!
     @IBOutlet weak var ownerView: UIView!
     @IBOutlet weak var ownerNameLbl: UILabel!
     
@@ -63,7 +62,7 @@ class AnnouncementCell: UITableViewCell {
         contentsView.layer.cornerRadius = 8.0
         //commentLbl.hidden = true
         Custom.fullCornerView(ownerView)
-        ownerPhotoImgView.layer.cornerRadius = 30.0
+        ownerPhotoImgView.layer.cornerRadius = 25.0
         ownerPhotoImgView.layer.masksToBounds = true
     }
     

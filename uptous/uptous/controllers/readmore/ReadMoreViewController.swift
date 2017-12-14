@@ -65,7 +65,7 @@ class ReadMoreViewController: GeneralViewController {
             self.fetchCommentList()
         }
         Custom.fullCornerView(ownerView)
-        ownerPhotoImgView.layer.cornerRadius = 30.0
+        ownerPhotoImgView.layer.cornerRadius = 25.0
         ownerPhotoImgView.layer.masksToBounds = true
 
     }
@@ -118,7 +118,10 @@ class ReadMoreViewController: GeneralViewController {
         
         let name = data.ownerName!.components(separatedBy: " ")
         msgNameLbl.text = ("\(name[0]) message")
-        newsItemNameLbl.text = data.newsItemName
+        let decodedString = data.newsItemName?.removingPercentEncoding!
+        newsItemNameLbl.text =   decodedString
+        
+        //newsItemNameLbl.text = data.newsItemName
         //newsItemDescriptionLbl.text = data.newsItemDescription!
         
         let font = UIFont(name: "Helvetica Neue", size: 16.0)

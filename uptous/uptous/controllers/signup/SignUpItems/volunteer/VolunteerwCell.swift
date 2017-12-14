@@ -31,8 +31,6 @@ class VolunteerwCell: UITableViewCell {
         cornerView(openView)
     }
     
-    
-    
     func updateView(_ data: Items) {
         let attributedStr = NSMutableAttributedString()
         

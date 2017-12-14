@@ -55,6 +55,7 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
     var imageData3 : String!
     var imageData4 : String!
     var selectedCommunity = "0"
+    var selectedAlbum = "0"
 
      private var imagePicker : UIImagePickerController!
 
@@ -68,8 +69,8 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
         addNewAlbumButton.isEnabled = false
         fetchCommunity()
         let tap : UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ImagePostViewController.dismissKeyboard))
-         NotificationCenter.default.addObserver(self, selector: #selector(ImagePostViewController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ImagePostViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+         //NotificationCenter.default.addObserver(self, selector: #selector(ImagePostViewController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        //NotificationCenter.default.addObserver(self, selector: #selector(ImagePostViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         menuView = UIView()
         albumMenuView = UIView()
@@ -172,7 +173,7 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
                 }
                 
             }else {
-                let alert = UIAlertController(title: "Alert", message: "Fields are  missing", preferredStyle: UIAlertControllerStyle.alert)
+                let alert = UIAlertController(title: "Alert", message: "Please fill in all fields", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
@@ -203,28 +204,38 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
     @IBAction func fetchAlbumClick(_ sender: UIButton) {
         menuView.isHidden = true
         albumMenuView.isHidden = false
-        albumMenuView.frame = CGRect(x: addNewAlbumButton.frame.origin.x, y: addNewAlbumButton.frame.origin.y+35, width: addNewAlbumButton.frame.size.width, height: 300)
-        albumMenuView.backgroundColor = UIColor.white
-        self.view.addSubview(albumMenuView)
         
-        communityAlbumTableView.frame = CGRect(x: 0, y: 0, width: addNewAlbumButton.frame.size.width, height: 300)
-        // Delegates and data Source
-        communityAlbumTableView.dataSource = self
-        communityAlbumTableView.delegate = self
-        communityAlbumTableView.register(DropperCell.self, forCellReuseIdentifier: "cell")
-        // Styling
-        communityAlbumTableView.backgroundColor = UIColor.lightGray
-        communityAlbumTableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
-        communityAlbumTableView.bounces = false
-        communityAlbumTableView.layer.cornerRadius = 9.0
-        communityAlbumTableView.clipsToBounds = true
-        albumMenuView.addSubview(communityAlbumTableView)
+        if selectedAlbum == "0" {
+            selectedAlbum = "1"
+            albumMenuView.frame = CGRect(x: addNewAlbumButton.frame.origin.x, y: addNewAlbumButton.frame.origin.y+35, width: addNewAlbumButton.frame.size.width, height: self.view.frame.size.height - 300)
+            albumMenuView.backgroundColor = UIColor.white
+            self.view.addSubview(albumMenuView)
+            
+            communityAlbumTableView.frame = CGRect(x: 0, y: 0, width: addNewAlbumButton.frame.size.width, height: self.view.frame.size.height - 300)
+            // Delegates and data Source
+            communityAlbumTableView.dataSource = self
+            communityAlbumTableView.delegate = self
+            communityAlbumTableView.register(DropperCell.self, forCellReuseIdentifier: "cell")
+            // Styling
+            communityAlbumTableView.backgroundColor = UIColor.white
+            communityAlbumTableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
+            communityAlbumTableView.bounces = false
+            communityAlbumTableView.layer.cornerRadius = 9.0
+            communityAlbumTableView.clipsToBounds = true
+            albumMenuView.addSubview(communityAlbumTableView)
+        }else {
+            selectedAlbum = "0"
+            menuView.isHidden = true
+            albumMenuView.isHidden = true
+        }
+        
     }
     
     //MARK: Fetch Community Records
     func fetchAlbumBasedCommunity(communityID: Int) {
         addNewAlbumButton.isEnabled = true
         addNewAlbumTextField.isEnabled = true
+        self.albumList.removeAll()
         self.albumList.append("ADD NEW ALBUM")
         self.albumListID.append(0)
         //addNewAlbumTextField.text = "ADD NEW ALBUM"
@@ -265,17 +276,17 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
         menuView.isHidden = false
         if selectedCommunity == "0" {
             selectedCommunity = "1"
-            menuView.frame = CGRect(x: dropdownButton.frame.origin.x, y: dropdownButton.frame.origin.y+35, width: dropdownButton.frame.size.width, height: 300)
+            menuView.frame = CGRect(x: dropdownButton.frame.origin.x, y: dropdownButton.frame.origin.y+35, width: dropdownButton.frame.size.width, height: self.view.frame.size.height - 200)
             menuView.backgroundColor = UIColor.white
             self.view.addSubview(menuView)
             
-            communityTableView.frame = CGRect(x: 0, y: 0, width: dropdownButton.frame.size.width, height: 300)
+            communityTableView.frame = CGRect(x: 0, y: 0, width: dropdownButton.frame.size.width, height: self.view.frame.size.height - 200)
             // Delegates and data Source
             communityTableView.dataSource = self
             communityTableView.delegate = self
             communityTableView.register(DropperCell.self, forCellReuseIdentifier: "cell")
             // Styling
-            communityTableView.backgroundColor = UIColor.lightGray
+            communityTableView.backgroundColor = UIColor.white
             communityTableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
             communityTableView.bounces = false
             communityTableView.layer.cornerRadius = 9.0
@@ -475,6 +486,8 @@ extension ImagePostViewController: UITableViewDelegate, UITableViewDataSource {
         //cell.last = items.count - 1  // Sets the last item to the cell
         cell.indexPath = indexPath as NSIndexPath? // Sets index path to the cell
         cell.borderColor = border.color // Sets the border color for the seperator
+        tableView.tableFooterView = UIView(frame: CGRect.zero)
+        tableView.backgroundColor = UIColor.white
         cell.backgroundColor = UIColor.white
         cell.textItem.textColor = UIColor.black
         cell.textItem.numberOfLines = 2
@@ -482,9 +495,14 @@ extension ImagePostViewController: UITableViewDelegate, UITableViewDataSource {
         cell.textItem.font = UIFont.systemFont(ofSize: 16.0)
         cell.cellType = .Text
         if tableView == communityAlbumTableView {
-            cell.textItem.text = self.albumList[indexPath.row]
+            let decodedString = self.albumList[indexPath.row].removingPercentEncoding!
+            cell.textItem.text =  decodedString
+            
+            //cell.textItem.text = self.albumList[indexPath.row]
         }else {
-            cell.textItem.text = self.communityList[indexPath.row]
+            let decodedString = self.communityList[indexPath.row].removingPercentEncoding!
+            cell.textItem.text =  decodedString
+            //cell.textItem.text = self.communityList[indexPath.row]
         }
         return cell
     }

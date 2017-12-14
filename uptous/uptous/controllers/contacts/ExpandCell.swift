@@ -50,7 +50,7 @@ class ExpandCell: UITableViewCell {
         ownerView.isHidden = false
         ownerNameLbl.isHidden = false
         ownerPhotoImgView.isHidden = true
-        ownerPhotoImgView.layer.cornerRadius = 30.0
+        ownerPhotoImgView.layer.cornerRadius = 25.0
         ownerPhotoImgView.layer.masksToBounds = true
         
         if data.email != nil {
@@ -86,11 +86,11 @@ class ExpandCell: UITableViewCell {
         }
         
         if data.firstName != "" && data.lastName != "" {
-            nameLbl.text = ("\(data.firstName!)") + (" \(data.lastName!)")
+            nameLbl.text = ("\(data.lastName!),") + (" \(data.firstName!)") //("\(data.firstName!)") + (" \(data.lastName!)")
             
             let firstName = data.firstName!.capitalized.characters.first
             let secondName = data.lastName!.capitalized.characters.first
-            let resultString = ("\(firstName!)") + ("\(secondName!)")
+            let resultString = ("\(secondName!)") + ("\(firstName!)") //("\(firstName!)") + ("\(secondName!)")
             ownerNameLbl.text = resultString
             
         }else if data.firstName != "" {

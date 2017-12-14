@@ -73,8 +73,8 @@
                   symbolName = "uptous.ItemDetailsEditingMsgViewController.keyboardWillHide (Foundation.Notification) -&gt; ()"
                   moduleName = "uptous"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Volumes/NO%20NAME/10/21/uptous/uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
-                  timestampString = "532979181.023768"
+                  urlString = "file:///Volumes/NO%20NAME/uptous-new/uptous/uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
+                  timestampString = "534007319.838806"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "329"
@@ -88,8 +88,8 @@
                   symbolName = "uptous.ItemDetailsEditingMsgViewController.(keyboardWillHide (Foundation.Notification) -&gt; ()).(closure #1)"
                   moduleName = "uptous"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Volumes/NO%20NAME/10/21/uptous/uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
-                  timestampString = "532979181.026046"
+                  urlString = "file:///Volumes/NO%20NAME/uptous-new/uptous/uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
+                  timestampString = "534007319.842117"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "329"
@@ -157,38 +157,6 @@
             endingLineNumber = "517"
             landmarkName = "openPhoneClick(_:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "uptous.MyUpToUsContactsViewController.openPhoneClick (Swift.Int) -&gt; ()"
-                  moduleName = "uptous"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Volumes/NO%20NAME/10/21/uptous/uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
-                  timestampString = "532979181.038354"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "517"
-                  endingLineNumber = "517"
-                  offsetFromSymbolStart = "630">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "uptous.MyUpToUsContactsViewController.(openPhoneClick (Swift.Int) -&gt; ()).(closure #1)"
-                  moduleName = "uptous"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Volumes/NO%20NAME/10/21/uptous/uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
-                  timestampString = "532979181.040644"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "517"
-                  endingLineNumber = "517"
-                  offsetFromSymbolStart = "2368">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -203,8 +171,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "574"
             endingLineNumber = "574"
-            landmarkName = "collapseClick(_:)"
-            landmarkType = "7">
+            landmarkName = "MyUpToUsContactsViewController"
+            landmarkType = "4">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -390,12 +358,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/post/ImagePostViewController.swift"
-            timestampString = "532544576.293593"
+            timestampString = "534010245.223749"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "111"
-            endingLineNumber = "111"
-            landmarkName = "uploadImage(imgData:)"
+            startingLineNumber = "112"
+            endingLineNumber = "112"
+            landmarkName = "uploadExitingAlbum(imgData:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -406,11 +374,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/post/ImagePostViewController.swift"
-            timestampString = "532545945.886095"
+            timestampString = "534010245.223749"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "123"
-            endingLineNumber = "123"
+            startingLineNumber = "124"
+            endingLineNumber = "124"
             landmarkName = "uploadImage(imgData:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -514,16 +482,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/library/DetailsLibraryViewController.swift"
-            timestampString = "532978334.603074"
+            timestampString = "534007027.576534"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "125"
-            endingLineNumber = "125"
-            landmarkName = "fetchRecords()"
+            startingLineNumber = "200"
+            endingLineNumber = "200"
+            landmarkName = "collectionView(_:cellForItemAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

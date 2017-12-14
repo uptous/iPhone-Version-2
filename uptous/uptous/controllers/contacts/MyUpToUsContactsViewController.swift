@@ -31,6 +31,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     var itemsDatas = NSMutableArray()
     var loadMoreControl: LKPullToLoadMore!
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var messageView: UIView!
     let defaults = UserDefaults.standard
     
     var searchActive : Bool = false
@@ -67,7 +68,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     
     fileprivate struct landingCellConstants {
         static var cellIdentifier:String = "LandingCell"
-        static var rowHeight:CGFloat! = 80
+        static var rowHeight:CGFloat! = 70
     }
     
     fileprivate struct expandCellConstants {
@@ -84,6 +85,9 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         tableView.register(expandNib, forCellReuseIdentifier: expandCellConstants.cellIdentifier as String)
          let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(MyUpToUsContactsViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
+        //self.getContacts()
+        messageView.isHidden = true
+        self.tableView.isHidden = true
         getTotalContacts()
     }
     
@@ -95,13 +99,13 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
             let dic = UserPreferences.AllContactList.object(at: index) as! NSDictionary
             
             if UserPreferences.SelectedCommunityID == 001 {
-                let email = dic.object(forKey: "email") as? String
+                let email = dic.object(forKey: "email") as? String ?? ""
                 let firstName = dic.object(forKey: "firstName") as? String ?? ""
-                let lastName = dic.object(forKey: "email") as? String ?? ""
+                let lastName = dic.object(forKey: "lastName") as? String ?? ""
                 
                 if firstName != "" || lastName != "" {
                     self.fullListArr.append(Contacts(info: dic))
-                    self.allIDArr.append(email!)
+                    self.allIDArr.append(email)
                 }
                 
             }else {
@@ -111,13 +115,12 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
                     let dic1 = results.object(at: i) as! NSDictionary
                     if (dic1.object(forKey: "id") as! Int) == communityID {
                         let firstName = dic.object(forKey: "firstName") as? String ?? ""
-                        let lastName = dic.object(forKey: "email") as? String ?? ""
+                        let lastName = dic.object(forKey: "lastName") as? String ?? ""
                         if firstName != "" || lastName != "" {
                             self.fullListArr.append(Contacts(info: dic))
                             let email = dic1.object(forKey: "email") as? String ?? ""
                             self.allIDArr.append(email)
                         }
-                        
                     }
                 }
             }
@@ -125,12 +128,14 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         
         if self.fullListArr.count > 0 {
             self.tableView.isHidden = false
+            self.messageView.isHidden = true
             self.tableView.reloadData()
         }else {
             self.tableView.isHidden = true
-            let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertControllerStyle.alert)
+            self.messageView.isHidden = false
+            /*let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            self.present(alert, animated: true, completion: nil)*/
         }
     }
     
@@ -213,12 +218,15 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        messageView.isHidden = true
+        self.tableView.isHidden = true
         if UserPreferences.SelectedCommunityName == "" {
             headingBtn.setTitle("Contacts - All Communities", for: .normal)
         }else{
             headingBtn.setTitle("Contacts - \(UserPreferences.SelectedCommunityName)", for: .normal)
         }
-        //getContacts()
+        //getTotalContacts()
+        getContacts()
         onTimerTick()
     }
     
@@ -236,11 +244,11 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
                 }else {
                     if data?.object(forKey: "lastContactChange") as? NSNumber != self.defaults.object(forKey: "LastModifiedContact") as? NSNumber {
                         self.defaults.set(data?.object(forKey: "lastContactChange"), forKey: "LastModifiedContact")
+                        
                         self.getTotalContacts()
                     }
                 }
             }
-            
         }) {
             (error) -> Void in
         }
@@ -250,7 +258,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     func getTotalContacts() {
         DataConnectionManager.requestGETURL1(api: TotalContacts, para: ["":""], success: {
             (response) -> Void in
-            print(response)
+            //print(response)
             let item = response as! NSDictionary
             let totalContacts = Int((item.object(forKey: "total") as? String)!)!
             self.search(textLimit: totalContacts)
@@ -264,10 +272,10 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(textLimit)") + ("/offset/0")
         DataConnectionManager.requestGETURL(api: api, para: ["":""], success: {
             (jsonResult) -> Void in
-            print(jsonResult)
+            //print(jsonResult)
             UserPreferences.AllContactList = []
             let listArr = jsonResult as! NSArray
-            print("listArr ==>\(listArr.count)")
+            //print("listArr ==>\(listArr.count)")
             UserPreferences.AllContactList = listArr
             self.getContacts()
         }) {
@@ -410,14 +418,6 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
         }
     }
     
-    //Roshan
-    /*func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-     if tableView != communityTableView {
-     self.loadingData = false
-     loadMore()
-     }
-     }*/
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if tableView == communityTableView {
             return 50
@@ -425,7 +425,7 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
             if(selectedIndexPath == indexPath.row) {
                 return 190.0
             }
-            return 80.0
+            return 70.0
         }
     }
     

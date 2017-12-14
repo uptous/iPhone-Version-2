@@ -36,10 +36,11 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     @IBOutlet weak var pictureBtn: UIButton!
     @IBOutlet weak var messageBtn: UIButton!
     @IBOutlet weak var searchTextField: UITextField!
+    @IBOutlet weak var messageView: UIView!
     var isButtonSelected = false
     var filterStatus = false
     var topMenuStatus = 0
-    @IBOutlet weak var notifNoRecordsView: UIView!
+    //@IBOutlet weak var notifNoRecordsView: UIView!
     var topMenuSelected = 0
     
     
@@ -110,7 +111,9 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }else{
             headingBtn.setTitle(UserPreferences.SelectedCommunityName, for: .normal)
         }
-         notifNoRecordsView.isHidden = true
+         //notifNoRecordsView.isHidden = true
+        messageView.isHidden = true
+        self.tableView.isHidden = true
         //Fetch Feed Items
         self.getFeedList()
     }
@@ -123,9 +126,11 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }else{
             headingBtn.setTitle("Feed - \(UserPreferences.SelectedCommunityName)", for: .normal)
         }
+        self.tableView.isHidden = true
+        messageView.isHidden = true
         messageBtn.isHidden = true
         pictureBtn.isHidden = true
-        directBtn.isHidden = true
+        //directBtn.isHidden = true
         onTimerTick()
         self.getFeedList()
     }
@@ -199,7 +204,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
             if data != nil {
                 let status = data?.object(forKey: "status") as? String
                 if (status == "2") {
-                    self.notifNoRecordsView.isHidden = false
+                    //self.notifNoRecordsView.isHidden = false
 
                 }else {
                     if data?.object(forKey: "lastItemTime") as? NSNumber != self.defaults.object(forKey: "LastModified") as? NSNumber {
@@ -207,9 +212,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
                         self.getFeedList()
                     }
                 }
-                
             }
-            
         }) {
             (error) -> Void in
         }
@@ -382,12 +385,15 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
             
             if self.newsTypeList.count > 0 {
                 self.tableView.isHidden = false
+                self.tableView.isHidden = false
+                 self.messageView.isHidden = true
                 self.tableView.reloadData()
             }else {
                 self.tableView.isHidden = true
-                let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertControllerStyle.alert)
+                 self.messageView.isHidden = false
+                /*let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+                self.present(alert, animated: true, completion: nil)*/
             }
             
         }) {
@@ -728,40 +734,13 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     //MARK:- Post Button
     @IBAction func postButtonClick(_ sender: UIButton) {
         if isButtonSelected == true {
-            postBtn.setImage(UIImage(named: "post-selected"), for: UIControlState())
             isButtonSelected = false
-            UIView.animate(withDuration: 1.0, animations: {
-                
-            })
-            UIView.animate(withDuration: 0.15, animations: {
-                self.pictureBtn.center = self.postBtn.center
-                self.pictureBtn.center = self.postBtn.center
-                self.directBtn.center = self.postBtn.center
-                }, completion: { (completed) in
-                    self.messageBtn.isHidden = true
-                    self.pictureBtn.isHidden = true
-                    self.directBtn.isHidden = true
-                    
-            })
+            self.messageBtn.isHidden = true
+            self.pictureBtn.isHidden = true
         } else {
-            postBtn.setImage(UIImage(named: "post-unselected"), for: UIControlState())
             isButtonSelected = true
             messageBtn.isHidden = false
             pictureBtn.isHidden = false
-            directBtn.isHidden = false
-            let radius : CGFloat = 200.0
-            
-            let button2Center = CGPoint(x: postBtn.center.x + radius * sin(-CGFloat(160.degreesToRadians)), y:  postBtn.center.y + radius * cos(-CGFloat(160.degreesToRadians)))
-            let button3Center = CGPoint(x: postBtn.center.x + radius * sin(-CGFloat(130.degreesToRadians)), y:  postBtn.center.y + radius * cos(-CGFloat(130.degreesToRadians)))
-            let button4Center = CGPoint(x: postBtn.center.x + radius * sin(-CGFloat(100.degreesToRadians)), y:  postBtn.center.y + radius * cos(-CGFloat(100.degreesToRadians)))
-            
-            UIView.animate(withDuration: 0.35, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.0, options: .curveEaseOut, animations: {
-                self.messageBtn.center = button2Center
-                self.pictureBtn.center = button3Center
-                self.directBtn.center = button4Center
-                }, completion: { (completed) in
-                    
-            })
         }
     }
     

@@ -29,7 +29,7 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
     var currentSelectedIndex = 0
     var selectedIndexPath : IndexPath?
     var albumID: String?
-
+    
     var data: Library!
     
     private struct mediaphotoconstant {
@@ -44,6 +44,7 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         collectionView.register(nibWishList, forCellWithReuseIdentifier: mediaphotoconstant.cellIdentifier as String)
         collectionView.delegate = self
         collectionView.dataSource = self
+        //headingLable.text = ("\(data.title!) message")
         
         let leftSwipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(DetailsLibraryViewController.swipeLeft(sender:)))
         leftSwipeGesture.direction = .left
@@ -60,7 +61,7 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         if currentSelectedIndex+1 < itemsDatas.count {
             let data = self.itemsDatas[currentSelectedIndex+1] as? Library
             
-            animate(image: displayImage.image!, inLeftDirection: true)
+            //animate(image: displayImage.image!, inLeftDirection: true)
             //currentImageView.image = images[currentSelectedIndex+1]
             //displayImage.sd_setImage(with: URL.init(string: (data?.photo)!), completed: nil)
             
@@ -69,7 +70,8 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
             }
             displayImage.sd_setImage(with: URL(string:(data?.photo)!) as URL!, completed:block)
             
-
+            titleLable.text = data?.caption
+            titleCreateLable.text = ("\(Custom.dayStringFromTime((data?.createTime!)!))")
             
             currentSelectedIndex += 1
             selectedIndexPath = IndexPath(item: currentSelectedIndex, section: 0)
@@ -81,12 +83,15 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
     func swipeRight(sender: UISwipeGestureRecognizer) -> Void {
         if currentSelectedIndex-1 >= 0 {
             let data = self.itemsDatas[currentSelectedIndex-1] as? Library
-            animate(image: displayImage.image!, inLeftDirection: false)
+            //animate(image: displayImage.image!, inLeftDirection: false)
             
             let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
                 self.displayImage.image = image
             }
             displayImage.sd_setImage(with: URL(string:(data?.photo)!) as URL!, completed:block)
+            
+            titleLable.text = data?.caption
+            titleCreateLable.text = ("\(Custom.dayStringFromTime((data?.createTime!)!))")
             
             //currentImageView.image = images[currentSelectedIndex-1]
             //displayImage.sd_setImage(with: URL.init(string: itemsDatas[currentSelectedIndex-1] as! String), completed: nil)
@@ -107,17 +112,17 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
             } else {
                 imageView.frame.origin = CGPoint(x: self.view.frame.width + 10, y: imageView.frame.origin.y)
             }
-            }, completion: { finished in
-                imageView.removeFromSuperview()
+        }, completion: { finished in
+            imageView.removeFromSuperview()
         })
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         fetchRecords()
     }
     
     @IBAction func back(_ sender: UIButton) {
-        self.dismiss(animated: false, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     //MARK: Fetch Records
@@ -166,7 +171,7 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
             cell.thumnnailv.image = image
             if index == self.currentSelectedIndex {
                 UIView.animate(withDuration: 0.3, animations: { () -> Void in
-                   cell.thumnnailv.layer.shouldRasterize = true
+                    cell.thumnnailv.layer.shouldRasterize = true
                     cell.transform = CGAffineTransform(rotationAngle: -CGFloat(M_PI_4 / 8.0))
                 })
             }else {
@@ -178,7 +183,7 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         cell.activityindicator.startAnimating()
         cell.thumnnailv.sd_setImage(with: URL(string:mediapath) as URL!, completed:block)
     }
-
+    
     
     //MARK:- Collection Delegate
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -189,15 +194,31 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         cell.thumnnailv.image = nil
         cell.thumnnailv.layer.shouldRasterize = true
         
+        //titleLable.text = data?.caption
+        //titleCreateLable.text = ("\(Custom.dayStringFromTime((data?.createTime!)!))")
+        
+        if currentSelectedIndex == indexPath.row {
+            let data = self.itemsDatas[currentSelectedIndex] as? Library
+            titleLable.text = data?.caption
+            titleCreateLable.text = ("\(Custom.dayStringFromTime((data?.createTime!)!))")
+        }else {
+            let data = self.itemsDatas[currentSelectedIndex] as? Library
+            titleLable.text = data?.caption
+            titleCreateLable.text = ("\(Custom.dayStringFromTime((data?.createTime!)!))")
+        }
+        
         if let item = selectedIndexPath?.item {
             cell.thumnnailv.image = nil
             cell.thumnnailv.layer.shouldRasterize = true
-
+            
+            //titleLable.text = data?.caption
+            //titleCreateLable.text = ("\(Custom.dayStringFromTime((data?.createTime!)!))")
+            
             if indexPath.item == item {
                 UIView.animate(withDuration: 0.3, animations: {
                     cell.thumnnailv.layer.shouldRasterize = true
                     cell.thumnnailv.transform = CGAffineTransform.init(rotationAngle: -CGFloat(M_PI_4 / 8.0))
-                    }, completion: { (completed) in
+                }, completion: { (completed) in
                 })
             } else {
                 cell.thumnnailv.layer.shouldRasterize = true
@@ -206,12 +227,12 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         } else {
             cell.thumnnailv.image = nil
             cell.thumnnailv.layer.shouldRasterize = true
-
+            
             if indexPath.item == 0 {
                 UIView.animate(withDuration: 0.3, animations: {
                     cell.thumnnailv.layer.shouldRasterize = true
                     cell.thumnnailv.transform = CGAffineTransform.init(rotationAngle: -CGFloat(M_PI_4 / 8.0))
-                    }, completion: { (completed) in
+                }, completion: { (completed) in
                 })
             }
         }
@@ -227,10 +248,10 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         self.displayImage.image = collectioncell.thumnnailv.image
         collectionView.reloadData()
         
-        titleLable.text = data?.caption
-        titleCreateLable.text = ("\(Custom.dayStringFromTime((data?.createTime!)!))")
+        //titleLable.text = data?.caption
+        //titleCreateLable.text = ("\(Custom.dayStringFromTime((data?.createTime!)!))")
         
-          }
+    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.itemsDatas.count
@@ -262,6 +283,6 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         return edgeInsets > 0 ? UIEdgeInsetsMake(0, edgeInsets, 0, edgeInsets) : UIEdgeInsetsMake(0, cellSpacing, 0, cellSpacing)
     }
     
-
+    
     
 }

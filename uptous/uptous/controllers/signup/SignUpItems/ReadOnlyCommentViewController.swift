@@ -17,8 +17,9 @@ class ReadOnlyCommentViewController: GeneralViewController {
     @IBOutlet weak var nameLbl: UILabel!
     @IBOutlet weak var headingLbl: UILabel!
     @IBOutlet weak var eventDateLbl: UILabel!
-    var eventDateValue: String!
+    @IBOutlet weak var bottomBtn: UIButton!
     
+    var eventDateValue: String!
     var selectedItems: Items!
     var data: SignupSheet!
     var sheetDataID: String!
@@ -49,7 +50,15 @@ class ReadOnlyCommentViewController: GeneralViewController {
                 eventDateLbl.text = "\(Custom.dayStringSignupItems(selectedItems.dateTime!)), " + "" + " \(Custom.dayStringFromTime4(selectedItems.dateTime!)) - " + "" + "\(selectedItems.endTime!)"
             }
         }
-       
+        
+        bottomBtn.isEnabled = true
+        if selectedItems.volunteerStatus == "Full" {
+            bottomBtn.isEnabled = false
+            bottomBtn.setTitle("Full", for: .normal)
+        }else if selectedItems.volunteerStatus == "Volunteered" {
+            bottomBtn.isEnabled = true
+            bottomBtn.setTitle("Cancel my assignment", for: .normal)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

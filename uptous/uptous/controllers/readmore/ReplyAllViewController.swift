@@ -68,7 +68,7 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
         }
         
         Custom.fullCornerView(ownerView)
-        ownerPhotoImgView.layer.cornerRadius = 30.0
+        ownerPhotoImgView.layer.cornerRadius = 25.0
         ownerPhotoImgView.layer.masksToBounds = true
     }
     
@@ -255,8 +255,9 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
         
         let name = data.ownerName!.components(separatedBy: " ")
         msgNameLbl.text = ("\(name[0]) message")
-        newsItemNameLbl.text = data.newsItemName
-        
+        //newsItemNameLbl.text = data.newsItemName
+        let decodedString = data.newsItemName?.removingPercentEncoding!
+        newsItemNameLbl.text =   decodedString
        /* if calculateHeight(data.newsItemDescription!, width: webView.frame.size.width) > 40 {
             detailHeightContraint.constant = 100
             detailViewHeightContraint.constant = detailViewHeightContraint.constant + 60

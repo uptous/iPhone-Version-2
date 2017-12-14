@@ -14,6 +14,7 @@ class MyUpToUsCalendarViewController: GeneralViewController{
     @IBOutlet weak var lblDateHeader: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var messageView: UIView!
 
     var newsList = NSArray()
     var eventList = [Event]()
@@ -50,11 +51,15 @@ class MyUpToUsCalendarViewController: GeneralViewController{
         
         let expandNib = UINib(nibName: "CalendarTableViewCell", bundle: nil)
         tableView.register(expandNib, forCellReuseIdentifier: expandCellConstants.cellIdentifier as String)
+        messageView.isHidden = true
+        self.tableView.isHidden = true
         self.fetchCommunity()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         searchBar.text = ""
+        messageView.isHidden = true
+        self.tableView.isHidden = true
         if UserPreferences.SelectedCommunityName == "" {
             headingBtn.setTitle("Calendar - All Communities", for: .normal)
         }else{
@@ -153,12 +158,14 @@ class MyUpToUsCalendarViewController: GeneralViewController{
             
             if self.eventList.count > 0 {
                 self.tableView.isHidden = false
+                self.messageView.isHidden = true
                 self.tableView.reloadData()
             }else {
                 self.tableView.isHidden = true
-                let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertControllerStyle.alert)
+                self.messageView.isHidden = false
+                /*let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+                self.present(alert, animated: true, completion: nil)*/
             }
             
         }) {
@@ -454,30 +461,10 @@ extension MyUpToUsCalendarViewController: EventExpandCellDelegate, EventCellDele
                     cell.updateData(data,communityList: self.communityList)
                     return cell
                 }
-                
-              /* let data1: Event!  //EventCollapseTableViewCell
-                
-                /* data1 = eventList[(indexPath as NSIndexPath).row]
-                
-                let cell: CalendarTableViewCell = tableView.dequeueReusableCell(withIdentifier: "CalendarTableViewCell" ) as! CalendarTableViewCell
-                
-                cell.viewExpendableBtn.tag = indexPath.row
-                cell.updateData(data1)
-                cell.delegate = self*/
-                
-                data1 = eventList[(indexPath as NSIndexPath).row]
-                
-                let cell: EventCollapseTableViewCell = tableView.dequeueReusableCell(withIdentifier: "EventCollapseTableViewCell" ) as! EventCollapseTableViewCell
-                
-                //cell.viewExpendableBtn.tag = indexPath.row
-                cell.updateData(data1)
-                //cell.delegate = self
-                
-                return cell*/
             }
         }
         
-        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        /*func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
             if tableView == communityTableView {
                 return 50
             }else if selectedIndexPath == indexPath.row {
@@ -485,7 +472,7 @@ extension MyUpToUsCalendarViewController: EventExpandCellDelegate, EventCellDele
             }else {
                 return 125
             }
-        }
+        }*/
    
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             

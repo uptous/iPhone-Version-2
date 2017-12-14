@@ -16,10 +16,11 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
     @IBOutlet weak var emailTxtField: UITextField!
     @IBOutlet weak var mobileTxtField: UITextField!
     @IBOutlet weak var profileImage: UIImageView!
+    @IBOutlet weak var scrollView: UIScrollView!
+    
     var imagePicker : UIImagePickerController!
     var imgUploadStatus = false
-    
-
+    var activeField: UITextField?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,8 +35,8 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
         imagePicker.delegate = self
         addToolBar(textField: mobileTxtField)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(ProfileViewController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ProfileViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        //NotificationCenter.default.addObserver(self, selector: #selector(ProfileViewController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        //NotificationCenter.default.addObserver(self, selector: #selector(ProfileViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         let delayTime = DispatchTime.now() + Double(Int64(1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
         DispatchQueue.main.asyncAfter(deadline: delayTime) {
@@ -43,7 +44,50 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
         }
     }
     
-    func keyboardWillShow(notification: NSNotification) {
+    override func viewWillAppear(_ animated: Bool) {
+        registerForKeyboardNotifications()
+    }
+    
+    //MARK:- Keyboard
+    func registerForKeyboardNotifications(){
+        //Adding notifies on keyboard appearing
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWasShown(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    func keyboardWasShown(notification: NSNotification){
+        //Need to calculate keyboard exact size due to Apple suggestions
+        self.scrollView.isScrollEnabled = true
+        var info = notification.userInfo!
+        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.size
+        let contentInsets : UIEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, keyboardSize!.height, 0.0)
+        
+        self.scrollView.contentInset = contentInsets
+        self.scrollView.scrollIndicatorInsets = contentInsets
+        
+        var aRect : CGRect = self.view.frame
+        aRect.size.height -= keyboardSize!.height
+        if let activeField = self.activeField {
+            if (!aRect.contains(activeField.frame.origin)){
+                self.scrollView.scrollRectToVisible(activeField.frame, animated: true)
+            }
+        }
+    }
+    
+    func keyboardWillBeHidden(notification: NSNotification){
+        //Once keyboard disappears, restore original positions
+        var info = notification.userInfo!
+        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.size
+        let contentInsets : UIEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, -keyboardSize!.height, 0.0)
+        self.scrollView.contentInset.bottom = 0
+        self.scrollView.scrollIndicatorInsets = contentInsets
+        self.view.endEditing(true)
+        //mainViewConstraintHeight.constant = 1300
+        //mainView.layoutIfNeeded()
+        self.scrollView.isScrollEnabled = true
+    }
+    
+    /*func keyboardWillShow(notification: NSNotification) {
         
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y == 0{
@@ -59,45 +103,9 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
                 self.view.frame.origin.y += keyboardSize.height
             }
         }
-    }
+    }*/
     
     @IBAction func signOutClick(_ sender: UIButton) {
-        /*let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to Signout?", preferredStyle: .alert)
-        
-        let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
-            UserPreferences.SelectedCommunityID = 001
-            UserPreferences.SelectedCommunityName = ""
-            UserPreferences.AllContactList = []
-            UserPreferences.LoginID = ""
-            UserPreferences.Password = ""
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            let navController = appDelegate.window?.rootViewController as? UINavigationController
-            navController?.popToRootViewController(animated: true)
-            
-            
-        }
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action:UIAlertAction!) in
-            print("you have pressed the Cancel button");
-        }
-        alertController.addAction(cancelAction)
-        alertController.addAction(OKAction)
-        
-        //UIApplication.shared.keyWindow?.rootViewController?.present(alertController, animated: true, completion: nil)*/
-        
-       /* let alertView = UIAlertController(title: "UpToUs", message: "Are you sure you want to Signout?", preferredStyle: .alert)
-        alertView.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (alertAction) -> Void in
-            UserPreferences.SelectedCommunityID = 001
-            UserPreferences.SelectedCommunityName = ""
-            UserPreferences.AllContactList = []
-            UserPreferences.LoginID = ""
-            UserPreferences.Password = ""
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            let navController = appDelegate.window?.rootViewController as? UINavigationController
-            navController?.popToRootViewController(animated: true)
-        }))
-        alertView.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        present(alertView, animated: true, completion: nil)*/
         UserPreferences.LoginHeaderCodition = [:]
         UserPreferences.LoginStatus = ""
         UserPreferences.LoginID = ""
@@ -174,13 +182,11 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
         alertController.addAction(OKAction)
         
         self.present(alertController, animated: true, completion: nil)
-        
     }
        
     @IBAction func back(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)
     }
-    
     
     @IBAction func saveClick(_ sender: UIButton) {
         updateProfile()
@@ -210,7 +216,6 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {
             (alert: UIAlertAction!) -> Void in
         })
-        
         optionMenu.addAction(click)
         optionMenu.addAction(library)
         optionMenu.addAction(cancelAction)
@@ -224,8 +229,6 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
         imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
         imagePicker.modalPresentationStyle = .popover
         present(imagePicker, animated: true, completion: nil)
-        
-        
     }
     
     func takeNewPicture() {
@@ -241,55 +244,18 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
     //MARK: - Delegates
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        
         var chosenImage = UIImage()
         chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
-        //self.image.contentMode = .scaleAspectFill //3
-        //self.image.image = chosenImage //4
-        //dismiss(animated:true, completion: nil)
-        //let fixOrientationImage=chosenImage.fixOrientation()
-        //self.displayImage.image = fixOrientationImage
-        //chosenImage = fixOrientationImage!
-
-        
         delay(0.2, closure: { () -> () in
-        /* let imageCropVC =  RSKImageCropViewController (image: chosenImage)
-         imageCropVC.delegate = self
-            self.imgUploadStatus = true
-         self.present(imageCropVC, animated: true, completion:nil)*/
+        
          })
         dismiss(animated:true, completion: nil)
     }
-    
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         self.imgUploadStatus = false
         dismiss(animated: true, completion: nil)
     }
-    
-    // MARK :- RSCROPPER IMAGE DELEGATE
-   /* func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect) {
-        
-    }
-    
-    func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect, rotationAngle: CGFloat) {
-        //uploadBool = true
-        profileImage.layer.masksToBounds = true
-        profileImage.layer.cornerRadius = profileImage.frame.size.width/2
-        self.profileImage.image = croppedImage;
-        self.dismiss(animated: true, completion:nil)
-    }
-    
-    func imageCropViewController(_ controller: RSKImageCropViewController, willCropImage originalImage: UIImage) {
-        
-    }
-    
-    func imageCropViewControllerDidCancelCrop(_ controller: RSKImageCropViewController) {
-        self.dismiss(animated: true, completion:nil)
-        
-    }*/
-
-
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -314,6 +280,14 @@ extension ProfileViewController: UITextFieldDelegate{
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        activeField = textField
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        activeField = nil
     }
     
     func addToolBar(textField: UITextField){

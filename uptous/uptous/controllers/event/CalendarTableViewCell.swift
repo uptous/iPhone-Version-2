@@ -27,6 +27,13 @@ class CalendarTableViewCell: UITableViewCell {
     @IBOutlet weak var descriptionTextView: UITextView!
     @IBOutlet weak var descTableView: UITableView!
     
+    @IBOutlet weak var tableHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var view1HeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var view2HeightConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var view1: UIView!
+    @IBOutlet weak var view2: UIView!
+    
     var desc = ""
 
     fileprivate struct signUpCellConstants {
@@ -45,6 +52,17 @@ class CalendarTableViewCell: UITableViewCell {
         
         descTableView.estimatedRowHeight = 45
         descTableView.rowHeight = UITableViewAutomaticDimension
+    }
+    
+    func heightForView(text:String, font:UIFont, width:CGFloat) -> CGFloat{
+        let label:UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: CGFloat.greatestFiniteMagnitude))
+        label.numberOfLines = 0
+        label.lineBreakMode = NSLineBreakMode.byWordWrapping
+        label.font = font
+        label.text = text
+        label.sizeToFit()
+        
+        return label.frame.height
     }
    
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -110,9 +128,34 @@ class CalendarTableViewCell: UITableViewCell {
         
         lblStart.text =  startDateValue//Custom.dayStringFromTime2(data.startTime!)
         lblEnd.text =  endDateValue//Custom.dayStringFromTime2(data.endTime!)
-        let address = "\(data.address!), " + "\(data.city!), " + "\(data.state!), " + "\(data.country!), " + "\(data.zipCode!)"
-        locationBtn.setTitle(data.location!, for: .normal)
-       descTableView.reloadData()
+        //let address = "\(data.address!), " + "\(data.city!), " + "\(data.state!), " + "\(data.country!), " + "\(data.zipCode!)"
+        //locationBtn.setTitle(data.location!, for: .normal)
+       
+        if (desc.characters.count) > 0 {
+            let font = UIFont(name: "Helvetica", size: 14.0)
+            //descLabel.text = data!.notes!
+            let height = heightForView(text: desc, font: font!, width: descTableView.frame.size.width)
+            if height < 20 {
+                tableHeightConstraint.constant = 190 + 10//CGFloat(height)
+            }else if height < 70{
+                tableHeightConstraint.constant = 190 + 20
+            }else if height < 100{
+                tableHeightConstraint.constant = 190 + 30
+            }else {
+                tableHeightConstraint.constant = 190 + (CGFloat(height) - 45)
+            }
+        }else {
+            tableHeightConstraint.constant = 190
+        }
+        
+        view1HeightConstraint.constant = tableHeightConstraint.constant
+        view2HeightConstraint.constant = tableHeightConstraint.constant
+        
+        view1.layoutIfNeeded()
+        view2.layoutIfNeeded()
+        descTableView.layoutIfNeeded()
+        
+        descTableView.reloadData()
     }
 
     //Mark : Get Label Height with text

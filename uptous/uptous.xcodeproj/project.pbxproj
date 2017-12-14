@@ -10,9 +10,18 @@
 		015281BE1FBD4A74004D4F59 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015281BD1FBD4A74004D4F59 /* Album.swift */; };
 		015B64BB1F88986B006C3761 /* ShowLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B64B91F88986B006C3761 /* ShowLocationViewController.swift */; };
 		015B64BC1F88986B006C3761 /* ShowLocationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 015B64BA1F88986B006C3761 /* ShowLocationViewController.xib */; };
+		017326681FDFED0000AB52DF /* OpenSans-Bold.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 0173265E1FDFECDA00AB52DF /* OpenSans-Bold.ttf */; };
+		017326691FDFED0100AB52DF /* OpenSans-BoldItalic.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 017326661FDFECDF00AB52DF /* OpenSans-BoldItalic.ttf */; };
+		0173266A1FDFED0100AB52DF /* OpenSans-ExtraBold.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 017326671FDFECDF00AB52DF /* OpenSans-ExtraBold.ttf */; };
+		0173266B1FDFED0100AB52DF /* OpenSans-ExtraBoldItalic.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 0173265F1FDFECDB00AB52DF /* OpenSans-ExtraBoldItalic.ttf */; };
+		0173266C1FDFED0100AB52DF /* OpenSans-Italic.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 017326601FDFECDC00AB52DF /* OpenSans-Italic.ttf */; };
+		0173266D1FDFED0100AB52DF /* OpenSans-Light.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 017326621FDFECDD00AB52DF /* OpenSans-Light.ttf */; };
+		0173266E1FDFED0100AB52DF /* OpenSans-LightItalic.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 017326631FDFECDD00AB52DF /* OpenSans-LightItalic.ttf */; };
+		0173266F1FDFED0100AB52DF /* OpenSans-Regular.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 017326651FDFECDE00AB52DF /* OpenSans-Regular.ttf */; };
+		017326701FDFED0100AB52DF /* OpenSans-Semibold.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 017326641FDFECDE00AB52DF /* OpenSans-Semibold.ttf */; };
+		017326711FDFED0100AB52DF /* OpenSans-SemiboldItalic.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 017326611FDFECDC00AB52DF /* OpenSans-SemiboldItalic.ttf */; };
 		01766D3B1FA8457900AD5D13 /* CommunityAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01766D3A1FA8457800AD5D13 /* CommunityAlbum.swift */; };
 		01992CF41FB40E0900631EB2 /* SignUpType1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01992CF31FB40E0900631EB2 /* SignUpType1ViewController.swift */; };
-		01992CF61FB40E1D00631EB2 /* SignUpType2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01992CF51FB40E1D00631EB2 /* SignUpType2ViewController.swift */; };
 		01992CF81FB40E3400631EB2 /* SignUpType3ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01992CF71FB40E3400631EB2 /* SignUpType3ViewController.swift */; };
 		019D01591FB4176200574C07 /* SignUpDescCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019D01581FB4176200574C07 /* SignUpDescCell.swift */; };
 		019D015B1FB41A7500574C07 /* MainStoryBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019D015A1FB41A7400574C07 /* MainStoryBoard.swift */; };
@@ -22,13 +31,9 @@
 		01D8AAB01F91DECB00DD11DF /* volunteer.gif in Resources */ = {isa = PBXBuildFile; fileRef = 01D8AAAB1F91DECB00DD11DF /* volunteer.gif */; };
 		01D8AAB11F91DECB00DD11DF /* volunteer1.gif in Resources */ = {isa = PBXBuildFile; fileRef = 01D8AAAC1F91DECB00DD11DF /* volunteer1.gif */; };
 		01D8AAB21F91DECB00DD11DF /* volunteer2.gif in Resources */ = {isa = PBXBuildFile; fileRef = 01D8AAAD1F91DECB00DD11DF /* volunteer2.gif */; };
-		01D8AAB41F921C6000DD11DF /* SignUp1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D8AAB31F921C6000DD11DF /* SignUp1.swift */; };
-		01D8AAB61F921C7700DD11DF /* SignUp1.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01D8AAB51F921C7700DD11DF /* SignUp1.xib */; };
-		01D8AAB81F921D8D00DD11DF /* SignUp2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01D8AAB71F921D8D00DD11DF /* SignUp2.xib */; };
-		01D8AABA1F921D9A00DD11DF /* SignUp3.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01D8AAB91F921D9A00DD11DF /* SignUp3.xib */; };
-		01D8AABC1F921DB500DD11DF /* SignUp2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D8AABB1F921DB500DD11DF /* SignUp2.swift */; };
-		01D8AABE1F921DC300DD11DF /* SignUp3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D8AABD1F921DC300DD11DF /* SignUp3.swift */; };
 		01DD20E91FC3EF0900A2B4D7 /* uptous.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 0104484C1FA8BEB600C2B709 /* uptous.entitlements */; };
+		01E51C891FCA75A0006DF126 /* CalendarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E51C871FCA75A0006DF126 /* CalendarTableViewCell.swift */; };
+		01E51C8A1FCA75A0006DF126 /* CalendarTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01E51C881FCA75A0006DF126 /* CalendarTableViewCell.xib */; };
 		4E33B0C0AEF05C0DC4F40225 /* Pods_uptous.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C129DEFE8C1FCE921640925D /* Pods_uptous.framework */; };
 		D30A265E1E0068A9006A651B /* AnnouncementCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D30A265D1E006875006A651B /* AnnouncementCell.xib */; };
 		D30FA9FD1D66276700BF181F /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30FA9FC1D66276700BF181F /* ActivityIndicator.swift */; };
@@ -149,8 +154,6 @@
 		D3A3F04D1DE20DA60086D487 /* KMPlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A3F04C1DE20DA60086D487 /* KMPlaceholderTextView.swift */; };
 		D3AEBB861DDF773900A827C5 /* RSVPVolunteerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3AEBB851DDF773800A827C5 /* RSVPVolunteerViewController.swift */; };
 		D3B4C4B21DE613D1006B2430 /* MyUpToUsCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B4C4AF1DE613D1006B2430 /* MyUpToUsCalendarViewController.swift */; };
-		D3B4C4B31DE613D1006B2430 /* CalendarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B4C4B01DE613D1006B2430 /* CalendarTableViewCell.swift */; };
-		D3B4C4B41DE613D1006B2430 /* CalendarTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3B4C4B11DE613D1006B2430 /* CalendarTableViewCell.xib */; };
 		D3B4C4B61DE61903006B2430 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B4C4B51DE61903006B2430 /* Event.swift */; };
 		D3B4C5AC1DF092AB00B56DC6 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B4C5AB1DF092AB00B56DC6 /* UserProfile.swift */; };
 		D3B4C5B01DF0AE0600B56DC6 /* upload-image.gif in Resources */ = {isa = PBXBuildFile; fileRef = D3B4C5AF1DF0AE0600B56DC6 /* upload-image.gif */; };
@@ -272,9 +275,18 @@
 		015281BD1FBD4A74004D4F59 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		015B64B91F88986B006C3761 /* ShowLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowLocationViewController.swift; sourceTree = "<group>"; };
 		015B64BA1F88986B006C3761 /* ShowLocationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowLocationViewController.xib; sourceTree = "<group>"; };
+		0173265E1FDFECDA00AB52DF /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Bold.ttf"; sourceTree = "<group>"; };
+		0173265F1FDFECDB00AB52DF /* OpenSans-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
+		017326601FDFECDC00AB52DF /* OpenSans-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Italic.ttf"; sourceTree = "<group>"; };
+		017326611FDFECDC00AB52DF /* OpenSans-SemiboldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-SemiboldItalic.ttf"; sourceTree = "<group>"; };
+		017326621FDFECDD00AB52DF /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Light.ttf"; sourceTree = "<group>"; };
+		017326631FDFECDD00AB52DF /* OpenSans-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-LightItalic.ttf"; sourceTree = "<group>"; };
+		017326641FDFECDE00AB52DF /* OpenSans-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Semibold.ttf"; sourceTree = "<group>"; };
+		017326651FDFECDE00AB52DF /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
+		017326661FDFECDF00AB52DF /* OpenSans-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-BoldItalic.ttf"; sourceTree = "<group>"; };
+		017326671FDFECDF00AB52DF /* OpenSans-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-ExtraBold.ttf"; sourceTree = "<group>"; };
 		01766D3A1FA8457800AD5D13 /* CommunityAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityAlbum.swift; sourceTree = "<group>"; };
 		01992CF31FB40E0900631EB2 /* SignUpType1ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpType1ViewController.swift; sourceTree = "<group>"; };
-		01992CF51FB40E1D00631EB2 /* SignUpType2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpType2ViewController.swift; sourceTree = "<group>"; };
 		01992CF71FB40E3400631EB2 /* SignUpType3ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpType3ViewController.swift; sourceTree = "<group>"; };
 		019D01581FB4176200574C07 /* SignUpDescCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpDescCell.swift; sourceTree = "<group>"; };
 		019D015A1FB41A7400574C07 /* MainStoryBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainStoryBoard.swift; sourceTree = "<group>"; };
@@ -437,12 +449,8 @@
 		01D8AAAB1F91DECB00DD11DF /* volunteer.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = volunteer.gif; sourceTree = "<group>"; };
 		01D8AAAC1F91DECB00DD11DF /* volunteer1.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = volunteer1.gif; sourceTree = "<group>"; };
 		01D8AAAD1F91DECB00DD11DF /* volunteer2.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = volunteer2.gif; sourceTree = "<group>"; };
-		01D8AAB31F921C6000DD11DF /* SignUp1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUp1.swift; sourceTree = "<group>"; };
-		01D8AAB51F921C7700DD11DF /* SignUp1.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignUp1.xib; sourceTree = "<group>"; };
-		01D8AAB71F921D8D00DD11DF /* SignUp2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignUp2.xib; sourceTree = "<group>"; };
-		01D8AAB91F921D9A00DD11DF /* SignUp3.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignUp3.xib; sourceTree = "<group>"; };
-		01D8AABB1F921DB500DD11DF /* SignUp2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUp2.swift; sourceTree = "<group>"; };
-		01D8AABD1F921DC300DD11DF /* SignUp3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUp3.swift; sourceTree = "<group>"; };
+		01E51C871FCA75A0006DF126 /* CalendarTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarTableViewCell.swift; sourceTree = "<group>"; };
+		01E51C881FCA75A0006DF126 /* CalendarTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalendarTableViewCell.xib; sourceTree = "<group>"; };
 		2D10277E3F436438257FECDC /* Pods-uptous.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-uptous.release.xcconfig"; path = "Pods/Target Support Files/Pods-uptous/Pods-uptous.release.xcconfig"; sourceTree = "<group>"; };
 		5290438C22A04CFC4A98987C /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E5EA588B268F80448E5E17E /* Pods-uptous.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-uptous.debug.xcconfig"; path = "Pods/Target Support Files/Pods-uptous/Pods-uptous.debug.xcconfig"; sourceTree = "<group>"; };
@@ -583,8 +591,6 @@
 		D3A3F04C1DE20DA60086D487 /* KMPlaceholderTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KMPlaceholderTextView.swift; sourceTree = "<group>"; };
 		D3AEBB851DDF773800A827C5 /* RSVPVolunteerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSVPVolunteerViewController.swift; sourceTree = "<group>"; };
 		D3B4C4AF1DE613D1006B2430 /* MyUpToUsCalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyUpToUsCalendarViewController.swift; sourceTree = "<group>"; };
-		D3B4C4B01DE613D1006B2430 /* CalendarTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarTableViewCell.swift; sourceTree = "<group>"; };
-		D3B4C4B11DE613D1006B2430 /* CalendarTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalendarTableViewCell.xib; sourceTree = "<group>"; };
 		D3B4C4B51DE61903006B2430 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		D3B4C5AB1DF092AB00B56DC6 /* UserProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		D3B4C5AF1DF0AE0600B56DC6 /* upload-image.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "upload-image.gif"; sourceTree = "<group>"; };
@@ -741,6 +747,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0173265D1FDFECC100AB52DF /* font */ = {
+			isa = PBXGroup;
+			children = (
+				0173265E1FDFECDA00AB52DF /* OpenSans-Bold.ttf */,
+				017326661FDFECDF00AB52DF /* OpenSans-BoldItalic.ttf */,
+				017326671FDFECDF00AB52DF /* OpenSans-ExtraBold.ttf */,
+				0173265F1FDFECDB00AB52DF /* OpenSans-ExtraBoldItalic.ttf */,
+				017326601FDFECDC00AB52DF /* OpenSans-Italic.ttf */,
+				017326621FDFECDD00AB52DF /* OpenSans-Light.ttf */,
+				017326631FDFECDD00AB52DF /* OpenSans-LightItalic.ttf */,
+				017326651FDFECDE00AB52DF /* OpenSans-Regular.ttf */,
+				017326641FDFECDE00AB52DF /* OpenSans-Semibold.ttf */,
+				017326611FDFECDC00AB52DF /* OpenSans-SemiboldItalic.ttf */,
+			);
+			path = font;
+			sourceTree = "<group>";
+		};
 		01D3A8891FAC3A6A00E531C8 /* IBAnimatable */ = {
 			isa = PBXGroup;
 			children = (
@@ -993,14 +1016,7 @@
 				D33234EC1D906F1400E1F29F /* EventDateCell.xib */,
 				D33234EF1D906F3A00E1F29F /* CutOffDateCell.swift */,
 				D33234F01D906F3A00E1F29F /* CutOffDateCell.xib */,
-				01D8AAB31F921C6000DD11DF /* SignUp1.swift */,
-				01D8AAB51F921C7700DD11DF /* SignUp1.xib */,
-				01D8AABB1F921DB500DD11DF /* SignUp2.swift */,
-				01D8AAB71F921D8D00DD11DF /* SignUp2.xib */,
-				01D8AABD1F921DC300DD11DF /* SignUp3.swift */,
-				01D8AAB91F921D9A00DD11DF /* SignUp3.xib */,
 				01992CF31FB40E0900631EB2 /* SignUpType1ViewController.swift */,
-				01992CF51FB40E1D00631EB2 /* SignUpType2ViewController.swift */,
 				01992CF71FB40E3400631EB2 /* SignUpType3ViewController.swift */,
 				019D01581FB4176200574C07 /* SignUpDescCell.swift */,
 			);
@@ -1158,9 +1174,9 @@
 		D3B4C4AE1DE6138A006B2430 /* event */ = {
 			isa = PBXGroup;
 			children = (
+				01E51C871FCA75A0006DF126 /* CalendarTableViewCell.swift */,
+				01E51C881FCA75A0006DF126 /* CalendarTableViewCell.xib */,
 				D3B4C4AF1DE613D1006B2430 /* MyUpToUsCalendarViewController.swift */,
-				D3B4C4B01DE613D1006B2430 /* CalendarTableViewCell.swift */,
-				D3B4C4B11DE613D1006B2430 /* CalendarTableViewCell.xib */,
 				D398AFEC1E11963C00AFE135 /* EventCollapseTableViewCell.swift */,
 				D398AFED1E11963C00AFE135 /* EventCollapseTableViewCell.xib */,
 				015B64B91F88986B006C3761 /* ShowLocationViewController.swift */,
@@ -1437,6 +1453,7 @@
 		D3E4EAFC1DA0B0BC0024B734 /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				0173265D1FDFECC100AB52DF /* font */,
 				D3E4EAFD1DA0B0BC0024B734 /* gif */,
 			);
 			path = resources;
@@ -1630,7 +1647,6 @@
 				D3D42DC31DFB378A00F5E5C7 /* Default-568h@2x.png in Resources */,
 				D33201121DDE3CF00072A807 /* fav-icon@3x.gif in Resources */,
 				D3E4EAFF1DA0B0CD0024B734 /* smiley_test.gif in Resources */,
-				D3B4C4B41DE613D1006B2430 /* CalendarTableViewCell.xib in Resources */,
 				D3D42DD81DFB378A00F5E5C7 /* Reader-Print.png in Resources */,
 				D398AFEF1E11963C00AFE135 /* EventCollapseTableViewCell.xib in Resources */,
 				D332011C1DDE3CF00072A807 /* volunteer1@2x.gif in Resources */,
@@ -1640,9 +1656,7 @@
 				D3D42DDD1DFB378A00F5E5C7 /* Reader-Thumbs@3x.png in Resources */,
 				D3D8A67C1D5EDCB7000AB922 /* PhotosCell.xib in Resources */,
 				D3A3F04B1DE207B50086D487 /* MessagePostViewController.xib in Resources */,
-				01D8AAB81F921D8D00DD11DF /* SignUp2.xib in Resources */,
 				D3D42DC61DFB378A00F5E5C7 /* Reader-Button-H.png in Resources */,
-				01D8AABA1F921D9A00DD11DF /* SignUp3.xib in Resources */,
 				D3D42DCB1DFB378A00F5E5C7 /* Reader-Button-N@3x.png in Resources */,
 				F4E373CC1FAF30BE00B6BD40 /* DescCell.xib in Resources */,
 				D3D42DD51DFB378A00F5E5C7 /* Reader-Mark-Y.png in Resources */,
@@ -1665,9 +1679,9 @@
 				D3F405811DBC638100101A5B /* LandingCell.xib in Resources */,
 				D3F405851DBC63DC00101A5B /* ExpandCell.xib in Resources */,
 				D3D42DCC1DFB378A00F5E5C7 /* Reader-Email.png in Resources */,
+				01E51C8A1FCA75A0006DF126 /* CalendarTableViewCell.xib in Resources */,
 				D3D42DC51DFB378A00F5E5C7 /* Default-736h@3x.png in Resources */,
 				D3D8A6801D5EDCB7000AB922 /* PrivateThreadsCell.xib in Resources */,
-				01D8AAB61F921C7700DD11DF /* SignUp1.xib in Resources */,
 				D3210D031D64E013007A1F46 /* PersonalAnnouncementCell.xib in Resources */,
 				D3D42DC71DFB378A00F5E5C7 /* Reader-Button-H@2x.png in Resources */,
 				D33234EE1D906F1400E1F29F /* EventDateCell.xib in Resources */,
@@ -1790,6 +1804,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				017326681FDFED0000AB52DF /* OpenSans-Bold.ttf in Sources */,
+				017326691FDFED0100AB52DF /* OpenSans-BoldItalic.ttf in Sources */,
+				0173266A1FDFED0100AB52DF /* OpenSans-ExtraBold.ttf in Sources */,
+				0173266B1FDFED0100AB52DF /* OpenSans-ExtraBoldItalic.ttf in Sources */,
+				0173266C1FDFED0100AB52DF /* OpenSans-Italic.ttf in Sources */,
+				0173266D1FDFED0100AB52DF /* OpenSans-Light.ttf in Sources */,
+				0173266E1FDFED0100AB52DF /* OpenSans-LightItalic.ttf in Sources */,
+				0173266F1FDFED0100AB52DF /* OpenSans-Regular.ttf in Sources */,
+				017326701FDFED0100AB52DF /* OpenSans-Semibold.ttf in Sources */,
+				017326711FDFED0100AB52DF /* OpenSans-SemiboldItalic.ttf in Sources */,
 				F47A28371FC0AFB1009AE620 /* uptous.entitlements in Sources */,
 				D35CC7411DE13BF500F8E251 /* SDWebImageDownloader.m in Sources */,
 				D3D42DC21DFB378A00F5E5C7 /* PDFDownload.swift in Sources */,
@@ -1818,7 +1842,6 @@
 				D33AB3BD1DA8D5C5007E4BDC /* SignUpOpenViewController.swift in Sources */,
 				D3B4C5B41DF0B49800B56DC6 /* InviteViewController.swift in Sources */,
 				D336FC051D84971B00EDDF8E /* CommentViewController.swift in Sources */,
-				01D8AABC1F921DB500DD11DF /* SignUp2.swift in Sources */,
 				D36E7C311D8EF356002BDBBD /* CustomHeaderCell.swift in Sources */,
 				D33234ED1D906F1400E1F29F /* EventDateCell.swift in Sources */,
 				D3F0ECA31D89BE7000E5F78E /* PersonalMessageCell.swift in Sources */,
@@ -1859,19 +1882,16 @@
 				D3F0D6161DE758BA004AB85E /* DropperCell.swift in Sources */,
 				D39066351DF1DC3900DC4112 /* BaseUIButton.swift in Sources */,
 				F416271E1E55CBC800576DF5 /* CustomLayout.swift in Sources */,
-				D3B4C4B31DE613D1006B2430 /* CalendarTableViewCell.swift in Sources */,
 				D336FC031D847D6100EDDF8E /* Custom.swift in Sources */,
 				D31F9B7E1DD3A19500BF1056 /* DetailsLibraryViewController.swift in Sources */,
 				D3B4C4B21DE613D1006B2430 /* MyUpToUsCalendarViewController.swift in Sources */,
 				D3D42DF11DFB378B00F5E5C7 /* ThumbsViewController.m in Sources */,
 				D33AB3C31DA8F56E007E4BDC /* ItemDetailsEditingMsgViewController.swift in Sources */,
-				01992CF61FB40E1D00631EB2 /* SignUpType2ViewController.swift in Sources */,
 				D3870C4D1D616A0F0020BC1E /* JoinedUserCell.swift in Sources */,
 				F4E373CB1FAF30BE00B6BD40 /* DescCell.swift in Sources */,
 				D35CC7421DE13BF500F8E251 /* SDWebImageDownloaderOperation.m in Sources */,
 				01992CF41FB40E0900631EB2 /* SignUpType1ViewController.swift in Sources */,
 				D3D8A6731D5EDCB7000AB922 /* FileCell.swift in Sources */,
-				01D8AABE1F921DC300DD11DF /* SignUp3.swift in Sources */,
 				D32004371D79FBBC000FBBAD /* HPGrowingTextView.m in Sources */,
 				D3D8A62A1D5EDB45000AB922 /* AppDelegate.swift in Sources */,
 				D33234F11D906F3A00E1F29F /* CutOffDateCell.swift in Sources */,
@@ -1879,7 +1899,6 @@
 				D388AA381DF48AC500C08B59 /* FileListViewController.swift in Sources */,
 				D3E4EB021DA0B2950024B734 /* iOSDevCenters+GIF.swift in Sources */,
 				D3D42DEA1DFB378B00F5E5C7 /* ReaderThumbQueue.m in Sources */,
-				01D8AAB41F921C6000DD11DF /* SignUp1.swift in Sources */,
 				D30FA9FF1D6638FA00BF181F /* CustomImgView.swift in Sources */,
 				D3F405801DBC638100101A5B /* LandingCell.swift in Sources */,
 				D3F405841DBC63DC00101A5B /* ExpandCell.swift in Sources */,
@@ -1935,6 +1954,7 @@
 				D3D8A67F1D5EDCB7000AB922 /* PrivateThreadsCell.swift in Sources */,
 				D3290C5B1DD8DFFF000BA85F /* CommunityCell.swift in Sources */,
 				D3D6EAFD1DE0ABF100DA7B08 /* CustomSearchBar.swift in Sources */,
+				01E51C891FCA75A0006DF126 /* CalendarTableViewCell.swift in Sources */,
 				D328DB361D72CAE80095AB85 /* ImageCell.swift in Sources */,
 				D3A3F0461DE1EA930086D487 /* Files.swift in Sources */,
 				D352CF551D76085B0057BB13 /* GroupIdentifierView.swift in Sources */,
@@ -2097,7 +2117,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = uptous/uptous.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Yuval Spector (KM7B733722)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = U8DTDCNJ53;
 				INFOPLIST_FILE = uptous/Info.plist;
@@ -2105,8 +2125,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.uptous.uptous-mobile";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e0be56f7-6773-4dff-ba48-215b51a8ca54";
-				PROVISIONING_PROFILE_SPECIFIER = uptousDevelopment;
+				PROVISIONING_PROFILE = "0d730d5b-e2d7-4ee5-a1f0-195e4c119dbc";
+				PROVISIONING_PROFILE_SPECIFIER = Live_Distribution;
 				SWIFT_OBJC_BRIDGING_HEADER = "uptous/uptous-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -2122,7 +2142,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = uptous/uptous.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Yuval Spector (KM7B733722)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = U8DTDCNJ53;
 				INFOPLIST_FILE = uptous/Info.plist;
@@ -2130,8 +2150,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.uptous.uptous-mobile";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e0be56f7-6773-4dff-ba48-215b51a8ca54";
-				PROVISIONING_PROFILE_SPECIFIER = uptousDevelopment;
+				PROVISIONING_PROFILE = "0d730d5b-e2d7-4ee5-a1f0-195e4c119dbc";
+				PROVISIONING_PROFILE_SPECIFIER = Live_Distribution;
 				SWIFT_OBJC_BRIDGING_HEADER = "uptous/uptous-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;

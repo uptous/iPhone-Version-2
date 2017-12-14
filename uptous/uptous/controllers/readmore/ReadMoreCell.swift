@@ -20,7 +20,7 @@ class ReadMoreCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         Custom.fullCornerView(ownerView)
-        ownerPhotoImgView.layer.cornerRadius = 30.0
+        ownerPhotoImgView.layer.cornerRadius = 25.0
         ownerPhotoImgView.layer.masksToBounds = true
     }
     

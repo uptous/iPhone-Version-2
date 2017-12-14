@@ -28,6 +28,8 @@ class MyUpToUsSignUpViewController: GeneralViewController,UISearchBarDelegate,UI
     @IBOutlet weak var communityTableView: UITableView!
     @IBOutlet weak var communityView: UIView!
     @IBOutlet weak var headingBtn: UIButton!
+    @IBOutlet weak var messageView: UIView!
+    
     var topMenuStatus = 0
     var communityList = NSMutableArray()
     
@@ -49,7 +51,8 @@ class MyUpToUsSignUpViewController: GeneralViewController,UISearchBarDelegate,UI
 
         let eventNib = UINib(nibName: "EventDateCell", bundle: nil)
         tableView.register(eventNib, forCellReuseIdentifier: eventCellConstants.cellIdentifier as String)
-
+        messageView.isHidden = true
+        self.tableView.isHidden = true
        self.fetchCommunity()
     }
     
@@ -121,6 +124,8 @@ class MyUpToUsSignUpViewController: GeneralViewController,UISearchBarDelegate,UI
         }else{
             headingBtn.setTitle("Sign-Ups - \(UserPreferences.SelectedCommunityName)", for: .normal)
         }
+        self.tableView.isHidden = true
+        messageView.isHidden = true
         self.fetchSignupSheetList()
 
     }
@@ -156,13 +161,15 @@ class MyUpToUsSignUpViewController: GeneralViewController,UISearchBarDelegate,UI
             }
             
             if self.fullListArr.count > 0 {
+                self.messageView.isHidden = true
                 self.tableView.isHidden = false
                 self.tableView.reloadData()
             }else {
                 self.tableView.isHidden = true
-                let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertControllerStyle.alert)
+                self.messageView.isHidden = false
+                /*let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+                self.present(alert, animated: true, completion: nil)*/
             }
             
         }) {

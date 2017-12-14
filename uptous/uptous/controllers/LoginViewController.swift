@@ -62,7 +62,7 @@ class LoginViewController: GeneralViewController {
     override func viewWillAppear(_ animated: Bool) {
         emailTxtField.text! = ""
         passwordTxtField.text! = ""
-        //emailTxtField.becomeFirstResponder()
+        
     }
     
     @IBAction func forgetPasswordBtnClick(_ sender: UIButton) {
@@ -146,9 +146,6 @@ class LoginViewController: GeneralViewController {
     }
     
     func alreadyLoggedIn() {
-        
-        print(UserPreferences.LoginHeaderCodition)
-        print(UserPreferences.DeepLinkingStatus)
         appDelegate.loginHeaderCredentials = UserPreferences.LoginHeaderCodition
         let controller = self.storyboard?.instantiateViewController(withIdentifier: MainStoryBoard.ViewControllerIdentifiers.tabbarViewController) as! TabBarViewController
         
@@ -221,8 +218,8 @@ class LoginViewController: GeneralViewController {
                         let result = response.result.value as? NSDictionary
                         if (result?.object(forKey: "result"))! as! String == "Authenticated" {
                             
-//                            self.getTotalContacts()
-//                            self.checkNewContact()
+                            //self.getTotalContacts()
+                            self.checkNewContact()
                             self.checkNewFeed()
                             UserPreferences.LoginHeaderCodition = appDelegate.loginHeaderCredentials
                             UserPreferences.LoginStatus = "Registered"
@@ -279,6 +276,35 @@ class LoginViewController: GeneralViewController {
             let data = response as? NSDictionary
             self.defaults.set(data?.object(forKey: "lastContactChange"), forKey: "LastModifiedContact")
             self.defaults.synchronize()
+        }) {
+            (error) -> Void in
+        }
+    }
+    
+    //MARK: Fetch Records
+    func getTotalContacts() {
+        DataConnectionManager.requestGETURL1(api: TotalContacts, para: ["":""], success: {
+            (response) -> Void in
+            //print(response)
+            let item = response as! NSDictionary
+            let totalContacts = Int((item.object(forKey: "total") as? String)!)!
+            self.search(textLimit: totalContacts)
+        }) {
+            (error) -> Void in
+        }
+    }
+    
+    //MARK:- SEARCH API HIT
+    func search(textLimit: Int){
+        let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(textLimit)") + ("/offset/0")
+        DataConnectionManager.requestGETURL1(api: api, para: ["":""], success: {
+            (jsonResult) -> Void in
+            //print(jsonResult)
+            UserPreferences.AllContactList = []
+            let listArr = jsonResult as! NSArray
+            //print("listArr ==>\(listArr.count)")
+            UserPreferences.AllContactList = listArr
+            //self.getContacts()
         }) {
             (error) -> Void in
         }

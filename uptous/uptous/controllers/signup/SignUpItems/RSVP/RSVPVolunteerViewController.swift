@@ -15,6 +15,7 @@ class RSVPVolunteerViewController: UIViewController {
     @IBOutlet weak var dateTimeLbl: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var gifImageView: UIImageView!
+    @IBOutlet weak var bottomBtn: UIButton!
     var eventDateValue: String!
     
     var data: Items!
@@ -50,6 +51,15 @@ class RSVPVolunteerViewController: UIViewController {
         gifImageView.image = advTimeGif*/
         
         //self.itemsDatas = data.volunteers as! NSArray
+        
+        bottomBtn.isEnabled = true
+        if data.volunteerStatus == "Full" {
+            bottomBtn.isEnabled = false
+            bottomBtn.setTitle("Full", for: .normal)
+        }else if data.volunteerStatus == "Volunteered" {
+            bottomBtn.isEnabled = true
+            bottomBtn.setTitle("Cancel my assignment", for: .normal)
+        }
         self.tableView.reloadData()
     }
     

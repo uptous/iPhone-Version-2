@@ -62,7 +62,7 @@ class FileCell: UITableViewCell {
         contentsView.layer.borderWidth = CGFloat(1.0)
         contentsView.layer.cornerRadius = 8.0
         Custom.fullCornerView(ownerView)
-        ownerPhotoImgView.layer.cornerRadius = 30.0
+        ownerPhotoImgView.layer.cornerRadius = 25.0
         ownerPhotoImgView.layer.masksToBounds = true
     }
     

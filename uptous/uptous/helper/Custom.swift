@@ -156,7 +156,7 @@ class Custom: NSObject {
     class func fullCornerView(_ ownerView: UIView) ->UIView {
         ownerView.layer.borderColor = UIColor.clear.cgColor
         ownerView.layer.borderWidth = CGFloat(1.0)
-        ownerView.layer.cornerRadius = 30
+        ownerView.layer.cornerRadius = 25
         
         return ownerView
     }
