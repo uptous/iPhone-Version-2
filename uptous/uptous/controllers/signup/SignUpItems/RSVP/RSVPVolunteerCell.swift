@@ -39,7 +39,7 @@ class RSVPVolunteerCell: UITableViewCell  {
         let comment = data.object(forKey: "comment") as? String ?? ""
         
         phoneLbl.text = phone
-        commentLbl.text = phone
+        commentLbl.text = comment
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

@@ -43,9 +43,9 @@ class OpenRSVPViewController: GeneralViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Custom.buttonCorner(cancelButton)
-        self.headingLbl.text = ("Join the \(itemData.name!)")
-        self.rsvpLbl.text = "Yeah! You have just RSVP'd as joining the party!"
+        //Custom.buttonCorner(cancelButton)
+        //self.headingLbl.text = ("Join the \(itemData.name!)")
+        self.rsvpLbl.text = itemData.name!//"Yeah! You have just RSVP'd as joining the party!"
         //self.dateTimeLbl.text = ("\(Custom.dayStringFromTime3(itemData.dateTime!))")
         if itemData.dateTime == 0 {
             dateTimeLbl.text = ""

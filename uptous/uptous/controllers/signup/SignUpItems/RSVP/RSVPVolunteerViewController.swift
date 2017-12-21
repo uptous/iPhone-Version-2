@@ -29,8 +29,8 @@ class RSVPVolunteerViewController: UIViewController {
         super.viewDidLoad()
         
         headingLbl.text = ("Join the \((data.volunteers![0] as AnyObject).object(forKey: "firstName") as? String ?? "")")
-        fromLbl.text = "Driving from: \(data.name!)"
-        toLbl.text = "To: \(data.extra!)"
+        fromLbl.text = "\(data.name!)"
+        //toLbl.text = "To: \(data.extra!)"
         //dateTimeLbl.text = ("\(Custom.dayStringFromTime1(data.dateTime!))")
         if data.dateTime == 0 {
             dateTimeLbl.text = ""

@@ -87,14 +87,91 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         view.addGestureRecognizer(tap)
         //self.getContacts()
         messageView.isHidden = true
-        self.tableView.isHidden = true
+        //self.tableView.isHidden = true
         getTotalContacts()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        messageView.isHidden = true
+        //self.tableView.isHidden = true
+        if UserPreferences.SelectedCommunityName == "" {
+            headingBtn.setTitle("Contacts - All Communities", for: .normal)
+        }else{
+            headingBtn.setTitle("Contacts - \(UserPreferences.SelectedCommunityName)", for: .normal)
+        }
+        //getTotalContacts()
+        //getContacts()
+        checkNewContact()
+    }
+    
+    func checkNewContact() {
+        DataConnectionManager.requestGETURL1(api: ContactUpdateAPI, para: ["":""], success: {
+            (response) -> Void in
+            
+            let data = response as? NSDictionary
+            
+            if data != nil {
+                let status = data?.object(forKey: "status") as? String
+                if (status == "2") {
+                    //self.notifNoRecordsView.isHidden = false
+                    
+                }else {
+                    if data?.object(forKey: "lastContactChange") as? NSNumber != self.defaults.object(forKey: "LastModifiedContact") as? NSNumber {
+                        self.defaults.set(data?.object(forKey: "lastContactChange"), forKey: "LastModifiedContact")
+                        
+                        self.getTotalContacts()
+                    }
+                }
+            }
+        }) {
+            (error) -> Void in
+        }
+    }
+
+    
+//    func checkNewContact() {
+//        DataConnectionManager.requestGETURL1(api: ContactUpdateAPI, para: ["":""], success: {
+//            (response) -> Void in
+//            let data = response as? NSDictionary
+//            self.defaults.set(data?.object(forKey: "lastContactChange"), forKey: "LastModifiedContact")
+//            self.defaults.synchronize()
+//        }) {
+//            (error) -> Void in
+//        }
+//    }
+    
+    //MARK: Fetch Records
+    func getTotalContacts() {
+        DataConnectionManager.requestGETURL(api: TotalContacts, para: ["":""], success: {
+            (response) -> Void in
+            //print(response)
+            let item = response as! NSDictionary
+            let totalContacts = Int((item.object(forKey: "total") as? String)!)!
+            self.search(textLimit: totalContacts)
+        }) {
+            (error) -> Void in
+        }
+    }
+    
+    //MARK:- SEARCH API HIT
+    func search(textLimit: Int){
+        let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(textLimit)") + ("/offset/0")
+        DataConnectionManager.requestGETURL(api: api, para: ["":""], success: {
+            (jsonResult) -> Void in
+            //print(jsonResult)
+            UserPreferences.AllContactList = []
+            let listArr = jsonResult as! NSArray
+            //print("listArr ==>\(listArr.count)")
+            UserPreferences.AllContactList = listArr
+            self.getContacts()
+        }) {
+            (error) -> Void in
+        }
     }
     
     func getContacts() {
         self.fullListArr.removeAll()
         self.allIDArr.removeAll()
-        
         for index in 0..<UserPreferences.AllContactList.count {
             let dic = UserPreferences.AllContactList.object(at: index) as! NSDictionary
             
@@ -127,8 +204,9 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         }
         
         if self.fullListArr.count > 0 {
-            self.tableView.isHidden = false
             self.messageView.isHidden = true
+            self.tableView.isHidden = false
+            
             self.tableView.reloadData()
         }else {
             self.tableView.isHidden = true
@@ -217,44 +295,8 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         tableView.setContentOffset(CGPoint.zero, animated: true)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        messageView.isHidden = true
-        self.tableView.isHidden = true
-        if UserPreferences.SelectedCommunityName == "" {
-            headingBtn.setTitle("Contacts - All Communities", for: .normal)
-        }else{
-            headingBtn.setTitle("Contacts - \(UserPreferences.SelectedCommunityName)", for: .normal)
-        }
-        //getTotalContacts()
-        getContacts()
-        onTimerTick()
-    }
     
-    func onTimerTick() {
-        DataConnectionManager.requestGETURL1(api: ContactUpdateAPI, para: ["":""], success: {
-            (response) -> Void in
-            
-            let data = response as? NSDictionary
-            
-            if data != nil {
-                let status = data?.object(forKey: "status") as? String
-                if (status == "2") {
-                    //self.notifNoRecordsView.isHidden = false
-                    
-                }else {
-                    if data?.object(forKey: "lastContactChange") as? NSNumber != self.defaults.object(forKey: "LastModifiedContact") as? NSNumber {
-                        self.defaults.set(data?.object(forKey: "lastContactChange"), forKey: "LastModifiedContact")
-                        
-                        self.getTotalContacts()
-                    }
-                }
-            }
-        }) {
-            (error) -> Void in
-        }
-    }
-    
-    //MARK: Fetch Records
+   /* //MARK: Fetch Records
     func getTotalContacts() {
         DataConnectionManager.requestGETURL1(api: TotalContacts, para: ["":""], success: {
             (response) -> Void in
@@ -281,7 +323,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         }) {
             (error) -> Void in
         }
-    }
+    }*/
 
     //MARk:- Top Menu Community
     @IBAction func topMenuButtonClick(_ sender: UIButton) {
@@ -394,8 +436,29 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
                 
                 let data: Contacts!
                 if(searchActive) {
+                    
+                    
+                    /*self.filterListArr = self.filterListArr.sorted(by: { (item1, item2) -> Bool in
+                        return item1.firstName.compare(item2.lastName.name) == ComparisonResult.orderedAscending
+                    })*/
+                    
+                    self.filterListArr = self.filterListArr.sorted(by: { (contact1, contact2) -> Bool in
+                        if contact1.lastName == contact2.lastName {
+                            return contact1.firstName! < contact2.firstName!
+                        }else {
+                            return contact1.lastName! < contact2.lastName!
+                        }
+                    })
                     data = self.filterListArr[(indexPath as NSIndexPath).row]
+                    
                 }else {
+                    self.fullListArr = self.fullListArr.sorted(by: { (contact1, contact2) -> Bool in
+                        if contact1.lastName == contact2.lastName {
+                            return contact1.firstName! < contact2.firstName!
+                        }else {
+                            return contact1.lastName! < contact2.lastName!
+                        }
+                    })
                     data = self.fullListArr[(indexPath as NSIndexPath).row]
                 }
                 cell.updateView(data!)
@@ -408,8 +471,23 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
                 
                 let data: Contacts!
                 if(searchActive) {
+                    self.filterListArr = self.filterListArr.sorted(by: { (contact1, contact2) -> Bool in
+                        if contact1.lastName == contact2.lastName {
+                            return contact1.firstName! < contact2.firstName!
+                        }else {
+                            return contact1.lastName! < contact2.lastName!
+                        }
+                        
+                    })
                     data = self.filterListArr[(indexPath as NSIndexPath).row]
                 }else {
+                    self.fullListArr = self.fullListArr.sorted(by: { (contact1, contact2) -> Bool in
+                        if contact1.lastName == contact2.lastName {
+                            return contact1.firstName! < contact2.firstName!
+                        }else {
+                            return contact1.lastName! < contact2.lastName!
+                        }
+                    })
                     data = self.fullListArr[(indexPath as NSIndexPath).row]
                 }
                 cell.updateView(data!)

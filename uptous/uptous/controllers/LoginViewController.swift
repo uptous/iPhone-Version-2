@@ -62,7 +62,6 @@ class LoginViewController: GeneralViewController {
     override func viewWillAppear(_ animated: Bool) {
         emailTxtField.text! = ""
         passwordTxtField.text! = ""
-        
     }
     
     @IBAction func forgetPasswordBtnClick(_ sender: UIButton) {

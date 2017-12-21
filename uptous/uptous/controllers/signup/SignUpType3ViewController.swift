@@ -261,7 +261,6 @@ class SignUpType3ViewController: UIViewController,UITableViewDelegate, UITableVi
         return 1
     }
     
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         tableView.tableFooterView = UIView(frame: CGRect.zero)
         if tableView == itemTableView {

@@ -31,7 +31,7 @@ class RSVPCell: UITableViewCell {
         if data.volunteerStatus == "Open" {
             volunteeredView.isHidden = true
             openView.isHidden = false
-            rsvpLbl.text = data.name!
+            rsvpLbl.text = data.name! 
             
             if data.dateTime == 0 {
                 openDateLbl.text = ""
