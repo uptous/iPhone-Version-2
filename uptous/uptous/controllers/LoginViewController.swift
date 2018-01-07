@@ -25,13 +25,13 @@ class LoginViewController: GeneralViewController {
         //emailTxtField.text! = "yuval.spector@uptous.com"
         //passwordTxtField.text! = "postgres"  //
         
-        //emailTxtField.text! = "testp2@uptous.com"
+       // emailTxtField.text! = "testp2@uptous.com"
         //passwordTxtField.text! = "alpha1"  //
         //emailTxtField.text! = "kalanit@stanford.edu"
         //passwordTxtField.text! = "140796"
         
-        //emailTxtField.text! = "testp1@uptous.com"
-        //passwordTxtField.text! = "alpha1"  //
+        emailTxtField.text! = "testp1@uptous.com"
+        passwordTxtField.text! = "alpha1"  //
         
         //emailTxtField.becomeFirstResponder()
         let paddingView = UIView(frame: CGRect.init(x: 0, y: 0, width: 10, height:self.emailTxtField.frame.height ))
@@ -60,8 +60,8 @@ class LoginViewController: GeneralViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        emailTxtField.text! = ""
-        passwordTxtField.text! = ""
+        //emailTxtField.text! = ""
+        //passwordTxtField.text! = ""
     }
     
     @IBAction func forgetPasswordBtnClick(_ sender: UIButton) {

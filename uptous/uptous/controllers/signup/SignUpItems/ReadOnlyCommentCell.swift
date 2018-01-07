@@ -22,7 +22,7 @@ class ReadOnlyCommentCell: UITableViewCell {
     
     func updateView(_ data: NSDictionary) {
        
-        commentDescriptionLbl.text = data.object(forKey: "phone") as? String ?? ""
+        commentDescriptionLbl.text = data.object(forKey: "comment") as? String ?? ""
          nameLbl.text = data.object(forKey: "firstName") as? String
         //let eventDate = data.object(forKey: "dateTime") as? String ?? ""
         //dateLbl.text = eventDate

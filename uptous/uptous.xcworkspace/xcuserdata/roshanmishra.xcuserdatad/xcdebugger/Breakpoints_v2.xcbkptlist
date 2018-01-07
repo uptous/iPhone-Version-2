@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
-            timestampString = "506950745.645251"
+            timestampString = "536958234.610629"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "334"
@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
-            timestampString = "506950774.512919"
+            timestampString = "536958234.640334"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "193"
@@ -42,7 +42,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
-            timestampString = "506950799.623156"
+            timestampString = "536958234.640802"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "333"
@@ -58,7 +58,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
-            timestampString = "506950800.905529"
+            timestampString = "536958234.6412669"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "329"
@@ -70,31 +70,31 @@
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "uptous.ItemDetailsEditingMsgViewController.keyboardWillHide (Foundation.Notification) -&gt; ()"
+                  symbolName = "uptous.ItemDetailsEditingMsgViewController.keyboardWillHide(Foundation.Notification) -&gt; ()"
                   moduleName = "uptous"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Volumes/NO%20NAME/uptous-new/uptous/uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
-                  timestampString = "534007319.838806"
+                  urlString = "file:///Users/roshanmishra/Desktop/SPA/UpToUs/First%20Project/iPhone-Version-2/uptous/uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
+                  timestampString = "536956767.048527"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "329"
                   endingLineNumber = "329"
-                  offsetFromSymbolStart = "1664">
+                  offsetFromSymbolStart = "1921">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "uptous.ItemDetailsEditingMsgViewController.(keyboardWillHide (Foundation.Notification) -&gt; ()).(closure #1)"
+                  symbolName = "closure #1 () -&gt; () in uptous.ItemDetailsEditingMsgViewController.keyboardWillHide(Foundation.Notification) -&gt; ()"
                   moduleName = "uptous"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Volumes/NO%20NAME/uptous-new/uptous/uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
-                  timestampString = "534007319.842117"
+                  urlString = "file:///Users/roshanmishra/Desktop/SPA/UpToUs/First%20Project/iPhone-Version-2/uptous/uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
+                  timestampString = "536956767.051505"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "329"
                   endingLineNumber = "329"
-                  offsetFromSymbolStart = "322">
+                  offsetFromSymbolStart = "337">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -253,6 +253,38 @@
             endingLineNumber = "152"
             landmarkName = "searchBarCancelButtonClicked(_:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "uptous.MyUpToUsContactsViewController.getTotalContacts() -&gt; ()"
+                  moduleName = "uptous"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/roshanmishra/Desktop/SPA/UpToUs/First%20Project/iPhone-Version-2/uptous/uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
+                  timestampString = "536956767.089703"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "153"
+                  endingLineNumber = "153"
+                  offsetFromSymbolStart = "294">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (Swift.Error) -&gt; () in uptous.MyUpToUsContactsViewController.getTotalContacts() -&gt; ()"
+                  moduleName = "uptous"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/roshanmishra/Desktop/SPA/UpToUs/First%20Project/iPhone-Version-2/uptous/uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
+                  timestampString = "536956767.092046"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "153"
+                  endingLineNumber = "153"
+                  offsetFromSymbolStart = "12">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -294,7 +326,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
-            timestampString = "532326481.903649"
+            timestampString = "536958234.642006"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "126"
@@ -315,22 +347,6 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "44"
             endingLineNumber = "44"
-            landmarkName = "SignUpType1ViewController"
-            landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "uptous/controllers/signup/SignUpType1ViewController.swift"
-            timestampString = "532328710.012728"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155"
             landmarkName = "SignUpType1ViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -389,24 +405,8 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "uptous/controllers/signup/SignUpType1ViewController.swift"
-            timestampString = "532547156.239573"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "158"
-            endingLineNumber = "158"
-            landmarkName = "tableView(_:cellForRowAt:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
-            timestampString = "532693685.656989"
+            timestampString = "536958234.642527"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "145"
@@ -459,7 +459,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "106"
             endingLineNumber = "106"
-            landmarkName = "deleteButtonClick(_:)"
+            landmarkName = "back(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -475,8 +475,40 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "118"
             endingLineNumber = "118"
-            landmarkName = "delete()"
+            landmarkName = "deleteButtonClick(_:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__ObjC.UIAlertAction) -&gt; () in uptous.ReadOnlyCommentViewController.deleteButtonClick(__ObjC.UIButton) -&gt; ()"
+                  moduleName = "uptous"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/roshanmishra/Desktop/SPA/UpToUs/First%20Project/iPhone-Version-2/uptous/uptous/controllers/signup/SignUpItems/ReadOnlyCommentViewController.swift"
+                  timestampString = "536956767.164669"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "118"
+                  endingLineNumber = "118"
+                  offsetFromSymbolStart = "21">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in closure #1 (__ObjC.UIAlertAction) -&gt; () in uptous.ReadOnlyCommentViewController.deleteButtonClick(__ObjC.UIButton) -&gt; ()"
+                  moduleName = "uptous"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/roshanmishra/Desktop/SPA/UpToUs/First%20Project/iPhone-Version-2/uptous/uptous/controllers/signup/SignUpItems/ReadOnlyCommentViewController.swift"
+                  timestampString = "536956767.1679111"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "119"
+                  endingLineNumber = "119"
+                  offsetFromSymbolStart = "14">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -492,6 +524,22 @@
             startingLineNumber = "200"
             endingLineNumber = "200"
             landmarkName = "collectionView(_:cellForItemAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "uptous/controllers/signup/SignUpType1ViewController.swift"
+            timestampString = "536956729.015973"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "197"
+            endingLineNumber = "197"
+            landmarkName = "tableView(_:didSelectRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

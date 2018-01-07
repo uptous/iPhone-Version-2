@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -13,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PDU-yG-vtZ">
-                    <frame key="frameInset" minX="-23" minY="-15" width="46" height="30"/>
+                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="22" id="xfa-U1-L4u"/>
@@ -34,7 +37,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uiy-5x-4uz">
-                    <frame key="frameInset" minX="-23" minY="-15" width="46" height="30"/>
+                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="22" id="c8C-UV-WVO"/>
@@ -55,7 +58,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dsx-f0-ZPO">
-                    <frame key="frameInset" minX="-23" minY="-15" width="46" height="30"/>
+                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="22" id="BIJ-nE-hVo"/>
@@ -76,7 +79,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TcF-Vt-rO8">
-                    <frame key="frameInset" minX="-23" minY="-15" width="46" height="30"/>
+                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="22" id="BN9-JN-kE7"/>
@@ -96,8 +99,8 @@
                         <action selector="libraryBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="SXD-TF-ki1"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3JG-rP-B1w">
-                    <frame key="frameInset" minX="-23" minY="-15" width="46" height="30"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3JG-rP-B1w">
+                    <rect key="frame" x="476.5" y="12" width="80.5" height="22"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="22" id="jpE-ZE-4tW"/>
@@ -118,7 +121,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="buU-VA-rle">
-                    <frame key="frameInset" minX="-23" minY="-15" width="46" height="30"/>
+                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                     <color key="backgroundColor" red="0.32156862749999998" green="0.51764705879999995" blue="0.87843137250000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="5" id="UVI-Kt-6gN"/>
@@ -137,8 +140,8 @@
                         </mask>
                     </variation>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4xt-HA-pWv">
-                    <frame key="frameInset" minX="-23" minY="-15" width="46" height="30"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4xt-HA-pWv">
+                    <rect key="frame" x="130.5" y="32" width="80.5" height="5"/>
                     <color key="backgroundColor" red="0.32156862749999998" green="0.51764705879999995" blue="0.87843137250000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="5" id="YxA-z7-f43"/>
@@ -158,7 +161,7 @@
                     </variation>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jeg-lN-5Fr">
-                    <frame key="frameInset" minX="-23" minY="-15" width="46" height="30"/>
+                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                     <color key="backgroundColor" red="0.32156862749999998" green="0.51764705879999995" blue="0.87843137250000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="5" id="6ms-mk-s2U"/>
@@ -178,7 +181,7 @@
                     </variation>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mRf-bP-ouq">
-                    <frame key="frameInset" minX="-23" minY="-15" width="46" height="30"/>
+                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                     <color key="backgroundColor" red="0.32156862749999998" green="0.51764705879999995" blue="0.87843137250000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="5" id="5dK-xp-A88"/>
@@ -197,8 +200,8 @@
                         </mask>
                     </variation>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="58h-jT-GgR">
-                    <frame key="frameInset" minX="-23" minY="-15" width="46" height="30"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="58h-jT-GgR">
+                    <rect key="frame" x="477.5" y="33" width="80.5" height="5"/>
                     <color key="backgroundColor" red="0.32156862749999998" green="0.51764705879999995" blue="0.87843137250000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="5" id="3o4-H0-A2D"/>

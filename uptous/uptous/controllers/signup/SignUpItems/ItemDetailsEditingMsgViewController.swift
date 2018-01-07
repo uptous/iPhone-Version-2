@@ -83,8 +83,8 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         let x = selectedItems.numVolunteers! - selectedItems.volunteerCount!
         let y = selectedItems.numVolunteers!
         if y == 0 {
-            spotLbl.text = "More spots are open"
-
+            //spotLbl.text = "More spots are open"
+            spotLbl.text = ""
         }else {
             let text = ("\(x) out of ") + ("\(y) spots open")
             spotLbl.text = text
@@ -170,7 +170,7 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         //let opportunityID = selectedItems.Id
         let apiName = SignupItems + ("\(sheetDataID!)") + ("/item/\(selectedItems.Id!)/Add")
         var stringPost = "comment=" + msg
-        stringPost += "&phone=" + ""
+        //stringPost += "&phone=" + ""
         
         DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in

@@ -23,7 +23,7 @@ class RSVPItemCell: UITableViewCell {
     func updateData(_ data: NSDictionary) {
         print(data)
         //commentDescriptionLbl.text = data.object(forKey: "comment") as? String
-        commentDescriptionLbl.text = data.object(forKey: "phone") as? String ?? ""
+        commentDescriptionLbl.text = data.object(forKey: "comment") as? String ?? ""
         let name = data.object(forKey: "firstName") as? String ?? ""
         let attendes = data.object(forKey: "attendees") as? Int ?? 0
         

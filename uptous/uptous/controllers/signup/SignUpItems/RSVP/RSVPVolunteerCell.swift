@@ -35,10 +35,10 @@ class RSVPVolunteerCell: UITableViewCell  {
         }
         
         
-        let phone = data.object(forKey: "phone") as? String ?? ""
+       // let phone = data.object(forKey: "phone") as? String ?? ""
         let comment = data.object(forKey: "comment") as? String ?? ""
         
-        phoneLbl.text = phone
+        //phoneLbl.text = phone
         commentLbl.text = comment
     }
 
