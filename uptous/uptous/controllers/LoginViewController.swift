@@ -30,8 +30,8 @@ class LoginViewController: GeneralViewController {
         //emailTxtField.text! = "kalanit@stanford.edu"
         //passwordTxtField.text! = "140796"
         
-        emailTxtField.text! = "testp1@uptous.com"
-        passwordTxtField.text! = "alpha1"  //
+        //emailTxtField.text! = "testp1@uptous.com"
+        //passwordTxtField.text! = "alpha1"  //
         
         //emailTxtField.becomeFirstResponder()
         let paddingView = UIView(frame: CGRect.init(x: 0, y: 0, width: 10, height:self.emailTxtField.frame.height ))
