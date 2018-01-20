@@ -73,8 +73,8 @@
                   symbolName = "uptous.ItemDetailsEditingMsgViewController.keyboardWillHide(Foundation.Notification) -&gt; ()"
                   moduleName = "uptous"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/roshanmishra/Desktop/SPA/UpToUs/First%20Project/iPhone-Version-2/uptous/uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
-                  timestampString = "536956767.048527"
+                  urlString = "file:///Users/roshanmishra/Desktop/Roshan%20Mishra/Project/SPA/New%20Projects/iPhone-Version-2/uptous/uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
+                  timestampString = "538134345.933277"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "329"
@@ -88,8 +88,8 @@
                   symbolName = "closure #1 () -&gt; () in uptous.ItemDetailsEditingMsgViewController.keyboardWillHide(Foundation.Notification) -&gt; ()"
                   moduleName = "uptous"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/roshanmishra/Desktop/SPA/UpToUs/First%20Project/iPhone-Version-2/uptous/uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
-                  timestampString = "536956767.051505"
+                  urlString = "file:///Users/roshanmishra/Desktop/Roshan%20Mishra/Project/SPA/New%20Projects/iPhone-Version-2/uptous/uptous/controllers/signup/SignUpItems/ItemDetailsEditingMsgViewController.swift"
+                  timestampString = "538134345.937368"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "329"
@@ -150,11 +150,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
-            timestampString = "531506544.867649"
+            timestampString = "538134514.6896549"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "517"
-            endingLineNumber = "517"
+            startingLineNumber = "457"
+            endingLineNumber = "457"
+            landmarkName = "communitySelected(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
+            timestampString = "538134514.6897711"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "520"
+            endingLineNumber = "520"
             landmarkName = "openPhoneClick(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -166,140 +182,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
-            timestampString = "531506861.404117"
+            timestampString = "538134514.6898479"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "574"
-            endingLineNumber = "574"
-            landmarkName = "MyUpToUsContactsViewController"
-            landmarkType = "4">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
-            timestampString = "531506544.867649"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
-            landmarkName = "searchBar(_:textDidChange:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
-            timestampString = "531506544.867649"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "565"
-            endingLineNumber = "565"
-            landmarkName = "expandClick(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
-            timestampString = "531506544.867649"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "139"
-            endingLineNumber = "139"
-            landmarkName = "searchBarTextDidBeginEditing(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
-            timestampString = "531506544.867649"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "143"
-            endingLineNumber = "143"
-            landmarkName = "searchBarTextDidEndEditing(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
-            timestampString = "531506981.406345"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "152"
-            endingLineNumber = "152"
-            landmarkName = "searchBarCancelButtonClicked(_:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "uptous.MyUpToUsContactsViewController.getTotalContacts() -&gt; ()"
-                  moduleName = "uptous"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/roshanmishra/Desktop/SPA/UpToUs/First%20Project/iPhone-Version-2/uptous/uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
-                  timestampString = "536956767.089703"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "153"
-                  endingLineNumber = "153"
-                  offsetFromSymbolStart = "294">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (Swift.Error) -&gt; () in uptous.MyUpToUsContactsViewController.getTotalContacts() -&gt; ()"
-                  moduleName = "uptous"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/roshanmishra/Desktop/SPA/UpToUs/First%20Project/iPhone-Version-2/uptous/uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
-                  timestampString = "536956767.092046"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "153"
-                  endingLineNumber = "153"
-                  offsetFromSymbolStart = "12">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
-            timestampString = "531507025.381404"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "157"
-            endingLineNumber = "157"
-            landmarkName = "searchBar(_:textDidChange:)"
+            startingLineNumber = "511"
+            endingLineNumber = "511"
+            landmarkName = "mailComposeController(_:didFinishWith:error:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -349,22 +237,6 @@
             endingLineNumber = "44"
             landmarkName = "SignUpType1ViewController"
             landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
-            timestampString = "532329796.931501"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118"
-            landmarkName = "getContacts()"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -485,8 +357,8 @@
                   symbolName = "closure #1 (__ObjC.UIAlertAction) -&gt; () in uptous.ReadOnlyCommentViewController.deleteButtonClick(__ObjC.UIButton) -&gt; ()"
                   moduleName = "uptous"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/roshanmishra/Desktop/SPA/UpToUs/First%20Project/iPhone-Version-2/uptous/uptous/controllers/signup/SignUpItems/ReadOnlyCommentViewController.swift"
-                  timestampString = "536956767.164669"
+                  urlString = "file:///Users/roshanmishra/Desktop/Roshan%20Mishra/Project/SPA/New%20Projects/iPhone-Version-2/uptous/uptous/controllers/signup/SignUpItems/ReadOnlyCommentViewController.swift"
+                  timestampString = "538134346.031836"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "118"
@@ -500,8 +372,8 @@
                   symbolName = "closure #1 () -&gt; () in closure #1 (__ObjC.UIAlertAction) -&gt; () in uptous.ReadOnlyCommentViewController.deleteButtonClick(__ObjC.UIButton) -&gt; ()"
                   moduleName = "uptous"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/roshanmishra/Desktop/SPA/UpToUs/First%20Project/iPhone-Version-2/uptous/uptous/controllers/signup/SignUpItems/ReadOnlyCommentViewController.swift"
-                  timestampString = "536956767.1679111"
+                  urlString = "file:///Users/roshanmishra/Desktop/Roshan%20Mishra/Project/SPA/New%20Projects/iPhone-Version-2/uptous/uptous/controllers/signup/SignUpItems/ReadOnlyCommentViewController.swift"
+                  timestampString = "538134346.0353301"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "119"
@@ -540,6 +412,150 @@
             startingLineNumber = "197"
             endingLineNumber = "197"
             landmarkName = "tableView(_:didSelectRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
+            timestampString = "538134514.690156"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "96"
+            endingLineNumber = "96"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
+            timestampString = "538134514.690232"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
+            landmarkName = "getContacts(searchItem:offset:limit:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
+            timestampString = "538134514.690302"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "175"
+            endingLineNumber = "175"
+            landmarkName = "getContacts(searchItem:offset:limit:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Any) -&gt; () in uptous.MyUpToUsContactsViewController.getContacts(searchItem: Swift.String, offset: Swift.Int, limit: Swift.Int) -&gt; ()"
+                  moduleName = "uptous"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/roshanmishra/Desktop/Roshan%20Mishra/Project/SPA/New%20Projects/iPhone-Version-2/uptous/uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
+                  timestampString = "538134346.069693"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "175"
+                  endingLineNumber = "175"
+                  offsetFromSymbolStart = "25169">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (Swift.Error) -&gt; () in uptous.MyUpToUsContactsViewController.getContacts(searchItem: Swift.String, offset: Swift.Int, limit: Swift.Int) -&gt; ()"
+                  moduleName = "uptous"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/roshanmishra/Desktop/Roshan%20Mishra/Project/SPA/New%20Projects/iPhone-Version-2/uptous/uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
+                  timestampString = "538134346.0733351"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "177"
+                  endingLineNumber = "177"
+                  offsetFromSymbolStart = "12">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "uptous/controllers/MyUpToUsFeedViewController.swift"
+            timestampString = "538134514.6903729"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "124"
+            endingLineNumber = "124"
+            landmarkName = "viewWillAppear(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "uptous/controllers/MyUpToUsFeedViewController.swift"
+            timestampString = "538134514.690833"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "386"
+            endingLineNumber = "386"
+            landmarkName = "getFeedList()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "uptous/controllers/MyUpToUsFeedViewController.swift"
+            timestampString = "538134514.69118"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "810"
+            endingLineNumber = "810"
+            landmarkName = "tableView(_:titleForHeaderInSection:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "uptous/controllers/MyUpToUsFeedViewController.swift"
+            timestampString = "538134514.691525"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "831"
+            endingLineNumber = "831"
+            landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

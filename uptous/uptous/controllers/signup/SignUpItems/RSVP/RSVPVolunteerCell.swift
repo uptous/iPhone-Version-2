@@ -21,13 +21,13 @@ class RSVPVolunteerCell: UITableViewCell  {
     }
     
     func updateData(_ data: NSDictionary, type:String) {
-        let attendees = data.object(forKey: "attendees") as? Int
+        let attendees = data.object(forKey: "attendees") as? Int ?? 0
         let name = data.object(forKey: "firstName") as? String ?? ""
         if attendees == 0 {
             nameLbl.text = name
         }else {
             if type != "Vote" {
-                nameLbl.text = name + " - \(attendees!) attendees"
+                nameLbl.text = name + " - \(attendees) attendees"
 
             }else {
                 nameLbl.text = name

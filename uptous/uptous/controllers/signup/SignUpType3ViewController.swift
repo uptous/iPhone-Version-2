@@ -134,11 +134,21 @@ class SignUpType3ViewController: UIViewController,UITableViewDelegate, UITableVi
                 contact1PhotoImgView.isHidden = true
                 
                 let stringArray = data.contact?.components(separatedBy: " ")
-                let firstName = stringArray![0]
-                let secondName = stringArray![1]
-                let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
+                if stringArray?.count == 1 {
+                    let firstName = stringArray![0]
+                    //let secondName = stringArray![1] ?? ""
+                    let resultString = "\(firstName.characters.first!)"
+                    owner1NameLbl.text = resultString
+                }else {
+                    let firstName = stringArray![0]
+                    let secondName = stringArray![1]
+                    let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
+                    owner1NameLbl.text = resultString
+                }
                 
-                owner1NameLbl.text = resultString
+                
+                
+                
                 let color1 = Utility.hexStringToUIColor(hex: data.organizer1BackgroundColor!)
                 let color2 = Utility.hexStringToUIColor(hex: data.organizer1TextColor!)
                 owner1View.backgroundColor = color1

@@ -23,7 +23,7 @@ class LoginViewController: GeneralViewController {
         //emailTxtField.text! = "asmithutu@gmail.com"
         //passwordTxtField.text! = "alpha123"
         //emailTxtField.text! = "yuval.spector@uptous.com"
-        //passwordTxtField.text! = "postgres"  //
+        //passwordTxtField.text! = "aaabbb"  //
         
        // emailTxtField.text! = "testp2@uptous.com"
         //passwordTxtField.text! = "alpha1"  //

@@ -44,12 +44,18 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     var searchKey: String = ""
     var searchKeyBool: Bool = false
     var page: Int = 0
-    var limit: Int = 20
+    //var limit: Int = 20
     var loadingData = false
     var customSearchController: CustomSearchController!
     var searchController: UISearchController!
     var cancelbool: Bool = false
     var totalContacts: Int = 0
+    
+    var isDataLoading:Bool=false
+    var pageNo:Int=0
+    var limit:Int=20
+    var offset:Int=0 //pageNo*limit
+    var didEndReached:Bool=false
     
     @IBOutlet weak var communityTableView: UITableView!
     @IBOutlet weak var communityView: UIView!
@@ -85,135 +91,98 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         tableView.register(expandNib, forCellReuseIdentifier: expandCellConstants.cellIdentifier as String)
          let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(MyUpToUsContactsViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
-        //self.getContacts()
         messageView.isHidden = true
-        //self.tableView.isHidden = true
-        getTotalContacts()
+        
+        getContacts(searchItem: "0", offset: self.offset, limit: self.limit)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        messageView.isHidden = true
-        //self.tableView.isHidden = true
-        if UserPreferences.SelectedCommunityName == "" {
-            headingBtn.setTitle("Contacts - All Communities", for: .normal)
-        }else{
-            headingBtn.setTitle("Contacts - \(UserPreferences.SelectedCommunityName)", for: .normal)
-        }
-        //getTotalContacts()
-        //getContacts()
-        checkNewContact()
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        print("scrollViewWillBeginDragging")
+        isDataLoading = false
     }
     
-    func checkNewContact() {
-        DataConnectionManager.requestGETURL1(api: ContactUpdateAPI, para: ["":""], success: {
-            (response) -> Void in
-            
-            let data = response as? NSDictionary
-            
-            if data != nil {
-                let status = data?.object(forKey: "status") as? String
-                if (status == "2") {
-                    //self.notifNoRecordsView.isHidden = false
-                    
-                }else {
-                    if data?.object(forKey: "lastContactChange") as? NSNumber != self.defaults.object(forKey: "LastModifiedContact") as? NSNumber {
-                        self.defaults.set(data?.object(forKey: "lastContactChange"), forKey: "LastModifiedContact")
-                        
-                        self.getTotalContacts()
-                    }
-                }
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("scrollViewDidEndDecelerating")
+    }
+    
+    //Pagination
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
+        print("scrollViewDidEndDragging")
+        if ((tableView.contentOffset.y + tableView.frame.size.height) >= tableView.contentSize.height)
+        {
+            if !isDataLoading{
+                isDataLoading = true
+                self.pageNo=self.pageNo+1
+                self.limit=self.limit+10
+                self.offset=self.limit * self.pageNo
+                //loadCallLogData(offset: self.offset, limit: self.limit)
+                getContacts(searchItem: "0", offset: self.offset, limit: self.limit)
             }
-        }) {
-            (error) -> Void in
-        }
-    }
-
-    
-//    func checkNewContact() {
-//        DataConnectionManager.requestGETURL1(api: ContactUpdateAPI, para: ["":""], success: {
-//            (response) -> Void in
-//            let data = response as? NSDictionary
-//            self.defaults.set(data?.object(forKey: "lastContactChange"), forKey: "LastModifiedContact")
-//            self.defaults.synchronize()
-//        }) {
-//            (error) -> Void in
-//        }
-//    }
-    
-    //MARK: Fetch Records
-    func getTotalContacts() {
-        DataConnectionManager.requestGETURL(api: TotalContacts, para: ["":""], success: {
-            (response) -> Void in
-            //print(response)
-            let item = response as! NSDictionary
-            let totalContacts = Int((item.object(forKey: "total") as? String)!)!
-            self.search(textLimit: totalContacts)
-        }) {
-            (error) -> Void in
         }
     }
     
     //MARK:- SEARCH API HIT
-    func search(textLimit: Int){
-        let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(textLimit)") + ("/offset/0")
+    func getContacts(searchItem: String, offset: Int, limit: Int) {
+        //let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(textLimit)") + ("/offset/0")
+
+        let api = ("\(Members)") + ("/community/0") + ("/search/\(searchItem)") + ("/limit/\(limit)") + ("/offset/\(offset)")
         DataConnectionManager.requestGETURL(api: api, para: ["":""], success: {
             (jsonResult) -> Void in
-            //print(jsonResult)
-            UserPreferences.AllContactList = []
+            print("jsonResult==>\(jsonResult)")
             let listArr = jsonResult as! NSArray
-            //print("listArr ==>\(listArr.count)")
-            UserPreferences.AllContactList = listArr
-            self.getContacts()
+            
+            for index in 0..<listArr.count {
+                let dic = listArr.object(at: index) as! NSDictionary
+                
+                if UserPreferences.SelectedCommunityID == 001 {
+                    let email = dic.object(forKey: "email") as? String ?? ""
+                    let firstName = dic.object(forKey: "firstName") as? String ?? ""
+                    let lastName = dic.object(forKey: "lastName") as? String ?? ""
+                    
+                    if firstName != "" || lastName != "" {
+                        self.fullListArr.append(Contacts(info: dic))
+                        self.allIDArr.append(email)
+                    }
+                }else {
+                    let communityID = UserPreferences.SelectedCommunityID
+                    let results = dic.object(forKey: "communities") as! NSArray
+                    for i in 0..<results.count {
+                        let dic1 = results.object(at: i) as! NSDictionary
+                        if (dic1.object(forKey: "id") as! Int) == communityID {
+                            let firstName = dic.object(forKey: "firstName") as? String ?? ""
+                            let lastName = dic.object(forKey: "lastName") as? String ?? ""
+                            if firstName != "" || lastName != "" {
+                                self.fullListArr.append(Contacts(info: dic))
+                                let email = dic1.object(forKey: "email") as? String ?? ""
+                                self.allIDArr.append(email)
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if self.fullListArr.count > 0 {
+                self.messageView.isHidden = true
+                self.tableView.isHidden = false
+                
+                self.tableView.reloadData()
+            }else {
+                self.tableView.isHidden = true
+                self.messageView.isHidden = false
+            }
         }) {
             (error) -> Void in
         }
     }
     
-    func getContacts() {
-        self.fullListArr.removeAll()
-        self.allIDArr.removeAll()
-        for index in 0..<UserPreferences.AllContactList.count {
-            let dic = UserPreferences.AllContactList.object(at: index) as! NSDictionary
-            
-            if UserPreferences.SelectedCommunityID == 001 {
-                let email = dic.object(forKey: "email") as? String ?? ""
-                let firstName = dic.object(forKey: "firstName") as? String ?? ""
-                let lastName = dic.object(forKey: "lastName") as? String ?? ""
-                
-                if firstName != "" || lastName != "" {
-                    self.fullListArr.append(Contacts(info: dic))
-                    self.allIDArr.append(email)
-                }
-                
-            }else {
-                let communityID = UserPreferences.SelectedCommunityID
-                let results = dic.object(forKey: "communities") as! NSArray
-                for i in 0..<results.count {
-                    let dic1 = results.object(at: i) as! NSDictionary
-                    if (dic1.object(forKey: "id") as! Int) == communityID {
-                        let firstName = dic.object(forKey: "firstName") as? String ?? ""
-                        let lastName = dic.object(forKey: "lastName") as? String ?? ""
-                        if firstName != "" || lastName != "" {
-                            self.fullListArr.append(Contacts(info: dic))
-                            let email = dic1.object(forKey: "email") as? String ?? ""
-                            self.allIDArr.append(email)
-                        }
-                    }
-                }
-            }
-        }
-        
-        if self.fullListArr.count > 0 {
-            self.messageView.isHidden = true
-            self.tableView.isHidden = false
-            
-            self.tableView.reloadData()
-        }else {
-            self.tableView.isHidden = true
-            self.messageView.isHidden = false
-            /*let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)*/
+    override func viewWillAppear(_ animated: Bool) {
+        messageView.isHidden = true
+        if UserPreferences.SelectedCommunityName == "" {
+            headingBtn.setTitle("Contacts - All Communities", for: .normal)
+        }else{
+            headingBtn.setTitle("Contacts - \(UserPreferences.SelectedCommunityName)", for: .normal)
         }
     }
     
@@ -294,36 +263,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         communityView.isHidden = true
         tableView.setContentOffset(CGPoint.zero, animated: true)
     }
-    
-    
-   /* //MARK: Fetch Records
-    func getTotalContacts() {
-        DataConnectionManager.requestGETURL1(api: TotalContacts, para: ["":""], success: {
-            (response) -> Void in
-            //print(response)
-            let item = response as! NSDictionary
-            let totalContacts = Int((item.object(forKey: "total") as? String)!)!
-            self.search(textLimit: totalContacts)
-        }) {
-            (error) -> Void in
-        }
-    }
-    
-    //MARK:- SEARCH API HIT
-    func search(textLimit: Int){
-        let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(textLimit)") + ("/offset/0")
-        DataConnectionManager.requestGETURL(api: api, para: ["":""], success: {
-            (jsonResult) -> Void in
-            //print(jsonResult)
-            UserPreferences.AllContactList = []
-            let listArr = jsonResult as! NSArray
-            //print("listArr ==>\(listArr.count)")
-            UserPreferences.AllContactList = listArr
-            self.getContacts()
-        }) {
-            (error) -> Void in
-        }
-    }*/
+
 
     //MARk:- Top Menu Community
     @IBAction func topMenuButtonClick(_ sender: UIButton) {
@@ -517,14 +457,20 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
             communityView.isHidden = true
             UserPreferences.SelectedCommunityID = 001
             UserPreferences.SelectedCommunityName = ""
-            getContacts()
+           // getContacts()
+            self.fullListArr.removeAll()
+            self.allIDArr.removeAll()
+            getContacts(searchItem: "0", offset: self.offset, limit: self.limit)
         }else {
             headingBtn.setImage(UIImage(named: "top-up-arrow"), for: .normal)
             UserPreferences.SelectedCommunityName = (data?.name)!
             headingBtn.setTitle("Contacts - \((data?.name)!)", for: .normal)
             UserPreferences.SelectedCommunityID = (data?.communityId)!
             communityView.isHidden = true
-            getContacts()
+            //getContacts()
+            self.fullListArr.removeAll()
+            self.allIDArr.removeAll()
+            getContacts(searchItem: "0", offset: self.offset, limit: self.limit)
         }
     }
    

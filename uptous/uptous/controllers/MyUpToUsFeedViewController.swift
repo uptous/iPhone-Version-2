@@ -385,8 +385,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
             
             if self.newsTypeList.count > 0 {
                 self.tableView.isHidden = false
-                self.tableView.isHidden = false
-                 self.messageView.isHidden = true
+                self.messageView.isHidden = true
                 self.tableView.reloadData()
             }else {
                 self.tableView.isHidden = true
@@ -407,7 +406,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     //MARK: PhotoCell Delegate
     func photoReplyTo(_ sender: NSInteger) {
-        if(searchActive) {
+        if(searchActive == true) {
             let data = filterListArr[sender]
             sendEmail(data)
         } else{
@@ -419,7 +418,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     func photoComment(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -431,7 +430,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     func photoComment1(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -443,7 +442,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     func readMore(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -457,7 +456,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     func openAlbumPage(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -470,7 +469,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     //MARK: AnnouncementCell Delegate
     func announcementReplyTo(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -480,7 +479,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     func announcementReplyAll(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -493,7 +492,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     func announcementPost(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -506,7 +505,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     //MARK: Private Thread Delegate
     func privateThreadReplyTo(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -516,7 +515,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     func privateThreadReplyAll(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -529,7 +528,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     func privateThreadComment(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -543,7 +542,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     //MARK: Opportunity Delegate
     func opportunityReplyTo(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -553,7 +552,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     func opportunityComment(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -565,7 +564,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     func opportunityComment1(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -578,7 +577,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     func openSignUpPage(_ sender: NSInteger) {
         
         let event: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             event = self.filterListArr[sender]
         }else {
             event = self.newsTypeList[sender]
@@ -665,7 +664,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     //MARK: File Delegate
     func fileReplyTo(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -675,7 +674,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     func fileComment(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -688,7 +687,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     func commentBtn(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -702,7 +701,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     //MARK:- PDF Download
     func downloadPDF(_ sender: NSInteger) {
         let data: Feed!
-        if(searchActive) {
+        if(searchActive == true) {
             data = self.filterListArr[sender]
         }else {
             data = self.newsTypeList[sender]
@@ -798,7 +797,7 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
             return self.communityList.count
             
         }else {
-            if(searchActive) {
+            if(searchActive == true) {
                 return self.filterListArr.count
             } else{
                 return self.newsTypeList.count
@@ -809,7 +808,7 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         var  sectionName: String = ""
         if tableView != communityTableView {
-            if(searchActive) {
+            if(searchActive == true) {
                 sectionName = "SEARCH RESULTS"
             }
             return sectionName
@@ -831,7 +830,7 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
             
         }else {
             let data: Feed!
-            if(searchActive) {
+            if(searchActive == true) {
                 data = self.filterListArr[(indexPath as NSIndexPath).row]
             }else {
                 data = self.newsTypeList[(indexPath as NSIndexPath).row]
@@ -907,7 +906,7 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
             return 50
         }else {
             let data: Feed!
-            if(searchActive) {
+            if(searchActive == true) {
                 data = self.filterListArr[(indexPath as NSIndexPath).row]
             }else {
                 data = self.newsTypeList[(indexPath as NSIndexPath).row]
