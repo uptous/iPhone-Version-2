@@ -71,6 +71,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     var searchString = ""
     var topMenuSelected = 0
     var expandStatus = ""
+    var searchText = "0"
     
     fileprivate struct landingCellConstants {
         static var cellIdentifier:String = "LandingCell"
@@ -118,7 +119,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
                 self.limit=self.limit+10
                 self.offset=self.limit * self.pageNo
                 //loadCallLogData(offset: self.offset, limit: self.limit)
-                getContacts(searchItem: "0", offset: self.offset, limit: self.limit)
+                getContacts(searchItem: searchText, offset: self.offset, limit: self.limit)
             }
         }
     }
@@ -126,7 +127,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     //MARK:- SEARCH API HIT
     func getContacts(searchItem: String, offset: Int, limit: Int) {
         //let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(textLimit)") + ("/offset/0")
-
+        //searchItem = "becker"
         let api = ("\(Members)") + ("/community/0") + ("/search/\(searchItem)") + ("/limit/\(limit)") + ("/offset/\(offset)")
         DataConnectionManager.requestGETURL(api: api, para: ["":""], success: {
             (jsonResult) -> Void in
@@ -188,24 +189,34 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     
     // MARK: UISearchBarDelegate functions
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchActive = false
+        //searchActive = false
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        searchActive = false
+        //searchActive = false
+        self.fullListArr.removeAll()
+        self.allIDArr.removeAll()
+        searchText = searchBar.text!
+        getContacts(searchItem: searchText, offset: self.offset, limit: self.limit)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-        searchActive = true
+        //searchActive = true
+        
+        //getContacts(searchItem: searchBar.text!, offset: self.offset, limit: self.limit)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-        searchActive = false
+        //searchActive = false
+        self.fullListArr.removeAll()
+        self.allIDArr.removeAll()
+        searchText = "0"
+        getContacts(searchItem: searchText, offset: self.offset, limit: self.limit)
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    /*func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         self.filterListArr.removeAll()
         let text = searchText.trimmingCharacters(in: .whitespaces)
         
@@ -252,7 +263,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         }
         
         self.tableView.reloadData()
-    }
+    }*/
     
     //Calls this function when the tap is recognized.
     func dismissKeyboard() {
@@ -376,11 +387,7 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
                 
                 let data: Contacts!
                 if(searchActive) {
-                    
-                    
-                    /*self.filterListArr = self.filterListArr.sorted(by: { (item1, item2) -> Bool in
-                        return item1.firstName.compare(item2.lastName.name) == ComparisonResult.orderedAscending
-                    })*/
+        
                     
                     self.filterListArr = self.filterListArr.sorted(by: { (contact1, contact2) -> Bool in
                         if contact1.lastName == contact2.lastName {
@@ -460,7 +467,7 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
            // getContacts()
             self.fullListArr.removeAll()
             self.allIDArr.removeAll()
-            getContacts(searchItem: "0", offset: self.offset, limit: self.limit)
+            getContacts(searchItem: searchText, offset: self.offset, limit: self.limit)
         }else {
             headingBtn.setImage(UIImage(named: "top-up-arrow"), for: .normal)
             UserPreferences.SelectedCommunityName = (data?.name)!
@@ -470,7 +477,7 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
             //getContacts()
             self.fullListArr.removeAll()
             self.allIDArr.removeAll()
-            getContacts(searchItem: "0", offset: self.offset, limit: self.limit)
+            getContacts(searchItem: searchText, offset: self.offset, limit: self.limit)
         }
     }
    
