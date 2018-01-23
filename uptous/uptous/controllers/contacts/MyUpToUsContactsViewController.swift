@@ -53,7 +53,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     
     var isDataLoading:Bool=false
     var pageNo:Int=0
-    var limit:Int=20
+    var limit:Int=150
     var offset:Int=0 //pageNo*limit
     var didEndReached:Bool=false
     
@@ -94,11 +94,13 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         view.addGestureRecognizer(tap)
         messageView.isHidden = true
         
+        
+        self.fullListArr.removeAll()
+        self.allIDArr.removeAll()
         getContacts(searchItem: "0", offset: self.offset, limit: self.limit)
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        
         print("scrollViewWillBeginDragging")
         isDataLoading = false
     }
@@ -116,7 +118,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
             if !isDataLoading{
                 isDataLoading = true
                 self.pageNo=self.pageNo+1
-                self.limit=self.limit+10
+                self.limit=self.limit+150
                 self.offset=self.limit * self.pageNo
                 //loadCallLogData(offset: self.offset, limit: self.limit)
                 getContacts(searchItem: searchText, offset: self.offset, limit: self.limit)
@@ -126,11 +128,19 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     
     //MARK:- SEARCH API HIT
     func getContacts(searchItem: String, offset: Int, limit: Int) {
+        
+        
         //let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(textLimit)") + ("/offset/0")
         //searchItem = "becker"
         let api = ("\(Members)") + ("/community/0") + ("/search/\(searchItem)") + ("/limit/\(limit)") + ("/offset/\(offset)")
+        print("api==>\(api)")
         DataConnectionManager.requestGETURL(api: api, para: ["":""], success: {
             (jsonResult) -> Void in
+//            if self.searchText != "0" {
+//                self.fullListArr.removeAll()
+//                self.allIDArr.removeAll()
+//            }
+            
             print("jsonResult==>\(jsonResult)")
             let listArr = jsonResult as! NSArray
             
@@ -194,10 +204,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         //searchActive = false
-        self.fullListArr.removeAll()
-        self.allIDArr.removeAll()
-        searchText = searchBar.text!
-        getContacts(searchItem: searchText, offset: self.offset, limit: self.limit)
+        
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -205,14 +212,32 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         //searchActive = true
         
         //getContacts(searchItem: searchBar.text!, offset: self.offset, limit: self.limit)
+        
+        if (searchBar.text! == "") {
+            searchText = "0"
+            self.offset = 0
+            self.limit = 150
+            self.fullListArr.removeAll()
+            self.allIDArr.removeAll()
+            getContacts(searchItem: searchBar.text!, offset: self.offset, limit: self.limit)
+            
+        }else {
+            searchText = searchBar.text!
+            self.fullListArr.removeAll()
+            self.allIDArr.removeAll()
+            getContacts(searchItem: searchText, offset: 0, limit: 150)
+        }
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         //searchActive = false
+        searchBar.text = ""
         self.fullListArr.removeAll()
         self.allIDArr.removeAll()
         searchText = "0"
+        self.offset = 0
+        self.limit = 150
         getContacts(searchItem: searchText, offset: self.offset, limit: self.limit)
     }
     
@@ -272,9 +297,10 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     
     @IBAction func topClick(_ sender: UIButton) {
         communityView.isHidden = true
-        tableView.setContentOffset(CGPoint.zero, animated: true)
+        if self.fullListArr.count > 0 {
+            tableView.setContentOffset(CGPoint.zero, animated: true)
+        }
     }
-
 
     //MARk:- Top Menu Community
     @IBAction func topMenuButtonClick(_ sender: UIButton) {
