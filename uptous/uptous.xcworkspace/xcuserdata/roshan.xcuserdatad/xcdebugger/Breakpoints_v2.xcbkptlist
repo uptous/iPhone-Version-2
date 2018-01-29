@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
-            timestampString = "534854138.598929"
+            timestampString = "538466323.237851"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "354"
-            endingLineNumber = "354"
-            landmarkName = "tableView(_:numberOfRowsInSection:)"
+            startingLineNumber = "357"
+            endingLineNumber = "357"
+            landmarkName = "didReceiveMemoryWarning()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -106,13 +106,45 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/LoginViewController.swift"
-            timestampString = "534854138.599339"
+            timestampString = "538466323.23864"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "92"
             endingLineNumber = "92"
             landmarkName = "fetchSignUpItems(ID:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "uptous.LoginViewController.fetchSignUpItems(ID: Swift.String) -&gt; ()"
+                  moduleName = "uptous"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/roshan/Documents/GitHub/iPhone-Version-2/uptous/uptous/controllers/LoginViewController.swift"
+                  timestampString = "538465732.338912"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "93"
+                  endingLineNumber = "93"
+                  offsetFromSymbolStart = "384">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Any) -&gt; () in uptous.LoginViewController.fetchSignUpItems(ID: Swift.String) -&gt; ()"
+                  moduleName = "uptous"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/roshan/Documents/GitHub/iPhone-Version-2/uptous/uptous/controllers/LoginViewController.swift"
+                  timestampString = "538465732.340541"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "95"
+                  endingLineNumber = "95"
+                  offsetFromSymbolStart = "24">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -122,7 +154,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/LoginViewController.swift"
-            timestampString = "534854138.599438"
+            timestampString = "538466323.238695"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "95"
@@ -138,7 +170,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/LoginViewController.swift"
-            timestampString = "534854138.599537"
+            timestampString = "538466323.238741"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "157"
@@ -282,12 +314,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
-            timestampString = "534854138.600054"
+            timestampString = "538466323.239046"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "98"
             endingLineNumber = "98"
-            landmarkName = "getContacts()"
+            landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -298,13 +330,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/contacts/MyUpToUsContactsViewController.swift"
-            timestampString = "534854138.600114"
+            timestampString = "538466323.239538"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "272"
-            endingLineNumber = "272"
-            landmarkName = "search(textLimit:)"
-            landmarkType = "7">
+            startingLineNumber = "275"
+            endingLineNumber = "275"
+            landmarkName = "MyUpToUsContactsViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

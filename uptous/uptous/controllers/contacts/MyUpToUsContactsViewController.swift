@@ -212,11 +212,12 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         //searchActive = true
         
         //getContacts(searchItem: searchBar.text!, offset: self.offset, limit: self.limit)
-        
+        self.offset = 0
+        self.limit = 150
+        self.pageNo = 0
         if (searchBar.text! == "") {
             searchText = "0"
-            self.offset = 0
-            self.limit = 150
+            
             self.fullListArr.removeAll()
             self.allIDArr.removeAll()
             getContacts(searchItem: searchBar.text!, offset: self.offset, limit: self.limit)
@@ -225,6 +226,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
             searchText = searchBar.text!
             self.fullListArr.removeAll()
             self.allIDArr.removeAll()
+            
             getContacts(searchItem: searchText, offset: 0, limit: 150)
         }
     }
@@ -238,6 +240,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         searchText = "0"
         self.offset = 0
         self.limit = 150
+        self.pageNo = 0
         getContacts(searchItem: searchText, offset: self.offset, limit: self.limit)
     }
     
