@@ -16,16 +16,20 @@ class LoginViewController: GeneralViewController {
     @IBOutlet weak var signInBtn: UIButton!
     
     let defaults = UserDefaults.standard
+    
+    var pageNo:Int=0
+    var limit:Int=150
+    var offset:Int=0
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view. // yuval.spector@uptous.com
         //emailTxtField.text! = "asmithutu@gmail.com"
         //passwordTxtField.text! = "alpha123"
-        //emailTxtField.text! = "yuval.spector@uptous.com"
-        //passwordTxtField.text! = "aaabbb"  //
+        emailTxtField.text! = "yuval.spector@uptous.com"
+        passwordTxtField.text! = "aaabbb"  //
         
-       // emailTxtField.text! = "testp2@uptous.com"
+        //emailTxtField.text! = "testp2@uptous.com"
         //passwordTxtField.text! = "alpha1"  //
         //emailTxtField.text! = "kalanit@stanford.edu"
         //passwordTxtField.text! = "140796"
@@ -44,6 +48,7 @@ class LoginViewController: GeneralViewController {
         
         if UserPreferences.LoginStatus ==  "Registered" {
             self.alreadyLoggedIn()
+            
         }
         signInBtn.layer.cornerRadius = 3
         
@@ -220,16 +225,16 @@ class LoginViewController: GeneralViewController {
                             //self.getTotalContacts()
                             self.checkNewContact()
                             self.checkNewFeed()
+                            self.getFirstContacts()
                             UserPreferences.LoginHeaderCodition = appDelegate.loginHeaderCredentials
                             UserPreferences.LoginStatus = "Registered"
                             UserPreferences.LoginID = username
                             UserPreferences.Password = password
                             
-                            self.alreadyLoggedIn()
-                            /*let controller = self.storyboard?.instantiateViewController(withIdentifier: MainStoryBoard.ViewControllerIdentifiers.tabbarViewController) as! TabBarViewController
-                            controller.selectedIndex = 0
                             
-                            self.navigationController?.pushViewController(controller, animated: true)*/
+                            
+                            self.alreadyLoggedIn()
+                            
                         }else {
                             DispatchQueue.main.async(execute: { () -> Void in
                                 let alert = UIAlertController(title: "Alert", message: "Authentication failed. Please try again or reset your password at www.uptous.com", preferredStyle: UIAlertControllerStyle.alert)
@@ -287,27 +292,82 @@ class LoginViewController: GeneralViewController {
             //print(response)
             let item = response as! NSDictionary
             let totalContacts = Int((item.object(forKey: "total") as? String)!)!
-            self.search(textLimit: totalContacts)
+            //self.search(textLimit: totalContacts)
+        }) {
+            (error) -> Void in
+        }
+    }
+    
+    func getFirstContacts() {
+        let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(self.limit)") + ("/offset/\(self.offset)")
+        print("contact API::\(api)")
+        DataConnectionManager.requestGETURL1(api: api, para: ["":""], success: {
+            (jsonResult) -> Void in
+            if let listArr = jsonResult as? [NSDictionary] {
+                if listArr.count > 0 {
+                    for contact in listArr {
+                        print(contact)
+                        UserPreferences.AllContactList.append(contact)
+                    }
+                }
+                print(UserPreferences.AllContactList.count)
+            }
         }) {
             (error) -> Void in
         }
     }
     
     //MARK:- SEARCH API HIT
-    func search(textLimit: Int){
-        let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(textLimit)") + ("/offset/0")
+    func search(searchOffset: Int, searchLimit: Int, completionHandler: @escaping ((_ offset: Int, _ limit: Int,_ status:String) -> Void)){
+        let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(searchLimit)") + ("/offset/\(searchOffset)")
+        print("contact API::\(api)")
         DataConnectionManager.requestGETURL1(api: api, para: ["":""], success: {
             (jsonResult) -> Void in
-            //print(jsonResult)
-            UserPreferences.AllContactList = []
-            let listArr = jsonResult as! NSArray
-            //print("listArr ==>\(listArr.count)")
-            UserPreferences.AllContactList = listArr
-            //self.getContacts()
+            if let listArr = jsonResult as? [NSDictionary] {
+                if listArr.count > 0 {
+                    for contact in listArr {
+                        print(contact)
+                        UserPreferences.AllContactList.append(contact)
+                        completionHandler(self.offset,self.limit,"process")
+                    }
+                }else {
+                    completionHandler(0, 0, "success")
+                    //return
+                }
+                print(UserPreferences.AllContactList.count)
+                
+            }else {
+                completionHandler(0, 0, "success")
+            }
         }) {
             (error) -> Void in
         }
     }
+    
+    //******************************
+    
+    func fetchContacts(fetchSearchOffset: Int, fetchSearchLimit: Int, searchCompletionHandler: @escaping ((String)->Void)) {
+        
+        self.search(searchOffset: self.offset, searchLimit: self.limit) { (offset, limit, status) in
+            
+            if status == "success" {
+                searchCompletionHandler("done")
+            }else {
+                self.pageNo=self.pageNo+1
+                self.limit=self.limit+50
+                //self.limit=self.limit+150
+                self.offset=self.limit * self.pageNo
+                
+                self.fetchContacts(fetchSearchOffset: self.offset, fetchSearchLimit: self.limit, searchCompletionHandler: { (msg) in
+                    if msg == "success" {
+                        searchCompletionHandler("success")
+                    }
+                })
+            }
+        }
+    }
+    
+    //******************************
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

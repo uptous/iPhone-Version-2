@@ -747,6 +747,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0169E4C0202060510097748F /* DBModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = DBModel;
+			sourceTree = "<group>";
+		};
 		0173265D1FDFECC100AB52DF /* font */ = {
 			isa = PBXGroup;
 			children = (
@@ -964,6 +971,7 @@
 		D319061F1D602D5500C9CFFF /* model */ = {
 			isa = PBXGroup;
 			children = (
+				0169E4C0202060510097748F /* DBModel */,
 				D3B4C4B51DE61903006B2430 /* Event.swift */,
 				D31906201D602D7E00C9CFFF /* Feed.swift */,
 				D31906241D60314E00C9CFFF /* Comment.swift */,

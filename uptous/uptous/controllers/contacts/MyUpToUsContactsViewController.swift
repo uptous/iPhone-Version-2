@@ -52,9 +52,9 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     var totalContacts: Int = 0
     
     var isDataLoading:Bool=false
-    var pageNo:Int=0
-    var limit:Int=150
-    var offset:Int=0 //pageNo*limit
+    var pageNo:Int=1
+    var limit:Int=300
+    var offset:Int=300 //pageNo*limit
     var didEndReached:Bool=false
     
     @IBOutlet weak var communityTableView: UITableView!
@@ -94,11 +94,71 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         view.addGestureRecognizer(tap)
         messageView.isHidden = true
         
-        
         self.fullListArr.removeAll()
         self.allIDArr.removeAll()
-        getContacts(searchItem: "0", offset: self.offset, limit: self.limit)
+        self.fetchContacts(fetchSearchOffset: self.offset, fetchSearchLimit: self.limit) { (msg) in
+            
+            if msg == "success" {
+                self.tableView.reloadData()
+            }
+            //print("msg")
+        }
+        
+        
+        //getContacts(searchItem: "0", offset: self.offset, limit: self.limit)
     }
+    
+    //MARK:- SEARCH API HIT
+    func search(searchOffset: Int, searchLimit: Int, completionHandler: @escaping ((_ offset: Int, _ limit: Int,_ status:String) -> Void)){
+        let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(searchLimit)") + ("/offset/\(searchOffset)")
+        print("contact API::\(api)")
+        DataConnectionManager.requestGETURL1(api: api, para: ["":""], success: {
+            (jsonResult) -> Void in
+            if let listArr = jsonResult as? [NSDictionary] {
+                if listArr.count > 0 {
+                    for contact in listArr {
+                        print(contact)
+                        UserPreferences.AllContactList.append(contact)
+                        completionHandler(self.offset,self.limit,"process")
+                    }
+                }else {
+                    completionHandler(0, 0, "success")
+                    //return
+                }
+                print(UserPreferences.AllContactList.count)
+                
+            }else {
+                completionHandler(0, 0, "success")
+            }
+        }) {
+            (error) -> Void in
+        }
+    }
+    
+    //******************************
+    
+    func fetchContacts(fetchSearchOffset: Int, fetchSearchLimit: Int, searchCompletionHandler: @escaping ((String)->Void)) {
+        
+        self.search(searchOffset: self.offset, searchLimit: self.limit) { (offset, limit, status) in
+            
+            if status == "success" {
+                searchCompletionHandler("done")
+            }else {
+                self.pageNo=self.pageNo+1
+                self.limit=self.limit+150
+                //self.limit=self.limit+150
+                self.offset=self.limit * self.pageNo
+                
+                self.fetchContacts(fetchSearchOffset: self.offset, fetchSearchLimit: self.limit, searchCompletionHandler: { (msg) in
+                    if msg == "success" {
+                        searchCompletionHandler("success")
+                    }
+                })
+            }
+        }
+    }
+    
+    //******************************
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         print("scrollViewWillBeginDragging")
@@ -190,6 +250,8 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     
     override func viewWillAppear(_ animated: Bool) {
         messageView.isHidden = true
+        print(UserPreferences.AllContactList)
+        print(UserPreferences.AllContactList.count)
         if UserPreferences.SelectedCommunityName == "" {
             headingBtn.setTitle("Contacts - All Communities", for: .normal)
         }else{
