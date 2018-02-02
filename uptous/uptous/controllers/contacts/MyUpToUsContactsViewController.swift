@@ -96,9 +96,11 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         
         self.fullListArr.removeAll()
         self.allIDArr.removeAll()
+        getContacts()
         self.fetchContacts(fetchSearchOffset: self.offset, fetchSearchLimit: self.limit) { (msg) in
             
             if msg == "success" {
+                self.getContacts()
                 self.tableView.reloadData()
             }
             //print("msg")
@@ -118,7 +120,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
                 if listArr.count > 0 {
                     for contact in listArr {
                         print(contact)
-                        UserPreferences.AllContactList.append(contact)
+                        UserPreferences.AllContactList.add(contact)
                         completionHandler(self.offset,self.limit,"process")
                     }
                 }else {
@@ -160,7 +162,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     
     //******************************
     
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+   /* func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         print("scrollViewWillBeginDragging")
         isDataLoading = false
     }
@@ -246,6 +248,55 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         }) {
             (error) -> Void in
         }
+    }*/
+    
+    func getContacts() {
+        self.fullListArr.removeAll()
+        self.allIDArr.removeAll()
+        for index in 0..<UserPreferences.AllContactList.count {
+           // let dic =
+            let dic = UserPreferences.AllContactList.object(at: index) as! NSDictionary
+            
+            if UserPreferences.SelectedCommunityID == 001 {
+                let email = dic.object(forKey: "email") as? String ?? ""
+                let firstName = dic.object(forKey: "firstName") as? String ?? ""
+                let lastName = dic.object(forKey: "lastName") as? String ?? ""
+                
+                if firstName != "" || lastName != "" {
+                    self.fullListArr.append(Contacts(info: dic))
+                    self.allIDArr.append(email)
+                }
+                
+            }else {
+                let communityID = UserPreferences.SelectedCommunityID
+                let results = dic.object(forKey: "communities") as! NSArray
+                for i in 0..<results.count {
+                    let dic1 = results.object(at: i) as! NSDictionary
+                    if (dic1.object(forKey: "id") as! Int) == communityID {
+                        let firstName = dic.object(forKey: "firstName") as? String ?? ""
+                        let lastName = dic.object(forKey: "lastName") as? String ?? ""
+                        if firstName != "" || lastName != "" {
+                            self.fullListArr.append(Contacts(info: dic))
+                            let email = dic1.object(forKey: "email") as? String ?? ""
+                            self.allIDArr.append(email)
+                        }
+                    }
+                }
+            }
+        }
+        
+        if self.fullListArr.count > 0 {
+            self.messageView.isHidden = true
+            self.tableView.isHidden = false
+            
+            self.tableView.reloadData()
+        }else {
+            self.tableView.isHidden = true
+            self.messageView.isHidden = false
+            /*let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertControllerStyle.alert)
+             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+             self.present(alert, animated: true, completion: nil)*/
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -261,52 +312,24 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     
     // MARK: UISearchBarDelegate functions
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        //searchActive = false
+        searchActive = false
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        //searchActive = false
-        
+        searchActive = false
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-        //searchActive = true
-        
-        //getContacts(searchItem: searchBar.text!, offset: self.offset, limit: self.limit)
-        self.offset = 0
-        self.limit = 150
-        self.pageNo = 0
-        if (searchBar.text! == "") {
-            searchText = "0"
-            
-            self.fullListArr.removeAll()
-            self.allIDArr.removeAll()
-            getContacts(searchItem: searchBar.text!, offset: self.offset, limit: self.limit)
-            
-        }else {
-            searchText = searchBar.text!
-            self.fullListArr.removeAll()
-            self.allIDArr.removeAll()
-            
-            getContacts(searchItem: searchText, offset: 0, limit: 150)
-        }
+        searchActive = true
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-        //searchActive = false
-        searchBar.text = ""
-        self.fullListArr.removeAll()
-        self.allIDArr.removeAll()
-        searchText = "0"
-        self.offset = 0
-        self.limit = 150
-        self.pageNo = 0
-        getContacts(searchItem: searchText, offset: self.offset, limit: self.limit)
+        searchActive = false
     }
     
-    /*func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         self.filterListArr.removeAll()
         let text = searchText.trimmingCharacters(in: .whitespaces)
         
@@ -353,7 +376,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         }
         
         self.tableView.reloadData()
-    }*/
+    }
     
     //Calls this function when the tap is recognized.
     func dismissKeyboard() {
@@ -555,22 +578,17 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
             communityView.isHidden = true
             UserPreferences.SelectedCommunityID = 001
             UserPreferences.SelectedCommunityName = ""
-           // getContacts()
-            self.fullListArr.removeAll()
-            self.allIDArr.removeAll()
-            getContacts(searchItem: searchText, offset: self.offset, limit: self.limit)
+            getContacts()
         }else {
             headingBtn.setImage(UIImage(named: "top-up-arrow"), for: .normal)
             UserPreferences.SelectedCommunityName = (data?.name)!
             headingBtn.setTitle("Contacts - \((data?.name)!)", for: .normal)
             UserPreferences.SelectedCommunityID = (data?.communityId)!
             communityView.isHidden = true
-            //getContacts()
-            self.fullListArr.removeAll()
-            self.allIDArr.removeAll()
-            getContacts(searchItem: searchText, offset: self.offset, limit: self.limit)
+            getContacts()
         }
     }
+    
    
     
     @IBAction func menuButtonClick(_ sender: UIButton) {

@@ -28,12 +28,11 @@ class LoginViewController: GeneralViewController {
         //passwordTxtField.text! = "alpha123"
         emailTxtField.text! = "yuval.spector@uptous.com"
         passwordTxtField.text! = "aaabbb"  //
-        
         //emailTxtField.text! = "testp2@uptous.com"
         //passwordTxtField.text! = "alpha1"  //
         //emailTxtField.text! = "kalanit@stanford.edu"
         //passwordTxtField.text! = "140796"
-        
+
         //emailTxtField.text! = "testp1@uptous.com"
         //passwordTxtField.text! = "alpha1"  //
         
@@ -307,7 +306,7 @@ class LoginViewController: GeneralViewController {
                 if listArr.count > 0 {
                     for contact in listArr {
                         print(contact)
-                        UserPreferences.AllContactList.append(contact)
+                        UserPreferences.AllContactList.add(contact)
                     }
                 }
                 print(UserPreferences.AllContactList.count)
@@ -327,7 +326,7 @@ class LoginViewController: GeneralViewController {
                 if listArr.count > 0 {
                     for contact in listArr {
                         print(contact)
-                        UserPreferences.AllContactList.append(contact)
+                        UserPreferences.AllContactList.add(contact)
                         completionHandler(self.offset,self.limit,"process")
                     }
                 }else {
