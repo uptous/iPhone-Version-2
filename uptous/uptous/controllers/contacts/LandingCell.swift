@@ -98,36 +98,8 @@ class LandingCell: UITableViewCell {
             }
             let stringRepresentation1 = childrens.joined(separator: ", ")
             teamLbl.text = "\(stringRepresentation1)"
-            
         }
-        
-        
-        /* //if data.photo == "https://dsnn35vlkp0h4.cloudfront.net/images/blank_image.gif" {
-         ownerView.isHidden = false
-         ownerNameLbl.isHidden = false
-         ownerPhotoImgView.isHidden = true
-         
-         let firstName = data.firstName!.capitalized.characters.first
-         let secondName = data.lastName!.capitalized.characters.first
-         let resultString = ("\(firstName!)") + ("\(secondName!)")
-         
-         ownerNameLbl.text = resultString
-         let color1 = Utility.hexStringToUIColor(hex: data.memberBackgroundColor!)
-         let color2 = Utility.hexStringToUIColor(hex: data.memberTextColor!)
-         ownerView.backgroundColor = color1
-         ownerNameLbl.textColor = color2
-         
-         
-         }else {
-         ownerView.isHidden = true
-         ownerPhotoImgView.isHidden = false
-         if let avatarUrl = data.photo {
-         ownerPhotoImgView.setUserAvatar(avatarUrl)
-         }
-         }*/
-        
     }
-    
     
     @IBAction func expand(sender: UIButton) {
         delegate.expandClick(sender.tag)

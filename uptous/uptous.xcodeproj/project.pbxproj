@@ -248,6 +248,10 @@
 		D3F405841DBC63DC00101A5B /* ExpandCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F405821DBC63DC00101A5B /* ExpandCell.swift */; };
 		D3F405851DBC63DC00101A5B /* ExpandCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3F405831DBC63DC00101A5B /* ExpandCell.xib */; };
 		F416271E1E55CBC800576DF5 /* CustomLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F416271D1E55CBC700576DF5 /* CustomLayout.swift */; };
+		F42D38032026D6F0007BB756 /* SQLiteDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D38012026D6F0007BB756 /* SQLiteDB.swift */; };
+		F42D38042026D6F0007BB756 /* SQLTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D38022026D6F0007BB756 /* SQLTable.swift */; };
+		F42D380C2026D81B007BB756 /* ContactsDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D380B2026D81B007BB756 /* ContactsDB.swift */; };
+		F42D380E2026D880007BB756 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F42D380D2026D87F007BB756 /* libsqlite3.tbd */; };
 		F47A28371FC0AFB1009AE620 /* uptous.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 0104484C1FA8BEB600C2B709 /* uptous.entitlements */; };
 		F4E373CB1FAF30BE00B6BD40 /* DescCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E373C91FAF30BE00B6BD40 /* DescCell.swift */; };
 		F4E373CC1FAF30BE00B6BD40 /* DescCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4E373CA1FAF30BE00B6BD40 /* DescCell.xib */; };
@@ -712,6 +716,10 @@
 		D3F405821DBC63DC00101A5B /* ExpandCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandCell.swift; sourceTree = "<group>"; };
 		D3F405831DBC63DC00101A5B /* ExpandCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExpandCell.xib; sourceTree = "<group>"; };
 		F416271D1E55CBC700576DF5 /* CustomLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomLayout.swift; sourceTree = "<group>"; };
+		F42D38012026D6F0007BB756 /* SQLiteDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteDB.swift; sourceTree = "<group>"; };
+		F42D38022026D6F0007BB756 /* SQLTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLTable.swift; sourceTree = "<group>"; };
+		F42D380B2026D81B007BB756 /* ContactsDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsDB.swift; sourceTree = "<group>"; };
+		F42D380D2026D87F007BB756 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		F4E373C91FAF30BE00B6BD40 /* DescCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DescCell.swift; sourceTree = "<group>"; };
 		F4E373CA1FAF30BE00B6BD40 /* DescCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DescCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -721,6 +729,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F42D380E2026D880007BB756 /* libsqlite3.tbd in Frameworks */,
 				D3C92C831D78A9F9004B9541 /* MessageUI.framework in Frameworks */,
 				D3F2B5681D683CBB00DE4DF8 /* QuartzCore.framework in Frameworks */,
 				D32E5D921D678D070064DE12 /* Foundation.framework in Frameworks */,
@@ -747,13 +756,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0169E4C0202060510097748F /* DBModel */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = DBModel;
-			sourceTree = "<group>";
-		};
 		0173265D1FDFECC100AB52DF /* font */ = {
 			isa = PBXGroup;
 			children = (
@@ -943,6 +945,7 @@
 		CE09E5BAAD6C5C1C0C8EF56C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F42D380D2026D87F007BB756 /* libsqlite3.tbd */,
 				D3C92C821D78A9F7004B9541 /* MessageUI.framework */,
 				D3F2B5671D683CBB00DE4DF8 /* QuartzCore.framework */,
 				D32E5D911D678D070064DE12 /* Foundation.framework */,
@@ -971,7 +974,7 @@
 		D319061F1D602D5500C9CFFF /* model */ = {
 			isa = PBXGroup;
 			children = (
-				0169E4C0202060510097748F /* DBModel */,
+				F42D38052026D748007BB756 /* DBModel */,
 				D3B4C4B51DE61903006B2430 /* Event.swift */,
 				D31906201D602D7E00C9CFFF /* Feed.swift */,
 				D31906241D60314E00C9CFFF /* Comment.swift */,
@@ -994,6 +997,7 @@
 		D336FBFD1D8467E500EDDF8E /* thirdparty */ = {
 			isa = PBXGroup;
 			children = (
+				F42D38002026D6E5007BB756 /* DBManager */,
 				01D3A8891FAC3A6A00E531C8 /* IBAnimatable */,
 				D3D42D7A1DFB378900F5E5C7 /* PDFDownload.swift */,
 				D3D42D7B1DFB378900F5E5C7 /* vfrlibrary */,
@@ -1516,6 +1520,23 @@
 			path = RSVP;
 			sourceTree = "<group>";
 		};
+		F42D38002026D6E5007BB756 /* DBManager */ = {
+			isa = PBXGroup;
+			children = (
+				F42D38012026D6F0007BB756 /* SQLiteDB.swift */,
+				F42D38022026D6F0007BB756 /* SQLTable.swift */,
+			);
+			path = DBManager;
+			sourceTree = "<group>";
+		};
+		F42D38052026D748007BB756 /* DBModel */ = {
+			isa = PBXGroup;
+			children = (
+				F42D380B2026D81B007BB756 /* ContactsDB.swift */,
+			);
+			path = DBModel;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1833,8 +1854,10 @@
 				D3E4EB0C1DA107DF0024B734 /* RSVPItemCell.swift in Sources */,
 				D33735481D8E80A400D97C32 /* MyUpToUsSignUpViewController.swift in Sources */,
 				D31906161D60237400C9CFFF /* Utility.swift in Sources */,
+				F42D38032026D6F0007BB756 /* SQLiteDB.swift in Sources */,
 				D37998DE1DA034230020F240 /* DriverItemCell.swift in Sources */,
 				D35CC73E1DE13BF500F8E251 /* SDImageCache.m in Sources */,
+				F42D380C2026D81B007BB756 /* ContactsDB.swift in Sources */,
 				D3D42DEE1DFB378B00F5E5C7 /* ReaderThumbView.m in Sources */,
 				D37998E31DA038FC0020F240 /* SignUpDriverViewController.swift in Sources */,
 				D3290C591DD8DB33000BA85F /* Community.swift in Sources */,
@@ -1922,6 +1945,7 @@
 				D3A21A011D9691A000B96F00 /* RSVPCell.swift in Sources */,
 				D3E4EB081DA0E3990024B734 /* SignUpRSVPViewController.swift in Sources */,
 				D3D42DEB1DFB378B00F5E5C7 /* ReaderThumbRender.m in Sources */,
+				F42D38042026D6F0007BB756 /* SQLTable.swift in Sources */,
 				D32004381D79FBBC000FBBAD /* HPTextViewInternal.m in Sources */,
 				D316A1BA1DE3676600B06185 /* ImagePostViewController.swift in Sources */,
 				D37D204E1DECA79400489DF0 /* ProfileViewController.swift in Sources */,

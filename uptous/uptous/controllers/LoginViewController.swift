@@ -66,6 +66,7 @@ class LoginViewController: GeneralViewController {
     override func viewWillAppear(_ animated: Bool) {
         //emailTxtField.text! = ""
         //passwordTxtField.text! = ""
+        //UserPreferences.AllContactList.a
     }
     
     @IBAction func forgetPasswordBtnClick(_ sender: UIButton) {
@@ -75,6 +76,7 @@ class LoginViewController: GeneralViewController {
         } else {
             UIApplication.shared.openURL(url!)
         }
+        
     }
     
     @IBAction func signUpBtnClick(_ sender: UIButton) {
@@ -230,8 +232,6 @@ class LoginViewController: GeneralViewController {
                             UserPreferences.LoginID = username
                             UserPreferences.Password = password
                             
-                            
-                            
                             self.alreadyLoggedIn()
                             
                         }else {
@@ -298,16 +298,16 @@ class LoginViewController: GeneralViewController {
     }
     
     func getFirstContacts() {
-        let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(self.limit)") + ("/offset/\(self.offset)")
+        //let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(self.limit)") + ("/offset/\(self.offset)")
+        
+        let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/100") + ("/offset/0")
         print("contact API::\(api)")
         DataConnectionManager.requestGETURL1(api: api, para: ["":""], success: {
             (jsonResult) -> Void in
+            print(jsonResult)
             if let listArr = jsonResult as? [NSDictionary] {
                 if listArr.count > 0 {
-                    for contact in listArr {
-                        print(contact)
-                        UserPreferences.AllContactList.add(contact)
-                    }
+                    UserPreferences.AllContactList = listArr
                 }
                 print(UserPreferences.AllContactList.count)
             }
@@ -326,7 +326,9 @@ class LoginViewController: GeneralViewController {
                 if listArr.count > 0 {
                     for contact in listArr {
                         print(contact)
-                        UserPreferences.AllContactList.add(contact)
+                        //UserPreferences.AllContactList.addingObjects(from: listArr)
+                        //UserPreferences.AllContactList.append(contact)
+                        print(UserPreferences.AllContactList.count)
                         completionHandler(self.offset,self.limit,"process")
                     }
                 }else {

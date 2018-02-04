@@ -67,10 +67,10 @@ class DataConnectionManager: NSObject {
     class func requestGETURL(api:String, para: [String : String] ,success:@escaping (Any) -> Void, failure:@escaping (Error) -> Void) {
         print(appDelegate.loginHeaderCredentials)
          ActivityIndicator.show()
+        
         Alamofire.request(api, method: .get, parameters: nil, encoding: URLEncoding.default, headers: appDelegate.loginHeaderCredentials).responseJSON { (response:DataResponse<Any>) in
             
-            print(response.result)
-            print(response)
+           
             
             ActivityIndicator.hide()
             switch(response.result) {
@@ -133,9 +133,6 @@ class DataConnectionManager: NSObject {
     // GET
     class func requestGETURL1(api:String, para: [String : String] ,success:@escaping (Any) -> Void, failure:@escaping (Error) -> Void) {
         Alamofire.request(api, method: .get, parameters: nil, encoding: URLEncoding.default, headers: appDelegate.loginHeaderCredentials).responseJSON { (response:DataResponse<Any>) in
-            
-            print(response.result)
-            print(response)
             
             switch(response.result) {
             case .success(_):

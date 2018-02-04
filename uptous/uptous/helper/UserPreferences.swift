@@ -41,9 +41,9 @@ class UserPreferences: NSObject {
     }
 
     
-    class var AllContactList: NSMutableArray {
+    class var AllContactList: [Any] {
         get {
-            return (UserDefaults.standard.object(forKey: "ContactList") as? NSMutableArray) ?? NSMutableArray()
+            return (UserDefaults.standard.object(forKey: "ContactList") as? [Any]) ?? []
         }
         set {
             UserDefaults.standard.set(newValue, forKey: "ContactList")
