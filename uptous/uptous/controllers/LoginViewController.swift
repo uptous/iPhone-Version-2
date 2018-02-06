@@ -26,8 +26,8 @@ class LoginViewController: GeneralViewController {
         // Do any additional setup after loading the view. // yuval.spector@uptous.com
         //emailTxtField.text! = "asmithutu@gmail.com"
         //passwordTxtField.text! = "alpha123"
-        emailTxtField.text! = "yuval.spector@uptous.com"
-        passwordTxtField.text! = "aaabbb"  //
+        //emailTxtField.text! = "yuval.spector@uptous.com"
+        //passwordTxtField.text! = "aaabbb"  //
         //emailTxtField.text! = "testp2@uptous.com"
         //passwordTxtField.text! = "alpha1"  //
         //emailTxtField.text! = "kalanit@stanford.edu"
@@ -226,7 +226,7 @@ class LoginViewController: GeneralViewController {
                             //self.getTotalContacts()
                             self.checkNewContact()
                             self.checkNewFeed()
-                            self.getFirstContacts()
+                            //self.getFirstContacts()
                             UserPreferences.LoginHeaderCodition = appDelegate.loginHeaderCredentials
                             UserPreferences.LoginStatus = "Registered"
                             UserPreferences.LoginID = username
