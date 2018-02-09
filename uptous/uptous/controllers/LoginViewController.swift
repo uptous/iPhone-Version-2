@@ -70,22 +70,30 @@ class LoginViewController: GeneralViewController {
     }
     
     @IBAction func forgetPasswordBtnClick(_ sender: UIButton) {
-        let url = URL(string: "https://www.uptous.com/mobileForgotPassword")
+       /* let url = URL(string: "https://www.uptous.com/mobileForgotPassword")
         if #available(iOS 10.0, *) {
             UIApplication.shared.open(url!, options: [:], completionHandler: nil)
         } else {
             UIApplication.shared.openURL(url!)
-        }
+        }*/
+        
+        let controller = WebViewViewController(nibName: "WebViewViewController", bundle: nil)
+        controller.urlString = "https://www.uptous.com/mobileForgotPassword"
+        self.present(controller, animated: true, completion: nil)
         
     }
     
     @IBAction func signUpBtnClick(_ sender: UIButton) {
-        let url = URL(string: "https://www.uptous.com/mobileSignup")
+        /*let url = URL(string: "https://www.uptous.com/mobileSignup")
         if #available(iOS 10.0, *) {
             UIApplication.shared.open(url!, options: [:], completionHandler: nil)
         } else {
             UIApplication.shared.openURL(url!)
-        }
+        }*/
+        
+        let controller = WebViewViewController(nibName: "WebViewViewController", bundle: nil)
+        controller.urlString = "https://www.uptous.com/mobileSignup"
+        self.present(controller, animated: true, completion: nil)
     }
     
     @IBAction func signInBtnClick(_ sender: UIButton) {
@@ -284,89 +292,6 @@ class LoginViewController: GeneralViewController {
         }
     }
     
-    //MARK: Fetch Records
-    func getTotalContacts() {
-        DataConnectionManager.requestGETURL1(api: TotalContacts, para: ["":""], success: {
-            (response) -> Void in
-            //print(response)
-            let item = response as! NSDictionary
-            let totalContacts = Int((item.object(forKey: "total") as? String)!)!
-            //self.search(textLimit: totalContacts)
-        }) {
-            (error) -> Void in
-        }
-    }
-    
-    func getFirstContacts() {
-        //let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(self.limit)") + ("/offset/\(self.offset)")
-        
-        let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/100") + ("/offset/0")
-        print("contact API::\(api)")
-        DataConnectionManager.requestGETURL1(api: api, para: ["":""], success: {
-            (jsonResult) -> Void in
-            print(jsonResult)
-            if let listArr = jsonResult as? [NSDictionary] {
-                if listArr.count > 0 {
-                    UserPreferences.AllContactList = listArr
-                }
-                print(UserPreferences.AllContactList.count)
-            }
-        }) {
-            (error) -> Void in
-        }
-    }
-    
-    //MARK:- SEARCH API HIT
-    func search(searchOffset: Int, searchLimit: Int, completionHandler: @escaping ((_ offset: Int, _ limit: Int,_ status:String) -> Void)){
-        let api = ("\(Members)") + ("/community/0") + ("/search/0") + ("/limit/\(searchLimit)") + ("/offset/\(searchOffset)")
-        print("contact API::\(api)")
-        DataConnectionManager.requestGETURL1(api: api, para: ["":""], success: {
-            (jsonResult) -> Void in
-            if let listArr = jsonResult as? [NSDictionary] {
-                if listArr.count > 0 {
-                    for contact in listArr {
-                        print(contact)
-                        //UserPreferences.AllContactList.addingObjects(from: listArr)
-                        //UserPreferences.AllContactList.append(contact)
-                        print(UserPreferences.AllContactList.count)
-                        completionHandler(self.offset,self.limit,"process")
-                    }
-                }else {
-                    completionHandler(0, 0, "success")
-                    //return
-                }
-                print(UserPreferences.AllContactList.count)
-                
-            }else {
-                completionHandler(0, 0, "success")
-            }
-        }) {
-            (error) -> Void in
-        }
-    }
-    
-    //******************************
-    
-    func fetchContacts(fetchSearchOffset: Int, fetchSearchLimit: Int, searchCompletionHandler: @escaping ((String)->Void)) {
-        
-        self.search(searchOffset: self.offset, searchLimit: self.limit) { (offset, limit, status) in
-            
-            if status == "success" {
-                searchCompletionHandler("done")
-            }else {
-                self.pageNo=self.pageNo+1
-                self.limit=self.limit+50
-                //self.limit=self.limit+150
-                self.offset=self.limit * self.pageNo
-                
-                self.fetchContacts(fetchSearchOffset: self.offset, fetchSearchLimit: self.limit, searchCompletionHandler: { (msg) in
-                    if msg == "success" {
-                        searchCompletionHandler("success")
-                    }
-                })
-            }
-        }
-    }
     
     //******************************
     

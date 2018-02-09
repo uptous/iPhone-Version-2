@@ -253,6 +253,8 @@
 		F42D380C2026D81B007BB756 /* ContactsDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D380B2026D81B007BB756 /* ContactsDB.swift */; };
 		F42D380E2026D880007BB756 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F42D380D2026D87F007BB756 /* libsqlite3.tbd */; };
 		F47A28371FC0AFB1009AE620 /* uptous.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 0104484C1FA8BEB600C2B709 /* uptous.entitlements */; };
+		F4B3FFBA202E194200E902C7 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B3FFB8202E194200E902C7 /* WebViewViewController.swift */; };
+		F4B3FFBB202E194200E902C7 /* WebViewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4B3FFB9202E194200E902C7 /* WebViewViewController.xib */; };
 		F4E373CB1FAF30BE00B6BD40 /* DescCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E373C91FAF30BE00B6BD40 /* DescCell.swift */; };
 		F4E373CC1FAF30BE00B6BD40 /* DescCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4E373CA1FAF30BE00B6BD40 /* DescCell.xib */; };
 /* End PBXBuildFile section */
@@ -720,6 +722,8 @@
 		F42D38022026D6F0007BB756 /* SQLTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLTable.swift; sourceTree = "<group>"; };
 		F42D380B2026D81B007BB756 /* ContactsDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsDB.swift; sourceTree = "<group>"; };
 		F42D380D2026D87F007BB756 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		F4B3FFB8202E194200E902C7 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
+		F4B3FFB9202E194200E902C7 /* WebViewViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebViewViewController.xib; sourceTree = "<group>"; };
 		F4E373C91FAF30BE00B6BD40 /* DescCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DescCell.swift; sourceTree = "<group>"; };
 		F4E373CA1FAF30BE00B6BD40 /* DescCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DescCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1391,6 +1395,8 @@
 				D3D8A65C1D5EDCB7000AB922 /* MyUpToUsFeedViewController.swift */,
 				D3290C5A1DD8DFFF000BA85F /* CommunityCell.swift */,
 				D32107781E3A75D300D24855 /* LoginNVG.swift */,
+				F4B3FFB8202E194200E902C7 /* WebViewViewController.swift */,
+				F4B3FFB9202E194200E902C7 /* WebViewViewController.xib */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -1611,7 +1617,7 @@
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = U8DTDCNJ53;
 						LastSwiftMigration = 0800;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.SafariKeychain = {
 								enabled = 1;
@@ -1702,6 +1708,7 @@
 				D332011A1DDE3CF00072A807 /* volunteer@3x.gif in Resources */,
 				D3D42DD61DFB378A00F5E5C7 /* Reader-Mark-Y@2x.png in Resources */,
 				D33201141DDE3CF00072A807 /* fav-icon1@2x.gif in Resources */,
+				F4B3FFBB202E194200E902C7 /* WebViewViewController.xib in Resources */,
 				D332011D1DDE3CF00072A807 /* volunteer1@3x.gif in Resources */,
 				D33234F21D906F3A00E1F29F /* CutOffDateCell.xib in Resources */,
 				D3D8A62F1D5EDB45000AB922 /* Main.storyboard in Resources */,
@@ -1903,6 +1910,7 @@
 				D35CC7451DE13BF500F8E251 /* UIButton+WebCache.m in Sources */,
 				D33752C31D5F1F8E008E1CBB /* CustomTextField.swift in Sources */,
 				D3D8A6821D5EDCEA000AB922 /* GeneralViewController.swift in Sources */,
+				F4B3FFBA202E194200E902C7 /* WebViewViewController.swift in Sources */,
 				D31906251D60314E00C9CFFF /* Comment.swift in Sources */,
 				D3B4C5AC1DF092AB00B56DC6 /* UserProfile.swift in Sources */,
 				D33234EA1D90690500E1F29F /* SignupSheet.swift in Sources */,
@@ -2149,16 +2157,16 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = uptous/uptous.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Yuval Spector (KM7B733722)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = U8DTDCNJ53;
 				INFOPLIST_FILE = uptous/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.uptous.uptous-mobile";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0d730d5b-e2d7-4ee5-a1f0-195e4c119dbc";
-				PROVISIONING_PROFILE_SPECIFIER = Live_Distribution;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "uptous/uptous-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -2174,16 +2182,16 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = uptous/uptous.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Yuval Spector (KM7B733722)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = U8DTDCNJ53;
 				INFOPLIST_FILE = uptous/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.uptous.uptous-mobile";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0d730d5b-e2d7-4ee5-a1f0-195e4c119dbc";
-				PROVISIONING_PROFILE_SPECIFIER = Live_Distribution;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "uptous/uptous-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
