@@ -8,8 +8,9 @@
 
 import UIKit
 import Alamofire
+import SafariServices
 
-class LoginViewController: GeneralViewController {
+class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate {
 
     @IBOutlet weak var emailTxtField: UITextField!
     @IBOutlet weak var passwordTxtField: UITextField!
@@ -70,30 +71,23 @@ class LoginViewController: GeneralViewController {
     }
     
     @IBAction func forgetPasswordBtnClick(_ sender: UIButton) {
-       /* let url = URL(string: "https://www.uptous.com/mobileForgotPassword")
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(url!, options: [:], completionHandler: nil)
-        } else {
-            UIApplication.shared.openURL(url!)
-        }*/
-        
-        let controller = WebViewViewController(nibName: "WebViewViewController", bundle: nil)
-        controller.urlString = "https://www.uptous.com/mobileForgotPassword"
-        self.present(controller, animated: true, completion: nil)
-        
+        let url = URL(string: "https://www.uptous.com/mobileForgotPassword")
+        let svc = SFSafariViewController(url: url!, entersReaderIfAvailable: true)
+        //svc.delegate = self as? SFSafariViewControllerDelegate
+        self.present(svc, animated: true, completion: nil)
     }
     
     @IBAction func signUpBtnClick(_ sender: UIButton) {
-        /*let url = URL(string: "https://www.uptous.com/mobileSignup")
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(url!, options: [:], completionHandler: nil)
-        } else {
-            UIApplication.shared.openURL(url!)
-        }*/
-        
-        let controller = WebViewViewController(nibName: "WebViewViewController", bundle: nil)
-        controller.urlString = "https://www.uptous.com/mobileSignup"
-        self.present(controller, animated: true, completion: nil)
+        let url = URL(string: "https://www.uptous.com/mobileSignup")
+        let svc = SFSafariViewController(url: url!, entersReaderIfAvailable: true)
+        //svc.delegate = self as? SFSafariViewControllerDelegate
+        self.present(svc, animated: true, completion: nil)
+    }
+    
+    //MARK:-SFSafariViewController Delegate
+    func safariViewControllerDidFinish(_ controller: SFSafariViewController)
+    {
+        controller.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func signInBtnClick(_ sender: UIButton) {

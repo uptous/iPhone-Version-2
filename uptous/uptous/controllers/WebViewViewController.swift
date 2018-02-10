@@ -7,34 +7,53 @@
 //
 
 import UIKit
+import WebKit
+import SafariServices
 
-class WebViewViewController: UIViewController {
+class WebViewViewController: UIViewController,WKNavigationDelegate {
 
-     @IBOutlet weak var webView: UIWebView!
      var urlString = ""
+     var webView : WKWebView!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        ActivityIndicator.show()
+        
+        // loading URL :
         let url = URL(string: urlString)
-        let request = URLRequest(url: url!)
-        webView.loadRequest(request)
+        /*let request = URLRequest(url: url!)
+        ActivityIndicator.show()
+        // init and load request in webview.
+        webView = WKWebView(frame: self.view.frame)
+        webView.navigationDelegate = self
+        webView.load(request)
+        self.view.addSubview(webView)
+        self.view.sendSubview(toBack: webView)*/
+        
+        let svc = SFSafariViewController(url: url!, entersReaderIfAvailable: true)
+        //svc.delegate = self as? SFSafariViewControllerDelegate
+        self.present(svc, animated: true, completion: nil)
     }
     
-    //MARK:- UIWebView Delegate
-    func webViewDidStartLoad(webView: UIWebView)
+    func safariViewControllerDidFinish(controller: SFSafariViewController)
     {
-        ActivityIndicator.show()
-        
+        controller.dismiss(animated: true, completion: nil)
     }
-    func webViewDidFinishLoad(webView: UIWebView)
-    {
+    
+    //MARK:- WKNavigationDelegate
+    
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        print(error.localizedDescription)
         ActivityIndicator.hide()
     }
     
-    func webView(_ webView: UIWebView, didFailLoadWithError error: Error)
-    {
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        print("Strat to load")
+        ActivityIndicator.show()
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        print("finish to load")
         ActivityIndicator.hide()
     }
     

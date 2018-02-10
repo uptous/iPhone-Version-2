@@ -106,75 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/LoginViewController.swift"
-            timestampString = "539259621.981418"
+            timestampString = "539941038.590873"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "96"
-            endingLineNumber = "96"
-            landmarkName = "fetchSignUpItems(ID:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "uptous.LoginViewController.fetchSignUpItems(ID: Swift.String) -&gt; ()"
-                  moduleName = "uptous"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/roshan/Documents/GitHub/iPhone-Version-2/uptous/uptous/controllers/LoginViewController.swift"
-                  timestampString = "539259622.0282201"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "97"
-                  endingLineNumber = "97"
-                  offsetFromSymbolStart = "384">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Any) -&gt; () in uptous.LoginViewController.fetchSignUpItems(ID: Swift.String) -&gt; ()"
-                  moduleName = "uptous"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/roshan/Documents/GitHub/iPhone-Version-2/uptous/uptous/controllers/LoginViewController.swift"
-                  timestampString = "539259622.029807"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "99"
-                  endingLineNumber = "99"
-                  offsetFromSymbolStart = "24">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "uptous/controllers/LoginViewController.swift"
-            timestampString = "539259621.98189"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "99"
-            endingLineNumber = "99"
-            landmarkName = "fetchSignUpItems(ID:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "uptous/controllers/LoginViewController.swift"
-            timestampString = "539259621.9822249"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "161"
-            endingLineNumber = "161"
+            startingLineNumber = "155"
+            endingLineNumber = "155"
             landmarkName = "alreadyLoggedIn()"
             landmarkType = "7">
          </BreakpointContent>
@@ -394,13 +330,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "uptous/controllers/LoginViewController.swift"
-            timestampString = "539259729.713645"
+            timestampString = "539941038.591679"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "312"
-            endingLineNumber = "312"
-            landmarkName = "getFirstContacts()"
-            landmarkType = "7">
+            startingLineNumber = "306"
+            endingLineNumber = "306"
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
