@@ -1626,13 +1626,13 @@
 					};
 					D3D8A63C1D5EDB45000AB922 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = KM7B733722;
+						DevelopmentTeam = 2Y62ZNVPJ7;
 						LastSwiftMigration = 0800;
 						TestTargetID = D3D8A6251D5EDB44000AB922;
 					};
 					D3D8A6471D5EDB45000AB922 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = KM7B733722;
+						DevelopmentTeam = 2Y62ZNVPJ7;
 						LastSwiftMigration = 0800;
 						TestTargetID = D3D8A6251D5EDB44000AB922;
 					};
@@ -2077,11 +2077,11 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Yuval Spector (KM7B733722)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Yuval Spector (KM7B733722)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Yuval Spector (BARLF2AB37)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Yuval Spector (BARLF2AB37)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = KM7B733722;
+				DEVELOPMENT_TEAM = 2Y62ZNVPJ7;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2101,7 +2101,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "d6a19cc9-3b80-4015-8b67-363a5cbbff90";
+				PROVISIONING_PROFILE = "362fce63-f552-4126-8587-dae64dadbaa3";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2125,11 +2125,11 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Yuval Spector (KM7B733722)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Yuval Spector (KM7B733722)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Yuval Spector (BARLF2AB37)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Yuval Spector (BARLF2AB37)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = KM7B733722;
+				DEVELOPMENT_TEAM = 2Y62ZNVPJ7;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2142,7 +2142,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "d6a19cc9-3b80-4015-8b67-363a5cbbff90";
+				PROVISIONING_PROFILE = "362fce63-f552-4126-8587-dae64dadbaa3";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -2156,8 +2156,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = uptous/uptous.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Yuval Spector (KM7B733722)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Yuval Spector (BARLF2AB37)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Yuval Spector (BARLF2AB37)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = U8DTDCNJ53;
 				INFOPLIST_FILE = uptous/Info.plist;
@@ -2165,8 +2165,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.uptous.uptous-mobile";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0d730d5b-e2d7-4ee5-a1f0-195e4c119dbc";
-				PROVISIONING_PROFILE_SPECIFIER = Live_Distribution;
+				PROVISIONING_PROFILE = "a416cb02-0347-4ad3-87ba-331951b70b1d";
+				PROVISIONING_PROFILE_SPECIFIER = uptousDevelopment;
 				SWIFT_OBJC_BRIDGING_HEADER = "uptous/uptous-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -2181,8 +2181,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = uptous/uptous.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Yuval Spector (KM7B733722)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Yuval Spector (BARLF2AB37)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Yuval Spector (BARLF2AB37)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = U8DTDCNJ53;
 				INFOPLIST_FILE = uptous/Info.plist;
@@ -2190,8 +2190,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.uptous.uptous-mobile";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0d730d5b-e2d7-4ee5-a1f0-195e4c119dbc";
-				PROVISIONING_PROFILE_SPECIFIER = Live_Distribution;
+				PROVISIONING_PROFILE = "a416cb02-0347-4ad3-87ba-331951b70b1d";
+				PROVISIONING_PROFILE_SPECIFIER = uptousDevelopment;
 				SWIFT_OBJC_BRIDGING_HEADER = "uptous/uptous-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;

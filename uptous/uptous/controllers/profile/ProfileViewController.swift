@@ -247,7 +247,9 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
         var chosenImage = UIImage()
         chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
         delay(0.2, closure: { () -> () in
-        
+            // Mukesh
+            self.profileImage.image = chosenImage
+            //
          })
         dismiss(animated:true, completion: nil)
     }

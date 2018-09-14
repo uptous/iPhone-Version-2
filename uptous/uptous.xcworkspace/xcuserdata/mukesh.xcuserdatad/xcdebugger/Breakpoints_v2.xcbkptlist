@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "uptous/controllers/profile/ProfileViewController.swift"
+            timestampString = "558516525.8953069"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "162"
+            endingLineNumber = "162"
+            landmarkName = "updateProfile()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "uptous.ProfileViewController.updateProfile() -&gt; ()"
+                  moduleName = "uptous"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mukesh/Documents/UpToUs%20-%2013%20Sep%20/uptous/uptous/controllers/profile/ProfileViewController.swift"
+                  timestampString = "558516526.268849"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162"
+                  offsetFromSymbolStart = "5197">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Dictionary&lt;Swift.String, Any&gt;) -&gt; () in uptous.ProfileViewController.updateProfile() -&gt; ()"
+                  moduleName = "uptous"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mukesh/Documents/UpToUs%20-%2013%20Sep%20/uptous/uptous/controllers/profile/ProfileViewController.swift"
+                  timestampString = "558516526.2716039"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "164"
+                  endingLineNumber = "164"
+                  offsetFromSymbolStart = "28">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
