@@ -32,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.1</string>
+	<string>1.2</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -65,9 +65,9 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>UpToUs would like to access your camera for your profile photo upload. Your photos wont be shared without your permission.</string>
+	<string>UpToUs would like to access your camera in case you wish to upload profile images or share community photos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>UpToUs would like to access your photo gallery for your profile photo upload. Your photos wont be shared without your permission.</string>
+	<string>UpToUs would like to access your photo gallery in case you wish to upload profile images or share community photos.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
