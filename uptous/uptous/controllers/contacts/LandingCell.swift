@@ -30,6 +30,8 @@ class LandingCell: UITableViewCell {
     }
     
     func updateView(_ data: Contacts) {
+        
+
         ownerView.isHidden = false
         ownerNameLbl.isHidden = false
         ownerPhotoImgView.isHidden = true
@@ -60,8 +62,12 @@ class LandingCell: UITableViewCell {
             nameLbl.text = "- -"
             ownerNameLbl.text = "- -"
         }
-        print("\(data.firstName!)")
-        print("\(data.photo!)")
+        print("*****")
+        print(nameLbl.text ?? "")
+        print("*****")
+        
+//        print("\(data.firstName!)")
+//        print("\(data.photo!)")
         if data.photo == "" {
             let color1 = Utility.hexStringToUIColor(hex: data.memberBackgroundColor!)
             let color2 = Utility.hexStringToUIColor(hex: data.memberTextColor!)

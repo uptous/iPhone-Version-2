@@ -120,7 +120,8 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
             if !isDataLoading{
                 isDataLoading = true
                 self.pageNo=self.pageNo+1
-                self.limit=self.limit+150
+//                self.limit=self.limit+150
+                
                 self.offset=self.limit * self.pageNo
                 //loadCallLogData(offset: self.offset, limit: self.limit)
                 getContacts(searchItem: searchChar, offset: self.offset, limit: self.limit)
@@ -135,7 +136,9 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         DataConnectionManager.requestGETURL(api: api, para: ["":""], success: {
             (jsonResult) -> Void in
             let listArr = jsonResult as! NSArray
-            
+            print(listArr.count)
+//            print(listArr)
+
             for index in 0..<listArr.count {
                 let dic = listArr.object(at: index) as! NSDictionary
                 
@@ -191,7 +194,6 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         DataConnectionManager.requestGETURL1(api: api, para: ["":""], success: {
             (jsonResult) -> Void in
             let listArr = jsonResult as! NSArray
-            
             for index in 0..<listArr.count {
                 let dic = listArr.object(at: index) as! NSDictionary
                 
@@ -481,7 +483,7 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var sectionCount = 0
+//        var sectionCount = 0
         if tableView == communityTableView {
             return self.communityList.count
             
@@ -531,23 +533,23 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
                 if(searchActive) {
                     
                     
-                    self.filterListArr = self.filterListArr.sorted(by: { (contact1, contact2) -> Bool in
-                        if contact1.lastName == contact2.lastName {
-                            return contact1.firstName! < contact2.firstName!
-                        }else {
-                            return contact1.lastName! < contact2.lastName!
-                        }
-                    })
+//                    self.filterListArr = self.filterListArr.sorted(by: { (contact1, contact2) -> Bool in
+//                        if contact1.lastName == contact2.lastName {
+//                            return contact1.firstName! < contact2.firstName!
+//                        }else {
+//                            return contact1.lastName! < contact2.lastName!
+//                        }
+//                    })
                     data = self.filterListArr[(indexPath as NSIndexPath).row]
                     
                 }else {
-                    self.fullListArr = self.fullListArr.sorted(by: { (contact1, contact2) -> Bool in
-                        if contact1.lastName == contact2.lastName {
-                            return contact1.firstName! < contact2.firstName!
-                        }else {
-                            return contact1.lastName! < contact2.lastName!
-                        }
-                    })
+//                    self.fullListArr = self.fullListArr.sorted(by: { (contact1, contact2) -> Bool in
+//                        if contact1.lastName == contact2.lastName {
+//                            return contact1.firstName! < contact2.firstName!
+//                        }else {
+//                            return contact1.lastName! < contact2.lastName!
+//                        }
+//                    })
                     data = self.fullListArr[(indexPath as NSIndexPath).row]
                 }
                 cell.updateView(data!)
@@ -560,23 +562,23 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
                 
                 let data: Contacts!
                 if(searchActive) {
-                    self.filterListArr = self.filterListArr.sorted(by: { (contact1, contact2) -> Bool in
-                        if contact1.lastName == contact2.lastName {
-                            return contact1.firstName! < contact2.firstName!
-                        }else {
-                            return contact1.lastName! < contact2.lastName!
-                        }
-                        
-                    })
+//                    self.filterListArr = self.filterListArr.sorted(by: { (contact1, contact2) -> Bool in
+//                        if contact1.lastName == contact2.lastName {
+//                            return contact1.firstName! < contact2.firstName!
+//                        }else {
+//                            return contact1.lastName! < contact2.lastName!
+//                        }
+//
+//                    })
                     data = self.filterListArr[(indexPath as NSIndexPath).row]
                 }else {
-                    self.fullListArr = self.fullListArr.sorted(by: { (contact1, contact2) -> Bool in
-                        if contact1.lastName == contact2.lastName {
-                            return contact1.firstName! < contact2.firstName!
-                        }else {
-                            return contact1.lastName! < contact2.lastName!
-                        }
-                    })
+//                    self.fullListArr = self.fullListArr.sorted(by: { (contact1, contact2) -> Bool in
+//                        if contact1.lastName == contact2.lastName {
+//                            return contact1.firstName! < contact2.firstName!
+//                        }else {
+//                            return contact1.lastName! < contact2.lastName!
+//                        }
+//                    })
                     data = self.fullListArr[(indexPath as NSIndexPath).row]
                 }
                 cell.updateView(data!)
