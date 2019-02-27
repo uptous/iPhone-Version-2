@@ -166,6 +166,15 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func btnDownloadTapped(_ sender: UIButton)
+    {
+        guard let selectedImage = self.displayImage.image else {
+            print("Image not found!")
+            return
+        }
+        UIImageWriteToSavedPhotosAlbum(selectedImage, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+    }
+    
     func downloadImage(mediapath: String, cell: MediaCollectionCell, index : Int) {
         let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
             cell.thumnnailv.image = image
@@ -182,6 +191,22 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         cell.activityindicator.isHidden =  false
         cell.activityindicator.startAnimating()
         cell.thumnnailv.sd_setImage(with: URL(string:mediapath) as URL!, completed:block)
+    }
+    
+    //MARK: - Add image to Library
+    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        if let error = error {
+            // we got back an error!
+            showAlertWith(title: "Save error", message: error.localizedDescription)
+        } else {
+            showAlertWith(title: "Saved!", message: "Your image has been saved to your photos.")
+        }
+    }
+    
+    func showAlertWith(title: String, message: String){
+        let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "OK", style: .default))
+        present(ac, animated: true)
     }
     
     

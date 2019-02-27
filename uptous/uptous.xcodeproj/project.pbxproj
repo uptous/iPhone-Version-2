@@ -31,7 +31,6 @@
 		01D8AAB01F91DECB00DD11DF /* volunteer.gif in Resources */ = {isa = PBXBuildFile; fileRef = 01D8AAAB1F91DECB00DD11DF /* volunteer.gif */; };
 		01D8AAB11F91DECB00DD11DF /* volunteer1.gif in Resources */ = {isa = PBXBuildFile; fileRef = 01D8AAAC1F91DECB00DD11DF /* volunteer1.gif */; };
 		01D8AAB21F91DECB00DD11DF /* volunteer2.gif in Resources */ = {isa = PBXBuildFile; fileRef = 01D8AAAD1F91DECB00DD11DF /* volunteer2.gif */; };
-		01DD20E91FC3EF0900A2B4D7 /* uptous.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 0104484C1FA8BEB600C2B709 /* uptous.entitlements */; };
 		01E51C891FCA75A0006DF126 /* CalendarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E51C871FCA75A0006DF126 /* CalendarTableViewCell.swift */; };
 		01E51C8A1FCA75A0006DF126 /* CalendarTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01E51C881FCA75A0006DF126 /* CalendarTableViewCell.xib */; };
 		4E33B0C0AEF05C0DC4F40225 /* Pods_uptous.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C129DEFE8C1FCE921640925D /* Pods_uptous.framework */; };
@@ -1626,14 +1625,16 @@
 					};
 					D3D8A63C1D5EDB45000AB922 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = 2Y62ZNVPJ7;
+						DevelopmentTeam = U8DTDCNJ53;
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Manual;
 						TestTargetID = D3D8A6251D5EDB44000AB922;
 					};
 					D3D8A6471D5EDB45000AB922 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = 2Y62ZNVPJ7;
+						DevelopmentTeam = U8DTDCNJ53;
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Manual;
 						TestTargetID = D3D8A6251D5EDB44000AB922;
 					};
 				};
@@ -1663,7 +1664,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				01DD20E91FC3EF0900A2B4D7 /* uptous.entitlements in Resources */,
 				D30A265E1E0068A9006A651B /* AnnouncementCell.xib in Resources */,
 				D3D42DD71DFB378A00F5E5C7 /* Reader-Mark-Y@3x.png in Resources */,
 				D316A1BB1DE3676600B06185 /* ImagePostViewController.xib in Resources */,
@@ -1800,7 +1800,7 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2079,9 +2079,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Yuval Spector (BARLF2AB37)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Yuval Spector (BARLF2AB37)";
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 2Y62ZNVPJ7;
+				DEVELOPMENT_TEAM = U8DTDCNJ53;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2101,7 +2102,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "362fce63-f552-4126-8587-dae64dadbaa3";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2127,9 +2128,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: UTU, Inc. (U8DTDCNJ53)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: UTU, Inc. (U8DTDCNJ53)";
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 2Y62ZNVPJ7;
+				DEVELOPMENT_TEAM = U8DTDCNJ53;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2142,7 +2144,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "362fce63-f552-4126-8587-dae64dadbaa3";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -2165,7 +2167,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.uptous.uptous-mobile";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "362fce63-f552-4126-8587-dae64dadbaa3";
+				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = uptousDevelopment;
 				SWIFT_OBJC_BRIDGING_HEADER = "uptous/uptous-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2190,7 +2192,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.uptous.uptous-mobile";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0d730d5b-e2d7-4ee5-a1f0-195e4c119dbc";
+				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = Live_Distribution;
 				SWIFT_OBJC_BRIDGING_HEADER = "uptous/uptous-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
