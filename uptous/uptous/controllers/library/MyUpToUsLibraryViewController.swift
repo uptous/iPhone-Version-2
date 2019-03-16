@@ -385,19 +385,25 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
         }else {
             data = self.fullListArr1[indexPath]
         }
-        let docFile = data.path?.components(separatedBy: ".").last
-        
-        if docFile == "doc" || docFile == "docx" || docFile == "pdf" || docFile == "PDF" || docFile == "JPG" || docFile == "png" || docFile == "xls" || docFile == "xlsx" || docFile == "MOV" || docFile == "MP3" || docFile == "mp3"  || docFile == "jpg"  || docFile == "PNG" || docFile == "mov" {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "FileListViewController") as! FileListViewController
-            controller.filePath = data.path
-            self.present(controller, animated: true, completion: nil)
+        if data.type == "link" {
+            guard let url = URL(string: data.path ?? "") else { return }
+            UIApplication.shared.open(url)
+        }
+        else{
+            let docFile = data.path?.components(separatedBy: ".").last
             
-        }else {
-             DispatchQueue.main.async(execute: { () -> Void in
-             let alert = UIAlertController(title: "Alert", message: "Files in this format cannot be downloaded to the iPhone", preferredStyle: UIAlertControllerStyle.alert)
-             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-             self.present(alert, animated: true, completion: nil)
-            })
+            if docFile == "doc" || docFile == "docx" || docFile == "pdf" || docFile == "PDF" || docFile == "JPG" || docFile == "png" || docFile == "xls" || docFile == "xlsx" || docFile == "MOV" || docFile == "MP3" || docFile == "mp3"  || docFile == "jpg"  || docFile == "PNG" || docFile == "mov" {
+                let controller = self.storyboard?.instantiateViewController(withIdentifier: "FileListViewController") as! FileListViewController
+                controller.filePath = data.path
+                self.present(controller, animated: true, completion: nil)
+                
+            }else {
+                DispatchQueue.main.async(execute: { () -> Void in
+                    let alert = UIAlertController(title: "Alert", message: "Files in this format cannot be downloaded to the iPhone", preferredStyle: UIAlertControllerStyle.alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                })
+            }
         }
     }
     

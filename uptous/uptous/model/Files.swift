@@ -15,6 +15,7 @@ class Files: NSObject {
     var path: String?
     var createDate: Double?
     var communityId: Int?
+    var type: String?
 
     
     init(info: NSDictionary?) {
@@ -23,6 +24,7 @@ class Files: NSObject {
 
         self.Id = info?.object(forKey: "id") as? Int ?? 0
         self.title = info?.object(forKey: "title") as? String ?? ""
+        self.type = info?.object(forKey: "type") as? String ?? ""
         self.path = info?.object(forKey: "path") as? String ?? ""
         self.createDate = info?.object(forKey: "createDate") as? Double ?? 0
         
