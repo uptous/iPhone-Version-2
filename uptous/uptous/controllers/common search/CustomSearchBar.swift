@@ -21,6 +21,7 @@ class CustomSearchBar: UISearchBar {
         // Drawing code
         
         // Find the index of the search field in the search bar subviews.
+        /* the following never happes (ie index is always nil Yuval: 04242020
         if let index = indexOfSearchFieldInSubviews() {
             // Access the search field
             let searchField: UITextField = (subviews[0] ).subviews[index] as! UITextField
@@ -35,6 +36,7 @@ class CustomSearchBar: UISearchBar {
             // Set the background color of the search field.
             searchField.backgroundColor = barTintColor
         }
+        */
         
         let startPoint = CGPoint(x: 0.0, y: frame.size.height)
         let endPoint = CGPoint(x: frame.size.width, y: frame.size.height)
@@ -61,7 +63,7 @@ class CustomSearchBar: UISearchBar {
         preferredFont = font
         preferredTextColor = textColor
         
-        searchBarStyle = UISearchBarStyle.prominent
+        searchBarStyle = UISearchBar.Style.prominent
         isTranslucent = false
     }
     
@@ -70,13 +72,13 @@ class CustomSearchBar: UISearchBar {
         super.init(coder: aDecoder)
     }
     
-    
+    /* This function is never called. Yuval - 04242020
     func indexOfSearchFieldInSubviews() -> Int! {
         // Uncomment the next line to see the search bar subviews.
         // println(subviews[0].subviews)
         
-        var index: Int!
-        let searchBarView = subviews[0]
+        let index: Int? = nil
+        // let searchBarView = subviews[0]
         
         /*for i in 0 ..<searchBarView.subviews.count += 1 {
          if searchBarView.subviews[i].isKind(of: UITextField.self) {
@@ -87,4 +89,5 @@ class CustomSearchBar: UISearchBar {
         
         return index
     }
+    */
 }

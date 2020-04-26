@@ -20,7 +20,7 @@ class ItemDetailsMsgCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        Custom.cornerView(cellView)
+        _ = Custom.cornerView(cellView)
     }
     
     func updateData(_ data: NSDictionary) {

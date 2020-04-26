@@ -36,7 +36,7 @@ class CircularImageView: UIView {
             imageLayer.frame = self.bounds
             imageLayer.mask = mask
 
-            imageLayer.contentsGravity = kCAGravityResizeAspectFill
+            imageLayer.contentsGravity = CALayerContentsGravity.resizeAspectFill
             layer.addSublayer(imageLayer)
         }
         

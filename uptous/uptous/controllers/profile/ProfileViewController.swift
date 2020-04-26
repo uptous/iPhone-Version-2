@@ -51,16 +51,16 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
     //MARK:- Keyboard
     func registerForKeyboardNotifications(){
         //Adding notifies on keyboard appearing
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWasShown(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWasShown(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    func keyboardWasShown(notification: NSNotification){
+    @objc func keyboardWasShown(notification: NSNotification){
         //Need to calculate keyboard exact size due to Apple suggestions
         self.scrollView.isScrollEnabled = true
         var info = notification.userInfo!
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.size
-        let contentInsets : UIEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, keyboardSize!.height, 0.0)
+        let keyboardSize = (info[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.size
+        let contentInsets : UIEdgeInsets = UIEdgeInsets.init(top: 0.0, left: 0.0, bottom: keyboardSize!.height, right: 0.0)
         
         self.scrollView.contentInset = contentInsets
         self.scrollView.scrollIndicatorInsets = contentInsets
@@ -74,11 +74,11 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
         }
     }
     
-    func keyboardWillBeHidden(notification: NSNotification){
+    @objc func keyboardWillBeHidden(notification: NSNotification){
         //Once keyboard disappears, restore original positions
         var info = notification.userInfo!
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.size
-        let contentInsets : UIEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, -keyboardSize!.height, 0.0)
+        let keyboardSize = (info[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.size
+        let contentInsets : UIEdgeInsets = UIEdgeInsets.init(top: 0.0, left: 0.0, bottom: -keyboardSize!.height, right: 0.0)
         self.scrollView.contentInset.bottom = 0
         self.scrollView.scrollIndicatorInsets = contentInsets
         self.view.endEditing(true)
@@ -133,7 +133,7 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
             self.mobileTxtField.text = profileData.phone
             
             if profileData.photo == "https://dsnn35vlkp0h4.cloudfront.net/images/blank_image.gif" {
-                let imageData = try? Data(contentsOf: Bundle.main.url(forResource: "upload-image", withExtension: "gif")!)
+                _ = try? Data(contentsOf: Bundle.main.url(forResource: "upload-image", withExtension: "gif")!)
                 //let advTimeGif = UIImage.gifImageWithData(imageData!)
                 //self.image.image = advTimeGif
                 
@@ -141,7 +141,9 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
                 let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
                     self.profileImage.image = image
                 }
-                self.profileImage.sd_setImage(with: URL(string:profileData.photo!) as URL!, completed:block)
+                //self.profileImage.sd_setImage(with: URL(string:profileData.photo!) as URL!, completed:block)
+                let url = URL(string:profileData.photo!)
+                self.profileImage.sd_setImage(with: url, completed: block)
             }
                 
         }) { (error) -> Void in
@@ -151,7 +153,7 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
     }
     
     func updateProfile() {
-        let imageData = UIImageJPEGRepresentation(Utility.scaleUIImageToSize(self.profileImage.image!, size: CGSize(width: 120, height: 120)), 0.9)?.base64EncodedString()
+        let imageData = Utility.scaleUIImageToSize(self.profileImage.image!, size: CGSize(width: 120, height: 120)).jpegData(compressionQuality: 0.9)?.base64EncodedString()
         
         var stringPost = "firstname=" + firstNameTxtField.text!
         stringPost += "&lastname=" + lastNameTxtField.text!
@@ -234,7 +236,7 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
     func takeNewPicture() {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             imagePicker.allowsEditing = false
-            imagePicker.sourceType = UIImagePickerControllerSourceType.camera
+            imagePicker.sourceType = UIImagePickerController.SourceType.camera
             imagePicker.cameraCaptureMode = .photo
             imagePicker.modalPresentationStyle = .fullScreen
             present(imagePicker,animated: true,completion: nil)
@@ -243,9 +245,12 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
     
     //MARK: - Delegates
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
         var chosenImage = UIImage()
-        chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
+        chosenImage = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as! UIImage //2
         delay(0.2, closure: { () -> () in
             // Mukesh
             self.profileImage.image = chosenImage
@@ -297,9 +302,9 @@ extension ProfileViewController: UITextFieldDelegate{
         toolBar.barStyle = UIBarStyle.default
         toolBar.isTranslucent = true
         toolBar.tintColor = UIColor(red: 76/255, green: 217/255, blue: 100/255, alpha: 1)
-        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.done, target: self, action: #selector(ProfileViewController.donePressed))
-        let cancelButton = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.plain, target: self, action: #selector(ProfileViewController.cancelPressed))
-        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItem.Style.done, target: self, action: #selector(ProfileViewController.donePressed))
+        let cancelButton = UIBarButtonItem(title: "Cancel", style: UIBarButtonItem.Style.plain, target: self, action: #selector(ProfileViewController.cancelPressed))
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
         toolBar.setItems([cancelButton, spaceButton, doneButton], animated: false)
         toolBar.isUserInteractionEnabled = true
         toolBar.sizeToFit()
@@ -307,10 +312,20 @@ extension ProfileViewController: UITextFieldDelegate{
         textField.delegate = self
         textField.inputAccessoryView = toolBar
     }
-    func donePressed(){
+    @objc func donePressed(){
         view.endEditing(true)
     }
-    func cancelPressed(){
+    @objc func cancelPressed(){
         view.endEditing(true) // or do something
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
 }

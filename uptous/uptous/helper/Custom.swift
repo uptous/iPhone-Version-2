@@ -35,9 +35,9 @@ class Custom: NSObject {
         let dateFormatter = DateFormatter()
         let myDate = Date(timeIntervalSince1970:  epocTime)
         //dateFormatter.locale = Locale(identifier: "en")
-        dateFormatter.timeZone = NSTimeZone(name: "PST") as TimeZone!
-        //dateFormatter.locale = Locale(identifier: Locale.current.identifier)
         dateFormatter.dateFormat = "yyyy-dd-mm hh:mm:SSS"
+        dateFormatter.timeZone = TimeZone(abbreviation: "PST")
+        //dateFormatter.locale = Locale(identifier: Locale.current.identifier)
         
         return dateFormatter.string(from: myDate)
     }
@@ -46,7 +46,7 @@ class Custom: NSObject {
         let epocTime = TimeInterval(unixTime) / 1000
         let dateFormatter = DateFormatter()
         let myDate = Date(timeIntervalSince1970:  epocTime)
-        dateFormatter.timeZone = NSTimeZone(name: "PST") as TimeZone!
+        dateFormatter.timeZone = TimeZone(abbreviation: "PST")
         //dateFormatter.locale = Locale(identifier: Locale.current.identifier)
         dateFormatter.dateFormat = "MMM d"
         
@@ -57,7 +57,7 @@ class Custom: NSObject {
         let epocTime = TimeInterval(unixTime) / 1000
         let dateFormatter = DateFormatter()
         let myDate = Date(timeIntervalSince1970:  epocTime)
-        dateFormatter.timeZone = NSTimeZone(name: "PST") as TimeZone!
+        dateFormatter.timeZone = TimeZone(abbreviation: "PST")
         //dateFormatter.locale = Locale(identifier: Locale.current.identifier)
         dateFormatter.dateFormat = "MMM d, yyyy, h:mm a"
         
@@ -69,7 +69,7 @@ class Custom: NSObject {
         let dateFormatter = DateFormatter()
         let myDate = Date(timeIntervalSince1970:  epocTime)
         //dateFormatter.locale = Locale(identifier: "en")
-        dateFormatter.timeZone = NSTimeZone(name: "PST") as TimeZone!
+        dateFormatter.timeZone = TimeZone(abbreviation: "PST")
         //dateFormatter.locale = Locale(identifier: Locale.current.identifier)
         dateFormatter.dateFormat = "MMM d"
         
@@ -81,7 +81,7 @@ class Custom: NSObject {
         let dateFormatter = DateFormatter()
         let myDate = Date(timeIntervalSince1970:  epocTime)
         //dateFormatter.locale = Locale(identifier: "en")
-        dateFormatter.timeZone = NSTimeZone(name: "PST") as TimeZone!
+        dateFormatter.timeZone = TimeZone(abbreviation: "PST")
         //dateFormatter.locale = Locale(identifier: Locale.current.identifier)
         dateFormatter.dateFormat = "EEE, MMM d"
         //dateFormatter.timeZone = NSTimeZone() as TimeZone!
@@ -93,7 +93,7 @@ class Custom: NSObject {
         let dateFormatter = DateFormatter()
         let myDate = Date(timeIntervalSince1970:  epocTime)
         //dateFormatter.locale = Locale(identifier: "en")
-        dateFormatter.timeZone = NSTimeZone(name: "PST") as TimeZone!
+        dateFormatter.timeZone = TimeZone(abbreviation: "PST")
         //dateFormatter.locale = Locale(identifier: Locale.current.identifier)
         dateFormatter.dateFormat = "EEE, MMM d"
         
@@ -105,7 +105,7 @@ class Custom: NSObject {
         let dateFormatter = DateFormatter()
         let myDate = Date(timeIntervalSince1970:  epocTime)
         //dateFormatter.locale = Locale(identifier: "en")
-        dateFormatter.timeZone = NSTimeZone(name: "PST") as TimeZone!
+        dateFormatter.timeZone = TimeZone(abbreviation: "PST")
         //dateFormatter.locale = Locale(identifier: Locale.current.identifier)
         dateFormatter.dateFormat = "h:mma"
         //dateFormatter.timeZone = NSTimeZone() as TimeZone!
@@ -117,7 +117,7 @@ class Custom: NSObject {
         let dateFormatter = DateFormatter()
         let myDate = Date(timeIntervalSince1970:  epocTime)
         //dateFormatter.locale = Locale(identifier: "en")
-        dateFormatter.timeZone = NSTimeZone(name: "PST") as TimeZone!
+        dateFormatter.timeZone = TimeZone(abbreviation: "PST")
         //dateFormatter.locale = Locale(identifier: Locale.current.identifier)
         dateFormatter.dateFormat = "MM/dd/yyyy"
         
@@ -127,7 +127,7 @@ class Custom: NSObject {
     
     //Mark:- Get Label Width with text
     class func widthSize(_ text:String, fontName:String, fontSize:CGFloat) -> CGFloat{
-        let textSize: CGSize = text.size(attributes: [NSFontAttributeName: UIFont(name: fontName, size: fontSize)!])
+        let textSize: CGSize = text.size(withAttributes: convertToOptionalNSAttributedStringKeyDictionary([convertFromNSAttributedStringKey(NSAttributedString.Key.font): UIFont(name: fontName, size: fontSize)!]))
         
         return textSize.width
     }
@@ -135,21 +135,21 @@ class Custom: NSObject {
     //MARK:- Bold String
     class func attributedString(_ str: String,size:CGFloat) -> NSAttributedString? {
         let attributes = [
-            NSForegroundColorAttributeName : UIColor.black,
-            NSFontAttributeName: UIFont.boldSystemFont(ofSize: size)
+            convertFromNSAttributedStringKey(NSAttributedString.Key.foregroundColor) : UIColor.black,
+            convertFromNSAttributedStringKey(NSAttributedString.Key.font): UIFont.boldSystemFont(ofSize: size)
             //NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue
         ]
-        let attributedString = NSAttributedString(string: str, attributes: attributes)
+        let attributedString = NSAttributedString(string: str, attributes: convertToOptionalNSAttributedStringKeyDictionary(attributes))
         return attributedString
     }
     
     class func attributedString1(_ str: String,size:CGFloat) -> NSAttributedString? {
         let attributes = [
-            NSForegroundColorAttributeName : UIColor.red,
-            NSFontAttributeName: UIFont.boldSystemFont(ofSize: size)
+            convertFromNSAttributedStringKey(NSAttributedString.Key.foregroundColor) : UIColor.red,
+            convertFromNSAttributedStringKey(NSAttributedString.Key.font): UIFont.boldSystemFont(ofSize: size)
             //NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue
         ]
-        let attributedString = NSAttributedString(string: str, attributes: attributes)
+        let attributedString = NSAttributedString(string: str, attributes: convertToOptionalNSAttributedStringKeyDictionary(attributes))
         return attributedString
     }
     
@@ -185,4 +185,15 @@ class Custom: NSObject {
         return button
     }
 
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
 }

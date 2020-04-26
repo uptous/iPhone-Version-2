@@ -32,9 +32,9 @@ class ReadOnlyCommentViewController: GeneralViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         eventDateLbl.text = eventDateValue
-        Custom.cornerView(contentView)
-        nameLbl.text = selectedItems.name!
-        headingLbl.text = selectedItems.name!
+        _ = Custom.cornerView(contentView)
+        _ = nameLbl.text = selectedItems.name!
+        _ = headingLbl.text = selectedItems.name!
        // eventDateLbl.text = ("\(Custom.dayStringFromTime3(selectedItems.dateTime!))")
         
         if selectedItems.dateTime == 0 {
@@ -68,7 +68,7 @@ class ReadOnlyCommentViewController: GeneralViewController {
             voluniteerdDatas.add(volunteer!)
         }
         tableView.estimatedRowHeight = 75
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         print(self.calculateHeight(self.selectedItems.name!, width: self.nameLbl.frame.size.width))
         detailHeightContraint.constant = self.calculateHeight(self.selectedItems.name!, width: self.nameLbl.frame.size.width) + 50
         

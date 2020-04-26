@@ -56,10 +56,10 @@ class CustomTabBarView: UIView {
     }
     
     func deselectButton(){
-        newsFeedBtn.setImage(UIImage(named: "tabbar1"), for: UIControlState())
-        contactsBtn.setImage(UIImage(named: "tabbar2"), for: UIControlState())
-        signupBtn.setImage(UIImage(named: "tabbar3"), for: UIControlState())
-        libraryBtn.setImage(UIImage(named: "tabbar4"), for: UIControlState())
-        calendarBtn.setImage(UIImage(named: "tabbar5"), for: UIControlState())
+        newsFeedBtn.setImage(UIImage(named: "tabbar1"), for: UIControl.State())
+        contactsBtn.setImage(UIImage(named: "tabbar2"), for: UIControl.State())
+        signupBtn.setImage(UIImage(named: "tabbar3"), for: UIControl.State())
+        libraryBtn.setImage(UIImage(named: "tabbar4"), for: UIControl.State())
+        calendarBtn.setImage(UIImage(named: "tabbar5"), for: UIControl.State())
     }
 }

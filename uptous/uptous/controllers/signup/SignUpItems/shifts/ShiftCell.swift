@@ -32,9 +32,9 @@ class ShiftCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        cornerView(volunteeredView)
-        cornerView(fullView)
-        cornerView(openView)
+        _ = cornerView(volunteeredView)
+        _ = cornerView(fullView)
+        _ = cornerView(openView)
     }
     
     func updateView(_ data: Items) {

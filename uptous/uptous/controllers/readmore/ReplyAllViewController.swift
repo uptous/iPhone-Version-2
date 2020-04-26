@@ -54,9 +54,9 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
         textField_comments.placeholder = "Reply all..."
         // Observer Keyboard
         let center: NotificationCenter = NotificationCenter.default
-        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
-        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardDidChangeFrame(_:)), name: NSNotification.Name.UIKeyboardDidChangeFrame, object: nil)
+        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardWillHide(_:)), name: UIResponder.keyboardDidHideNotification, object: nil)
+        center.addObserver(self, selector: #selector(ReplyAllViewController.keyboardDidChangeFrame(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
         
         let tapRecognizer = UITapGestureRecognizer(target: self , action: #selector(ReplyAllViewController.HideTextKeyboard(_:)))
         tableView.addGestureRecognizer(tapRecognizer)
@@ -67,7 +67,7 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
             self.fetchOldReplyList()
         }
         
-        Custom.fullCornerView(ownerView)
+        _ = Custom.fullCornerView(ownerView)
         ownerPhotoImgView.layer.cornerRadius = 25.0
         ownerPhotoImgView.layer.masksToBounds = true
     }
@@ -76,18 +76,17 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
         self.tableView.isHidden = true
         
         tableView.estimatedRowHeight = 110
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
     }
     
     //MARK:- Reply Post
     func postReply(_ msg: String) {
         let apiName = PostReplyAPI + ("\(data.newsItemId!)")
-        var stringPost = "contents=" + msg
+        let stringPost = "contents=" + msg
         DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
             print(response)
             
-            print(response["status"])
             if response["status"] as? String == "0" {
                 self.fetchOldReplyList()
             }
@@ -120,13 +119,13 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
 
-    func HideTextKeyboard(_ sender: UITapGestureRecognizer?) {
+    @objc func HideTextKeyboard(_ sender: UITapGestureRecognizer?) {
         //textField_comments.resignFirstResponder()
         placeHolderText = "Reply all..."
         textView_comments.text = placeHolderText
@@ -144,7 +143,7 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
             
             if numberOfRows > 0 {
                 let indexPath = IndexPath(row: 0, section: numberOfRows)
-                self.tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: animated)
+                self.tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.bottom, animated: animated)
             }
         })
     }
@@ -161,12 +160,12 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
     }
     
     // MARK: - UIKeyBoard Delegate
-    func keyboardWillShow(_ notification: Notification) {
+    @objc func keyboardWillShow(_ notification: Notification) {
         let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let keyboardSize = (info[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         let keyboardHeight:CGFloat = keyboardSize.height
         
-        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIViewAnimationOptions(), animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIView.AnimationOptions(), animations: {
             
             self.commentsBoxBottomSpacing.constant = keyboardHeight
             
@@ -175,9 +174,9 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
         })
     }
     
-    func keyboardWillHide(_ notification: Notification) {
+    @objc func keyboardWillHide(_ notification: Notification) {
         let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let keyboardSize = (info[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         let keyboardHeight:CGFloat = keyboardSize.height
         
         self.commentsBoxBottomSpacing.constant = keyboardHeight
@@ -187,12 +186,12 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
             }, completion: nil)
     }
     
-    func keyboardDidChangeFrame(_ notification: Notification) {
+    @objc func keyboardDidChangeFrame(_ notification: Notification) {
         let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
-        let keyboardSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let keyboardSize = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let keyboardHeight:CGFloat = keyboardSize.height
         
-        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIViewAnimationOptions(), animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIView.AnimationOptions(), animations: {
             
             self.commentsBoxBottomSpacing.constant = keyboardHeight
             }, completion: nil)
@@ -206,9 +205,9 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
     
     func attributedString(_ str: String) -> NSAttributedString? {
         let attributes = [
-            NSUnderlineStyleAttributeName : NSUnderlineStyle.styleSingle.rawValue
+            convertFromNSAttributedStringKey(NSAttributedString.Key.underlineStyle) : NSUnderlineStyle.single.rawValue
         ]
-        let attributedString = NSAttributedString(string: str, attributes: attributes)
+        let attributedString = NSAttributedString(string: str, attributes: convertToOptionalNSAttributedStringKeyDictionary(attributes))
         return attributedString
     }
     
@@ -219,7 +218,7 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
             let stringArray = data.ownerName?.components(separatedBy: " ")
             let firstName = stringArray![0]
             let secondName = stringArray![1]
-            let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
+            let resultString = "\(firstName.prefix(1))\(secondName.prefix(1))"
             
             ownerNameLbl.text = resultString
             let color1 = Utility.hexStringToUIColor(hex: data.ownerBackgroundColor!)
@@ -237,7 +236,9 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
                 let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
                     self.ownerPhotoImgView.image = image
                 }
-                ownerPhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
+                //ownerPhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
+                let url = URL(string: avatarUrl)
+                ownerPhotoImgView.sd_setImage(with: url, completed: block)
             }
         }
         
@@ -313,8 +314,9 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
     }
     
     func showSendMailErrorAlert() {
-        let sendMailErrorAlert = UIAlertView(title: "Could Not Send Email", message: "Your device could not send e-mail.  Please check e-mail configuration and try again.", delegate: self, cancelButtonTitle: "OK")
-        sendMailErrorAlert.show()
+        let sendMailErrorAlert = UIAlertController(title: "Could Not Send Email", message: "Your device could not send e-mail.  Please check e-mail configuration and try again.", preferredStyle: .alert)
+        sendMailErrorAlert.addAction(UIAlertAction(title: "OK", style: .default) { _ in })
+        self.present(sendMailErrorAlert, animated: true){}
     }
     
     // MARK: MFMailComposeViewControllerDelegate Method
@@ -406,7 +408,7 @@ extension ReplyAllViewController: UITextViewDelegate {
             textView.text = nil
             textView.textColor = UIColor.black
         }
-        if text == "" && textView_comments.text.characters.count == 1 && textView.textColor == UIColor.black{
+        if text == "" && textView_comments.text.count == 1 && textView.textColor == UIColor.black{
             textView.text = placeHolderText
             textView.textColor = UIColor.lightGray
             textView.selectedRange = NSMakeRange(0, 0)
@@ -416,7 +418,7 @@ extension ReplyAllViewController: UITextViewDelegate {
         
         let totalText = textView.text + text
         
-        if totalText.characters.count > 0 && totalText != placeHolderText {
+        if totalText.count > 0 && totalText != placeHolderText {
             //btn_comments.setImage(UIImage(named: "chat_send"), forState: .Normal)
         }
         else{
@@ -449,4 +451,15 @@ extension UIColor{
         scanner.scanHexInt32(&hexInt)
         return hexInt
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

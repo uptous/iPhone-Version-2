@@ -19,7 +19,7 @@ class ReadMoreCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        Custom.fullCornerView(ownerView)
+        _ = Custom.fullCornerView(ownerView)
         ownerPhotoImgView.layer.cornerRadius = 25.0
         ownerPhotoImgView.layer.masksToBounds = true
     }
@@ -32,7 +32,7 @@ class ReadMoreCell: UITableViewCell {
             let stringArray = data.ownerName?.components(separatedBy: " ")
             let firstName = stringArray![0]
             let secondName = stringArray![1]
-            let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
+            let resultString = "\(firstName.prefix(1))\(secondName.prefix(1))"
             
             ownerNameLbl.text = resultString
             let color1 = Utility.hexStringToUIColor(hex: data.ownerBackgroundColor!)
@@ -50,7 +50,9 @@ class ReadMoreCell: UITableViewCell {
                 let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
                     self.ownerPhotoImgView.image = image
                 }
-                ownerPhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
+                //ownerPhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
+                let url = URL(string: avatarUrl)
+                ownerPhotoImgView.sd_setImage(with: url, completed: block)
             }
         }
 

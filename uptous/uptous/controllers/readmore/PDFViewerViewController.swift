@@ -18,20 +18,22 @@ class PDFViewerViewController: GeneralViewController,ReaderViewControllerDelegat
 
         let url = URL(string: data.newsItemUrl!)
         
-        PDFDownload.loadFileAsync(url: url! as NSURL, completion:{(path) in
-            print("pdf downloaded to: \(path)")
-            if path.1 == nil {
-                // Get the directory contents urls (including subfolders urls)
-                if let document = ReaderDocument.withDocumentFilePath(path.0, password: "") {
-                    let readerViewController: ReaderViewController = ReaderViewController(readerDocument: document)
-                    readerViewController.delegate = self
-                    // Set the ReaderViewController delegate to self
-                    self.navigationController!.pushViewController(readerViewController, animated: true)
-                }
-            } else {
-                print(path.1?.localizedDescription ?? "Error Occured")
+        PDFDownload.loadFileAsync(url: url! as NSURL, completion: pushNewAnonFunc)
+    }
+    
+    func pushNewAnonFunc(path0: String?, path1: Error?) -> Void {
+        print("pdf downloaded to: \(path0 ?? "PDF Downloaded")")
+        if path1 == nil {
+            // Get the directory contents urls (including subfolders urls)
+            if let document = ReaderDocument.withDocumentFilePath(path0, password: "") {
+                let readerViewController: ReaderViewController = ReaderViewController(readerDocument: document)
+                readerViewController.delegate = self
+                // Set the ReaderViewController delegate to self
+                self.navigationController!.pushViewController(readerViewController, animated: true)
             }
-        })
+        } else {
+            print(path1?.localizedDescription ?? "Download Failed")
+        }
     }
     
     func dismiss(_ viewController: ReaderViewController!) {

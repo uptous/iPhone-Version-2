@@ -67,7 +67,7 @@ class PhotosCell: UITableViewCell {
         contentsView.layer.cornerRadius = 8.0
         //commentLbl.hidden = true
         //readMoreBtn.isHidden = true
-        Custom.fullCornerView(ownerView)
+        _ = Custom.fullCornerView(ownerView)
         ownerPhotoImgView.layer.cornerRadius = 25.0
         ownerPhotoImgView.layer.masksToBounds = true
     }
@@ -106,10 +106,10 @@ class PhotosCell: UITableViewCell {
     
     func attributedString(_ str: String) -> NSAttributedString? {
         let attributes = [
-            NSForegroundColorAttributeName : UIColor.black,
-            NSUnderlineStyleAttributeName : NSUnderlineStyle.styleSingle.rawValue
+            convertFromNSAttributedStringKey(NSAttributedString.Key.foregroundColor) : UIColor.black,
+            convertFromNSAttributedStringKey(NSAttributedString.Key.underlineStyle) : NSUnderlineStyle.single.rawValue
             ] as [String : Any]
-        let attributedString = NSAttributedString(string: str, attributes: attributes)
+        let attributedString = NSAttributedString(string: str, attributes: convertToOptionalNSAttributedStringKeyDictionary(attributes))
         return attributedString
     }
     
@@ -119,16 +119,16 @@ class PhotosCell: UITableViewCell {
             ownerView.isHidden = false
             ownerPhotoImgView.isHidden = true
             let stringArray = data.ownerName?.components(separatedBy: " ")
-            var firstName = stringArray![0]
-            var secondName = stringArray![1]
+            let firstName = stringArray![0]
+            let secondName = stringArray![1]
             //let resultString: String
             //let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
             if firstName != "" && secondName != "" {
-                ownerNameLbl.text = "\(firstName.characters.first!)\(secondName.characters.first!)"
+                ownerNameLbl.text = "\(firstName.prefix(1))\(secondName.prefix(1))"
             }else if firstName != "" {
-                ownerNameLbl.text = "\(firstName.characters.first!)"
+                ownerNameLbl.text = "\(firstName.prefix(1))"
             }else if secondName != "" {
-                ownerNameLbl.text = "\(secondName.characters.first!)"
+                ownerNameLbl.text = "\(secondName.prefix(1))"
             }
             
             //ownerNameLbl.text = resultString
@@ -147,7 +147,9 @@ class PhotosCell: UITableViewCell {
                 let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
                     self.ownerPhotoImgView.image = image
                 }
-                ownerPhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
+                //ownerPhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
+                let url = URL(string: avatarUrl)
+                ownerPhotoImgView.sd_setImage(with: url, completed: block)
             }
         }
         
@@ -164,13 +166,15 @@ class PhotosCell: UITableViewCell {
         groupNameLbl.attributedText = attributedStr
         
         let replyName = data.ownerName?.components(separatedBy: " ")[0]
-        replyToBtn.setTitle(("Reply to" + " " + replyName!), for: UIControlState())
+        replyToBtn.setTitle(("Reply to" + " " + replyName!), for: UIControl.State())
         
         if let newsItemPhotoUrl = data.newsItemPhoto {
             let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
                 self.newsItemPhotoImgView.image = image
             }
-            self.newsItemPhotoImgView.sd_setImage(with: URL(string:newsItemPhotoUrl) as URL!, completed:block)
+            //self.newsItemPhotoImgView.sd_setImage(with: URL(string:newsItemPhotoUrl) as URL!, completed:block)
+            let url = URL(string: newsItemPhotoUrl)
+            self.newsItemPhotoImgView.sd_setImage(with: url, completed: block)
         }
         
         if data.newsItemDescription != "" {
@@ -187,10 +191,10 @@ class PhotosCell: UITableViewCell {
             comment1Btn.isHidden = false
             if data.comments?.count == 1 {
                 let text = ("\((data.comments?.count)!) comment")
-                comment1Btn.setTitle(text, for: UIControlState())
+                comment1Btn.setTitle(text, for: UIControl.State())
             }else {
                 let text = ("\((data.comments?.count)!) comments")
-                comment1Btn.setTitle(text, for: UIControlState())
+                comment1Btn.setTitle(text, for: UIControl.State())
             }
         }else{
             comment1Btn.isHidden = true
@@ -247,3 +251,14 @@ class PhotosCell: UITableViewCell {
 }
 
 
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
+}

@@ -34,17 +34,17 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Custom.cornerView(contentView)
+        _ = Custom.cornerView(contentView)
         descTableView.estimatedRowHeight = 95
-        descTableView.rowHeight = UITableViewAutomaticDimension
+        descTableView.rowHeight = UITableView.automaticDimension
         
         itemTableView.estimatedRowHeight = 95
-        itemTableView.rowHeight = UITableViewAutomaticDimension
+        itemTableView.rowHeight = UITableView.automaticDimension
     }
     
     func updateData(_ data: SignupSheet) {
         self.data = data
-        if (data.notes?.characters.count)! > 0 {
+        if (data.notes?.count)! > 0 {
             let font = UIFont(name: "Helvetica", size: 14.0)
             //descLabel.text = data!.notes!
             let height = heightForView(text: data.notes!, font: font!, width: descTableView.frame.size.width)
@@ -133,8 +133,8 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }

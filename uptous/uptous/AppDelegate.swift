@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var globalSignUpData: SignupSheet!
     let db = SQLiteDB.shared
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
                 // Override point for customization after application launch.
         
         _ = db.openDB(copyFile:false)
@@ -36,10 +36,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication,
                      continue userActivity: NSUserActivity,
-                     restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+                     restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         
-        let alert = UIAlertController(title: "Alert", message: "Deep Linking Working.", preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (alert) in
+        let alert = UIAlertController(title: "Alert", message: "Deep Linking Working.", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (alert) in
             // let login = LoginViewController(nibName: "LoginViewController", bundle: nil)
             
         }))
@@ -47,8 +47,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // 1
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
             let url = userActivity.webpageURL,
-            let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-                
+            let _ = URLComponents(url: url, resolvingAgainstBaseURL: true)
+            else {
                 return false
         }
         

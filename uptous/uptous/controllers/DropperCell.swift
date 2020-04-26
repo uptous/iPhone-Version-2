@@ -30,13 +30,13 @@ internal class DropperCell: UITableViewCell {
     override func layoutSubviews() {
         self.layoutMargins = UIEdgeInsets.zero//UIEdgeInsetsZero
         self.separatorInset = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
-        self.selectionStyle = UITableViewCellSelectionStyle.none
+        self.selectionStyle = UITableViewCell.SelectionStyle.none
         super.layoutSubviews()
         switch cellType {
         case .Icon:
             let height = self.frame.size.height - 20
             imageItem.frame = CGRect(x: 0, y: (self.frame.height - height)/2, width: self.frame.width, height: height)
-            imageItem.contentMode = UIViewContentMode.scaleAspectFit
+            imageItem.contentMode = UIView.ContentMode.scaleAspectFit
             addSubview(imageItem)
         case .Text:
             textItem.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: self.frame.size.height)

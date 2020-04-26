@@ -29,9 +29,9 @@ class OnGoingCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        cornerView(volunteeredView)
+        _ = cornerView(volunteeredView)
         //cornerView(fullView)
-        cornerView(openView)
+        _ = cornerView(openView)
     }
     
     func updateView(_ data: Items) {

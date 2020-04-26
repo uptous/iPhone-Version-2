@@ -207,7 +207,7 @@ open class RappleActivityIndicatorView: NSObject {
         
         let progress = RappleActivityIndicatorView.sharedInstance
         
-        NotificationCenter.default.addObserver(progress, selector: #selector(RappleActivityIndicatorView.orientationChanged), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.addObserver(progress, selector: #selector(RappleActivityIndicatorView.orientationChanged), name: UIDevice.orientationDidChangeNotification, object: nil)
         
         sharedInstance.showProgress = false
         
@@ -298,7 +298,7 @@ open class RappleActivityIndicatorView: NSObject {
         let x = completionPoint.x - 10
         let y = completionPoint.y + 4
         
-        let circle = UIBezierPath(arcCenter: completionPoint, radius: completionRadius, startAngle: CGFloat(-M_PI_2), endAngle:CGFloat(2 * M_PI - M_PI_2), clockwise: true)
+        let circle = UIBezierPath(arcCenter: completionPoint, radius: completionRadius, startAngle: CGFloat(-Double.pi/2), endAngle:CGFloat(2 * Double.pi - (Double.pi/2)), clockwise: true)
         let pgrsBg = CAShapeLayer()
         pgrsBg.path = circle.cgPath
         pgrsBg.fillColor = nil
@@ -321,7 +321,7 @@ open class RappleActivityIndicatorView: NSObject {
     }
     
     /** close completion UIs */
-    internal func closePrivateActivityCompletion() {
+    @objc internal func closePrivateActivityCompletion() {
         RappleActivityIndicatorView.stopPrivateAnimating(showCompletion: false, completionLabel: nil, completionTimeout: 0)
     }
     
@@ -385,7 +385,7 @@ open class RappleActivityIndicatorView: NSObject {
         var c = keyWindow.center; c.y -= cd
         
         // add activity indicator
-        activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
         activityIndicator?.color = getColor(key: RappleTintColorKey)
         activityIndicator?.startAnimating()
         backgroundView?.addSubview(activityIndicator!)
@@ -435,7 +435,7 @@ open class RappleActivityIndicatorView: NSObject {
         contentSqure?.layer.masksToBounds = true
         contentSqure?.center = keyWindow.center
         backgroundView?.addSubview(contentSqure!)
-        backgroundView?.sendSubview(toBack: contentSqure!)
+        backgroundView?.sendSubviewToBack(contentSqure!)
         
         completionPoint = activityIndicator!.center
         completionPoint.x = contentSqure!.center.x
@@ -487,7 +487,7 @@ open class RappleActivityIndicatorView: NSObject {
             return CGSize.zero
         }
         let nss = text! as NSString
-        let size = nss.boundingRect(with: CGSize(width: 220, height: 9999), options: .usesLineFragmentOrigin, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 16)], context: nil).size
+        let size = nss.boundingRect(with: CGSize(width: 220, height: 9999), options: .usesLineFragmentOrigin, attributes: convertToOptionalNSAttributedStringKeyDictionary([convertFromNSAttributedStringKey(NSAttributedString.Key.font): UIFont.systemFont(ofSize: 16)]), context: nil).size
         var h = size.height
         if h > 100 {
             h = 100
@@ -509,11 +509,11 @@ open class RappleActivityIndicatorView: NSObject {
         
         var center = keyWindow.center; center.y -= cd
         
-        let circle1 = UIBezierPath(arcCenter: center, radius: r, startAngle: CGFloat(-M_PI_2), endAngle:CGFloat(3 * M_PI_2), clockwise: true)
+        let circle1 = UIBezierPath(arcCenter: center, radius: r, startAngle: CGFloat(-Double.pi/2), endAngle:CGFloat(3 * (Double.pi/2)), clockwise: true)
         circularActivity1 = rotatingCircle(circle: circle1)
         
         if twoSided == true {
-            let circle2 = UIBezierPath(arcCenter: center, radius: r, startAngle: CGFloat(M_PI_2), endAngle:CGFloat(5 * M_PI_2), clockwise: true)
+            let circle2 = UIBezierPath(arcCenter: center, radius: r, startAngle: CGFloat(Double.pi/2), endAngle:CGFloat(5 * (Double.pi/2)), clockwise: true)
             circularActivity2 = rotatingCircle(circle: circle2)
         }
         completionPoint = center
@@ -536,7 +536,7 @@ open class RappleActivityIndicatorView: NSObject {
         strokeEnd.fromValue = 0.0
         strokeEnd.toValue = 1.0
         strokeEnd.duration = 1.0
-        strokeEnd.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        strokeEnd.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
         
         let endGroup = CAAnimationGroup()
         endGroup.duration = 1.3
@@ -548,7 +548,7 @@ open class RappleActivityIndicatorView: NSObject {
         strokeStart.fromValue = 0.0
         strokeStart.toValue = 1.0
         strokeStart.duration = 1.0
-        strokeStart.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        strokeStart.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
         
         let startGroup = CAAnimationGroup()
         startGroup.duration = 1.3
@@ -571,7 +571,7 @@ open class RappleActivityIndicatorView: NSObject {
             let cd = (h - size.height - 10) / 2
             
             var center = keyWindow.center; center.y -= cd
-            let circle = UIBezierPath(arcCenter: center, radius: (r - 5), startAngle: CGFloat(-M_PI_2), endAngle:CGFloat(2 * M_PI - M_PI_2), clockwise: true)
+            let circle = UIBezierPath(arcCenter: center, radius: (r - 5), startAngle: CGFloat(-Double.pi/2), endAngle:CGFloat(2 * Double.pi - (Double.pi/2)), clockwise: true)
             
             progressLayerBG = CAShapeLayer()
             progressLayerBG?.path = circle.cgPath
@@ -627,7 +627,7 @@ extension RappleActivityIndicatorView {
         }
     }
     /** re-create after orientation change */
-    internal func orientationChanged() {
+    @objc internal func orientationChanged() {
         RappleActivityIndicatorView.sharedInstance.createActivityIndicator()
     }
     /** clear all UIs */
@@ -651,4 +651,15 @@ extension RappleActivityIndicatorView {
     fileprivate var keyWindow: UIWindow {
         return UIApplication.shared.keyWindow!
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
 }

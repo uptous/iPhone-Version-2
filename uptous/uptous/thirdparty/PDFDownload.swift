@@ -46,7 +46,7 @@ class PDFDownload: NSObject {
                         }
                     }
                 }else {
-                    print("Failure: \(error?.localizedDescription)");
+                    print("Failure: \(error?.localizedDescription ?? "Failed to Download PDF")");
                     completion(nil, error)
                 }
             })

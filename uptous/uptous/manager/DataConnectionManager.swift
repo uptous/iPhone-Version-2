@@ -36,19 +36,22 @@ class DataConnectionManager: NSObject {
                  failure(error)
                  }*/
                 
-                let message : String
-                print(response.response?.statusCode)
+                //let message : String
+                print(response)
                 if let httpStatusCode = response.response?.statusCode {
-                    switch(httpStatusCode) {
-                    case 400:
-                        message = "Username or password not provided."
-                    case 401:
-                        message = "Incorrect password for user '."
+                    if (httpStatusCode == 401) {
                         self.relogin()
-                        
-                    default :
-                        message = ""
                     }
+                    //switch(httpStatusCode) {
+                    //case 400:
+                        //message = "Username or password not provided."
+                    //case 401:
+                        //message = "Incorrect password for user '."
+                        //self.relogin()
+                        
+                    //default :
+                        //message = ""
+                    //}
                 } else {
                     if response.result.isFailure {
                         let error : Error = response.result.error!
@@ -77,7 +80,7 @@ class DataConnectionManager: NSObject {
             case .success(_):
                 if response.result.isSuccess {
                     let result = response.result.value 
-                    success(result)
+                    success(result ?? "Success")
                 }
                 break
                 
@@ -87,19 +90,21 @@ class DataConnectionManager: NSObject {
                     failure(error)
                 }*/
                 
-                let message : String
-                print(response.response?.statusCode)
+                //let message : String
                 if let httpStatusCode = response.response?.statusCode {
-                    switch(httpStatusCode) {
-                    case 400:
-                        message = "Username or password not provided."
-                    case 401:
-                        message = "Incorrect password for user '."
+                    if (httpStatusCode == 401) {
                         self.relogin()
-                        
-                    default :
-                        message = ""
                     }
+                    //switch(httpStatusCode) {
+                    //case 400:
+                    //    message = "Username or password not provided."
+                    //case 401:
+                    //    message = "Incorrect password for user '."
+                    //    self.relogin()
+                    //
+                    //default :
+                    //    message = ""
+                    //}
                 } else {
                     if response.result.isFailure {
                         let error : Error = response.result.error!
@@ -115,8 +120,8 @@ class DataConnectionManager: NSObject {
     
     class func relogin() {
         
-        let alert = UIAlertController(title: "Alert", message: "Password changed. Please login again", preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (alert) in
+        let alert = UIAlertController(title: "Alert", message: "Password changed. Please login again", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (alert) in
            // let login = LoginViewController(nibName: "LoginViewController", bundle: nil)
             
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -138,24 +143,26 @@ class DataConnectionManager: NSObject {
             case .success(_):
                 if response.result.isSuccess {
                     let result = response.result.value
-                    success(result)
+                    success(result ?? "Success")
                 }
                 break
                 
             case .failure(_):
-                let message : String
-                print(response.response?.statusCode)
+                //let message : String
                 if let httpStatusCode = response.response?.statusCode {
-                    switch(httpStatusCode) {
-                    case 400:
-                        message = "Username or password not provided."
-                    case 401:
-                        message = "Incorrect password for user '."
+                    if (httpStatusCode == 401) {
                         self.relogin()
-                        
-                    default :
-                        message = ""
                     }
+                    //switch(httpStatusCode) {
+                    //case 400:
+                    //    message = "Username or password not provided."
+                    //case 401:
+                    //    message = "Incorrect password for user '."
+                    //    self.relogin()
+                    //
+                    //default :
+                    //    message = ""
+                    //}
                 } else {
                     if response.result.isFailure {
                         let error : Error = response.result.error!
@@ -181,20 +188,14 @@ class DataConnectionManager: NSObject {
         
        // let imageData = UIImageJPEGRepresentation(Utility.scaleUIImageToSize(img, size: CGSize(width: 120, height: 120)), 0.6)?.base64EncodedString()
         
-        let imageData = UIImageJPEGRepresentation(img, 0.9)?.base64EncodedString()//UIImageJPEGRepresentation(0.9, img)?.base64EncodedString()
+        let imageData = img.jpegData(compressionQuality: 0.9)?.base64EncodedString()//UIImageJPEGRepresentation(0.9, img)?.base64EncodedString()
         
-        print(imageData?.description)
         let stringPost = "photo=" + ("\(imageData!)")
-        
-        
-        
-        
+    
         if imageData != nil{
             let api1 = api.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-            let urlpost = NSURL(string: api1!)
-            let request = NSMutableURLRequest(url: urlpost as! URL)
-            
-            
+            let urlpost = URL(string: api1!)
+            let request = NSMutableURLRequest(url: urlpost!)
             
             request.httpMethod = "POST"
             
@@ -222,12 +223,12 @@ class DataConnectionManager: NSObject {
             
             let task = URLSession.shared.dataTask(with: request as URLRequest, completionHandler: {(data,response,error)->Void in
                 //using breaking point to show data
-                print(response)
-                let strData = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-                print("Body: \(strData)")
+                print(response ?? "response not found")
+                //let strData = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
+                //("Body: \(strData)")
                 
                 //let data1 = text.data(using: .utf8)
-                let t1 = try! JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any]
+                _ = try! JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any]
                 //success(t1!)
             })
             task.resume()
@@ -248,12 +249,12 @@ class DataConnectionManager: NSObject {
         let base64Credentials = credentialData.base64EncodedString(options: [])
         let api1 = api.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         
-        let urlpost = NSURL(string: api1!)
+        let urlpost = URL(string: api1!)
         
         ActivityIndicator.show()
         let data = stringPost.data(using: String.Encoding.utf8)
         
-        let request = NSMutableURLRequest(url: urlpost as! URL)
+        let request = NSMutableURLRequest(url: urlpost!)
         
         let jsonString = NSString(data: data!, encoding:String.Encoding.utf8.rawValue)
         request.httpBody = jsonString?.data(using: String.Encoding.utf8.rawValue, allowLossyConversion: true)
@@ -275,7 +276,7 @@ class DataConnectionManager: NSObject {
             }
             
             let strData = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-            print("Body: \(strData)")
+            print("Body: \(strData ?? "Failed to print strData")")
             
             let result = try! JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any]
             success(result!)

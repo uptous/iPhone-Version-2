@@ -64,7 +64,7 @@ class Utility: NSObject {
             cString.remove(at: cString.startIndex)
         }
         
-        if ((cString.characters.count) != 6) {
+        if ((cString.count) != 6) {
             return UIColor.gray
         }
         
@@ -179,7 +179,7 @@ class Utility: NSObject {
     
         let candidateURL:URL=URL(string: urlString)!
         
-        if (((candidateURL.scheme)?.characters.count)! > 0 && (candidateURL.host!).characters.count > 0)
+        if (!((candidateURL.scheme)?.isEmpty)! && !(candidateURL.host!).isEmpty)
         {
             return true
         }
@@ -192,7 +192,7 @@ class Utility: NSObject {
         //--
         let range:NSRange = NSRange(location: 0, length: attString.length);
         //--
-        attString.addAttribute(NSFontAttributeName, value: lbl.font, range: range);
+        attString.addAttribute(NSAttributedString.Key.font, value: lbl.font, range: range);
     
         let rect:CGRect = attString.boundingRect(with: CGSize(width: width, height: 3000), options: NSStringDrawingOptions.usesLineFragmentOrigin, context: nil)
         return CGSize(width: width, height: rect.size.height);
@@ -624,7 +624,7 @@ class Utility: NSObject {
               let calender = Calendar.current
               let componentSec =  (calender as NSCalendar).components(NSCalendar.Unit.second, from:fromdate, to: currentdate, options: NSCalendar.Options(rawValue:0))
             
-            NSLog("componentsecond is\(componentSec.second)")
+            NSLog("componentsecond is\(componentSec.second ?? 0)")
             
             if componentSec.second! <= 0
             {

@@ -7,7 +7,6 @@
 //
 
 import XCTest
-@testable import uptous
 
 class uptousTests: XCTestCase {
     

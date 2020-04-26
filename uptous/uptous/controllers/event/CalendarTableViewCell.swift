@@ -43,7 +43,7 @@ class CalendarTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         self.clipsToBounds = true
-        Custom.cornerView(cellView)
+        _ = Custom.cornerView(cellView)
         // Initialization code
         locationBtn.contentHorizontalAlignment = .left
         
@@ -51,7 +51,7 @@ class CalendarTableViewCell: UITableViewCell {
         descTableView.register(signUPNib, forCellReuseIdentifier: signUpCellConstants.cellIdentifier as String)
         
         descTableView.estimatedRowHeight = 45
-        descTableView.rowHeight = UITableViewAutomaticDimension
+        descTableView.rowHeight = UITableView.automaticDimension
     }
     
     func heightForView(text:String, font:UIFont, width:CGFloat) -> CGFloat{
@@ -102,8 +102,8 @@ class CalendarTableViewCell: UITableViewCell {
         //descriptionTextView.text = data.eventDescription!
         let startDate = Custom.dayStringFromTime2(data.startTime!)
         let endDate = Custom.dayStringFromTime2(data.endTime!)
-        let startTime = Custom.dayStringFromTime4(data.startTime!)
-        let endTime = Custom.dayStringFromTime4(data.endTime!)
+        // let startTime = Custom.dayStringFromTime4(data.startTime!)
+        // let endTime = Custom.dayStringFromTime4(data.endTime!)
         
         let startDate1 = Custom.dayStringFromTime3(data.startTime!)
         let endDate1 = Custom.dayStringFromTime3(data.endTime!)
@@ -131,7 +131,7 @@ class CalendarTableViewCell: UITableViewCell {
         //let address = "\(data.address!), " + "\(data.city!), " + "\(data.state!), " + "\(data.country!), " + "\(data.zipCode!)"
         //locationBtn.setTitle(data.location!, for: .normal)
        
-        if (desc.characters.count) > 0 {
+        if (desc.count) > 0 {
             let font = UIFont(name: "Helvetica", size: 14.0)
             //descLabel.text = data!.notes!
             let height = heightForView(text: desc, font: font!, width: descTableView.frame.size.width)

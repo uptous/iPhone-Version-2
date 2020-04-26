@@ -37,7 +37,9 @@ class CollectionCell: UICollectionViewCell {
         let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
             self.albumImgView.image = image
         }
-        albumImgView.sd_setImage(with: URL(string:data.thumb!) as URL!, completed:block)
+        //albumImgView.sd_setImage(with: URL(string:data.thumb!) as URL!, completed:block)
+        let url = URL(string: data.thumb!)
+        albumImgView.sd_setImage(with: url, completed: block)
     }
     
     func fileUpdateView(_ data: Files) {

@@ -65,13 +65,13 @@ class InviteViewController: GeneralViewController,InviteCellDelegate {
             (response) -> Void in
             print(response)
             
-            print(response["status"])
+            print(response["status"]!)
             if response["status"] as? String == "0" {
                 self.fetchInviteList()
-                Utility.showAlertWithoutCancel("Alert", message: "You are successfully Join This Community.")
+                Utility.showAlertWithoutCancel("Alert", message: "You Successfully Joined This Community.")
             }else if response["status"] as? String == "1" {
-                let alert = UIAlertController(title: "Alert", message: response["message"] as? String, preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                let alert = UIAlertController(title: "Alert", message: response["message"] as? String, preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
         })
@@ -118,7 +118,7 @@ extension InviteViewController: UITableViewDataSource,UITableViewDelegate {
         cell.delegate = self
         let data = inviteList[(indexPath as NSIndexPath).row]
         
-        var tblView = UIView(frame: CGRect.zero)
+        let tblView = UIView(frame: CGRect.zero)
         tableView.tableFooterView = tblView
         tableView.tableFooterView?.isHidden = true
         tableView.backgroundColor = UIColor.clear

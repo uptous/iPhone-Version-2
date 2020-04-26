@@ -40,10 +40,10 @@ class BaseUIButton: UIButton {
         super.awakeFromNib()
         //self.updateView()
         self.isExclusiveTouch = true;
-        self.imageView?.contentMode = UIViewContentMode.scaleAspectFit;
+        self.imageView?.contentMode = UIView.ContentMode.scaleAspectFit;
         
         for view:UIView in self.subviews {
-            view.contentMode = UIViewContentMode.scaleAspectFit;
+            view.contentMode = UIView.ContentMode.scaleAspectFit;
         }
     }
     

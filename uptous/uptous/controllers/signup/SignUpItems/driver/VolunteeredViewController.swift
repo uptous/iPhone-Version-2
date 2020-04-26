@@ -66,7 +66,7 @@ class VolunteeredViewController: GeneralViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         tableView.estimatedRowHeight = 95
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
     }
     
     //MARK:- Delete
@@ -142,7 +142,6 @@ extension VolunteeredViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "VolunteeredCell") as! VolunteeredCell
         let data = self.data.volunteers![(indexPath as NSIndexPath).row] as? NSDictionary
-        print(data)
         cell.updateData(data!)
         
         return cell

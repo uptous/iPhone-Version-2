@@ -31,10 +31,10 @@ class PersonalAnnouncementCell: UITableViewCell {
     
     func attributedString(_ str: String) -> NSAttributedString? {
         let attributes = [
-            NSForegroundColorAttributeName : UIColor.black,
-            NSUnderlineStyleAttributeName : NSUnderlineStyle.styleSingle.rawValue
+            convertFromNSAttributedStringKey(NSAttributedString.Key.foregroundColor) : UIColor.black,
+            convertFromNSAttributedStringKey(NSAttributedString.Key.underlineStyle) : NSUnderlineStyle.single.rawValue
         ] as [String : Any]
-        let attributedString = NSAttributedString(string: str, attributes: attributes)
+        let attributedString = NSAttributedString(string: str, attributes: convertToOptionalNSAttributedStringKeyDictionary(attributes))
         return attributedString
     }
     
@@ -53,7 +53,9 @@ class PersonalAnnouncementCell: UITableViewCell {
             let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
                 self.ownerPhotoImgView.image = image
             }
-            ownerPhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
+            //ownerPhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
+            let url = URL(string: avatarUrl)
+            ownerPhotoImgView.sd_setImage(with: url, completed: block)
             
         }else {
             ownerPhotoImgView.image = nil
@@ -80,4 +82,15 @@ class PersonalAnnouncementCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

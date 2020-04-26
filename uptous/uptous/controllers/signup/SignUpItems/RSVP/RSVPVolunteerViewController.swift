@@ -65,7 +65,7 @@ class RSVPVolunteerViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         tableView.estimatedRowHeight = 95
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
     }
     
     //MARK:- Delete
@@ -144,7 +144,6 @@ extension RSVPVolunteerViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RSVPVolunteerCell") as! RSVPVolunteerCell
         let data = self.data.volunteers![(indexPath as NSIndexPath).row] as? NSDictionary
-        print(data)
         cell.updateData(data!, type: rsvpType!)
         
         return cell

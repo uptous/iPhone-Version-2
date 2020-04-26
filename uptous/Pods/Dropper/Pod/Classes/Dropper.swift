@@ -167,7 +167,7 @@ public class Dropper: UIView {
         TableMenu.register(DropperCell.self, forCellReuseIdentifier: "cell")
         // Styling
         TableMenu.backgroundColor = UIColor.lightGray
-        TableMenu.separatorStyle = UITableViewCellSeparatorStyle.none
+        TableMenu.separatorStyle = UITableViewCell.SeparatorStyle.none
         TableMenu.bounces = false
         if (trimCorners) {
             TableMenu.layer.cornerRadius = 9.0

@@ -161,7 +161,7 @@ open class LKPullToLoadMore {
             loadMoreIndicator.image = drawReloadIndicator(wedgeAngle: angle)
 
             if tableView.contentInset.bottom != 0 {
-                tableView.contentInset = UIEdgeInsetsMake(tableView.contentInset.top, tableView.contentInset.left, 0, tableView.contentInset.right)
+                tableView.contentInset = UIEdgeInsets.init(top: tableView.contentInset.top, left: tableView.contentInset.left, bottom: 0, right: tableView.contentInset.right)
             }
         }
     }
@@ -227,9 +227,9 @@ open class LKPullToLoadMore {
             UIView.animate(
                 withDuration: 0.4,
                 delay: 0.0,
-                options: UIViewAnimationOptions.curveLinear,
+                options: UIView.AnimationOptions.curveLinear,
                 animations: {
-                    self.loadMoreIndicator.transform = self.loadMoreIndicator.transform.rotated(by: CGFloat(-M_PI_2))
+                    self.loadMoreIndicator.transform = self.loadMoreIndicator.transform.rotated(by: CGFloat(-Double.pi/2))
                 },
                 completion: { finished in
                     self.animateLoadingIndicator()
@@ -268,7 +268,7 @@ open class LKPullToLoadMore {
         //// Oval Drawing
         let ovalRect = CGRect(x: 0, y: 0, width: height, height: height)
         let ovalPath = UIBezierPath()
-        ovalPath.addArc(withCenter: CGPoint(x: ovalRect.midX, y: ovalRect.midY), radius: ovalRect.width / 2, startAngle: 0 * CGFloat(M_PI)/180, endAngle: -wedgeAngle * CGFloat(M_PI)/180, clockwise: true)
+        ovalPath.addArc(withCenter: CGPoint(x: ovalRect.midX, y: ovalRect.midY), radius: ovalRect.width / 2, startAngle: 0 * CGFloat(Double.pi)/180, endAngle: -wedgeAngle * CGFloat(Double.pi)/180, clockwise: true)
         ovalPath.addLine(to: CGPoint(x: ovalRect.midX, y: ovalRect.midY))
         ovalPath.close()
 

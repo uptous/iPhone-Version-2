@@ -68,7 +68,7 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
         imagePicker.delegate = self
         addNewAlbumButton.isEnabled = false
         fetchCommunity()
-        let tap : UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ImagePostViewController.dismissKeyboard))
+        let _ : UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ImagePostViewController.dismissKeyboard))
          //NotificationCenter.default.addObserver(self, selector: #selector(ImagePostViewController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         //NotificationCenter.default.addObserver(self, selector: #selector(ImagePostViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
@@ -77,7 +77,7 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
     }
     
     //MARK:- Dismiss Keyboard
-    func dismissKeyboard(){
+    @objc func dismissKeyboard(){
         //view.endEditing(true)
     }
     
@@ -107,8 +107,8 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
                     })
                 }else {
                     let msg = response["message"] as? String
-                    let alert = UIAlertController(title: "Alert", message: msg, preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                    let alert = UIAlertController(title: "Alert", message: msg, preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                 }
             })
@@ -157,8 +157,8 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
                 
             }else {
                 let msg = response["message"] as? String
-                let alert = UIAlertController(title: "Alert", message: msg, preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                let alert = UIAlertController(title: "Alert", message: msg, preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
         })
@@ -173,8 +173,8 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
                 }
                 
             }else {
-                let alert = UIAlertController(title: "Alert", message: "Please fill in all fields", preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+                let alert = UIAlertController(title: "Alert", message: "Please fill in all fields", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
             
@@ -218,7 +218,7 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
             communityAlbumTableView.register(DropperCell.self, forCellReuseIdentifier: "cell")
             // Styling
             communityAlbumTableView.backgroundColor = UIColor.white
-            communityAlbumTableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
+            communityAlbumTableView.separatorStyle = UITableViewCell.SeparatorStyle.singleLine
             communityAlbumTableView.bounces = false
             communityAlbumTableView.layer.cornerRadius = 9.0
             communityAlbumTableView.clipsToBounds = true
@@ -287,7 +287,7 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
             communityTableView.register(DropperCell.self, forCellReuseIdentifier: "cell")
             // Styling
             communityTableView.backgroundColor = UIColor.white
-            communityTableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
+            communityTableView.separatorStyle = UITableViewCell.SeparatorStyle.singleLine
             communityTableView.bounces = false
             communityTableView.layer.cornerRadius = 9.0
             communityTableView.clipsToBounds = true
@@ -304,31 +304,34 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
     }
     
     //MARK: - Delegates
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
         
         var chosenImage = UIImage()
-        chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
+        chosenImage = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as! UIImage //2
         //self.displayImage.contentMode = .scaleAspectFill //3
         //let fixOrientationImage=chosenImage.fixOrientation1()
         //self.displayImage.image = fixOrientationImage
         //chosenImage = fixOrientationImage
 
         if selectedImg == 0 {
-            imageData = UIImageJPEGRepresentation(chosenImage, 0.5)?.base64EncodedString()
+            imageData = chosenImage.jpegData(compressionQuality: 0.5)?.base64EncodedString()
             self.displayImage.image = chosenImage
             addMoreButton.isEnabled = true
             //albumView2.isHidden = true
         }else if selectedImg == 1 {
-            imageData1 = UIImageJPEGRepresentation(chosenImage, 0.5)?.base64EncodedString()
+            imageData1 = chosenImage.jpegData(compressionQuality: 0.5)?.base64EncodedString()
             self.displayImage1.image = chosenImage
         }else if selectedImg == 2 {
-            imageData2 = UIImageJPEGRepresentation(chosenImage, 0.5)?.base64EncodedString()
+            imageData2 = chosenImage.jpegData(compressionQuality: 0.5)?.base64EncodedString()
             self.displayImage2.image = chosenImage
         }else if selectedImg == 3 {
-            imageData3 = UIImageJPEGRepresentation(chosenImage, 0.5)?.base64EncodedString()
+            imageData3 = chosenImage.jpegData(compressionQuality: 0.5)?.base64EncodedString()
             self.displayImage3.image = chosenImage
         }else if selectedImg == 4 {
-            imageData4 = UIImageJPEGRepresentation(chosenImage, 0.5)?.base64EncodedString()
+            imageData4 = chosenImage.jpegData(compressionQuality: 0.5)?.base64EncodedString()
             self.displayImage4.image = chosenImage
         }
         
@@ -377,7 +380,7 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
     
     func keyboardWillShow(notification: NSNotification) {
         
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+        if ((notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
             if self.view.frame.origin.y == 0{
                 self.view.frame.origin.y -= 50
             }
@@ -386,7 +389,7 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+        if ((notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
             if self.view.frame.origin.y != 0{
                 self.view.frame.origin.y += 50
             }
@@ -404,7 +407,7 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
      func takeNewPicture() {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             imagePicker.allowsEditing = false
-            imagePicker.sourceType = UIImagePickerControllerSourceType.camera
+            imagePicker.sourceType = UIImagePickerController.SourceType.camera
             imagePicker.cameraCaptureMode = .photo
             imagePicker.modalPresentationStyle = .fullScreen
             present(imagePicker,animated: true,completion: nil)
@@ -554,7 +557,7 @@ extension UIImage {
     func fixOrientation1() -> UIImage {
         
         // No-op if the orientation is already correct
-        if ( self.imageOrientation == UIImageOrientation.up ) {
+        if ( self.imageOrientation == UIImage.Orientation.up ) {
             return self;
         }
         
@@ -562,27 +565,27 @@ extension UIImage {
         // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
         var transform: CGAffineTransform = CGAffineTransform.identity
         
-        if ( self.imageOrientation == UIImageOrientation.down || self.imageOrientation == UIImageOrientation.downMirrored ) {
+        if ( self.imageOrientation == UIImage.Orientation.down || self.imageOrientation == UIImage.Orientation.downMirrored ) {
             transform = transform.translatedBy(x: self.size.width, y: self.size.height)
-            transform = transform.rotated(by: CGFloat(M_PI))
+            transform = transform.rotated(by: CGFloat(Double.pi))
         }
         
-        if ( self.imageOrientation == UIImageOrientation.left || self.imageOrientation == UIImageOrientation.leftMirrored ) {
+        if ( self.imageOrientation == UIImage.Orientation.left || self.imageOrientation == UIImage.Orientation.leftMirrored ) {
             transform = transform.translatedBy(x: self.size.width, y: 0)
-            transform = transform.rotated(by: CGFloat(M_PI_2))
+            transform = transform.rotated(by: CGFloat(Double.pi/2))
         }
         
-        if ( self.imageOrientation == UIImageOrientation.right || self.imageOrientation == UIImageOrientation.rightMirrored ) {
+        if ( self.imageOrientation == UIImage.Orientation.right || self.imageOrientation == UIImage.Orientation.rightMirrored ) {
             transform = transform.translatedBy(x: 0, y: self.size.height);
-            transform = transform.rotated(by: CGFloat(-M_PI_2));
+            transform = transform.rotated(by: CGFloat(-Double.pi/2));
         }
         
-        if ( self.imageOrientation == UIImageOrientation.upMirrored || self.imageOrientation == UIImageOrientation.downMirrored ) {
+        if ( self.imageOrientation == UIImage.Orientation.upMirrored || self.imageOrientation == UIImage.Orientation.downMirrored ) {
             transform = transform.translatedBy(x: self.size.width, y: 0)
             transform = transform.scaledBy(x: -1, y: 1)
         }
         
-        if ( self.imageOrientation == UIImageOrientation.leftMirrored || self.imageOrientation == UIImageOrientation.rightMirrored ) {
+        if ( self.imageOrientation == UIImage.Orientation.leftMirrored || self.imageOrientation == UIImage.Orientation.rightMirrored ) {
             transform = transform.translatedBy(x: self.size.height, y: 0);
             transform = transform.scaledBy(x: -1, y: 1);
         }
@@ -596,10 +599,10 @@ extension UIImage {
         
         ctx.concatenate(transform)
         
-        if ( self.imageOrientation == UIImageOrientation.left ||
-            self.imageOrientation == UIImageOrientation.leftMirrored ||
-            self.imageOrientation == UIImageOrientation.right ||
-            self.imageOrientation == UIImageOrientation.rightMirrored ) {
+        if ( self.imageOrientation == UIImage.Orientation.left ||
+            self.imageOrientation == UIImage.Orientation.leftMirrored ||
+            self.imageOrientation == UIImage.Orientation.right ||
+            self.imageOrientation == UIImage.Orientation.rightMirrored ) {
             ctx.draw(self.cgImage!, in: CGRect(x: 0,y: 0,width: self.size.height,height: self.size.width))
         } else {
             ctx.draw(self.cgImage!, in: CGRect(x: 0,y: 0,width: self.size.width,height: self.size.height))
@@ -613,7 +616,7 @@ extension UIImage {
 extension Data {
     var attributedString: NSAttributedString? {
         do {
-            return try NSAttributedString(data: self, options:[NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
+            return try NSAttributedString(data: self, options:convertToNSAttributedStringDocumentReadingOptionKeyDictionary([convertFromNSAttributedStringDocumentAttributeKey(NSAttributedString.DocumentAttributeKey.documentType): convertFromNSAttributedStringDocumentType(NSAttributedString.DocumentType.html), convertFromNSAttributedStringDocumentAttributeKey(NSAttributedString.DocumentAttributeKey.characterEncoding): String.Encoding.utf8.rawValue]), documentAttributes: nil)
         } catch {
             print(error)
         }
@@ -626,3 +629,28 @@ extension String {
     }
 }
 
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToNSAttributedStringDocumentReadingOptionKeyDictionary(_ input: [String: Any]) -> [NSAttributedString.DocumentReadingOptionKey: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.DocumentReadingOptionKey(rawValue: key), value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringDocumentAttributeKey(_ input: NSAttributedString.DocumentAttributeKey) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringDocumentType(_ input: NSAttributedString.DocumentType) -> String {
+	return input.rawValue
+}

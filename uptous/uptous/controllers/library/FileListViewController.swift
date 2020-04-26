@@ -49,7 +49,7 @@ class FileListViewController: GeneralViewController,ReaderViewControllerDelegate
         NSLog("Webview load had finished")
     }// here hide it
     
-    func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
+    func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
         ActivityIndicator.hide()
         
         NSLog("Webview load had finished")

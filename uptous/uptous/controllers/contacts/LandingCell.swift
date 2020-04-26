@@ -26,7 +26,7 @@ class LandingCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        Custom.fullCornerView(ownerView)
+        _ = Custom.fullCornerView(ownerView)
     }
     
     func updateView(_ data: Contacts) {
@@ -42,21 +42,21 @@ class LandingCell: UITableViewCell {
         if data.firstName != "" && data.lastName != "" {
             nameLbl.text = ("\(data.lastName!),") + (" \(data.firstName!)")//("\(data.firstName!)") + (" \(data.lastName!)")
             
-            let firstName = data.firstName!.capitalized.characters.first
-            let secondName = data.lastName!.capitalized.characters.first
-            let resultString = ("\(secondName!)") + ("\(firstName!)") //("\(firstName!)") + ("\(secondName!)")
+            let firstName = data.firstName!.capitalized.prefix(1)
+            let secondName = data.lastName!.capitalized.prefix(1)
+            let resultString = ("\(secondName)") + ("\(firstName)") //("\(firstName!)") + ("\(secondName!)")
             ownerNameLbl.text = resultString
             
         }else if data.firstName != "" {
             nameLbl.text = ("\(data.firstName!)")
-            let firstName = data.firstName!.capitalized.characters.first
-            let resultString = ("\(firstName!)")
+            let firstName = data.firstName!.capitalized.prefix(1)
+            let resultString = ("\(firstName)")
             ownerNameLbl.text = resultString
             
         }else if data.lastName != "" {
             nameLbl.text = (" \(data.lastName!)")
-            let secondName = data.lastName!.capitalized.characters.first
-            let resultString = ("\(secondName!)")
+            let secondName = data.lastName!.capitalized.prefix(1)
+            let resultString = ("\(secondName)")
             ownerNameLbl.text = resultString
         }else {
             nameLbl.text = "- -"
@@ -85,7 +85,9 @@ class LandingCell: UITableViewCell {
                     self.ownerPhotoImgView.image = image
                     self.ownerPhotoImgView.setShowActivityIndicator(false)
                 }
-                ownerPhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
+                let url = URL(string: avatarUrl)
+                ownerPhotoImgView.sd_setImage(with: url, completed: block)
+                //ownerPhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
             }
         }else {
             let color1 = Utility.hexStringToUIColor(hex: data.memberBackgroundColor!)

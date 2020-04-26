@@ -74,7 +74,7 @@ class MessagePostViewController: UIViewController,DropperDelegate {
             communityTableView.register(DropperCell.self, forCellReuseIdentifier: "cell")
             // Styling
             communityTableView.backgroundColor = UIColor.lightGray
-            communityTableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
+            communityTableView.separatorStyle = UITableViewCell.SeparatorStyle.singleLine
             communityTableView.bounces = false
             communityTableView.layer.cornerRadius = 9.0
             communityTableView.clipsToBounds = true
@@ -108,14 +108,14 @@ class MessagePostViewController: UIViewController,DropperDelegate {
                 }else {
                     //Utility.showAlertWithoutCancel("Alert", message: "Your Post is not Uploaded.")
                     let msg = response["message"] as? String
-                    let alert = UIAlertController(title: "Alert", message: msg, preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                    let alert = UIAlertController(title: "Alert", message: msg, preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                 }
             })
         }else {
-            let alert = UIAlertController(title: "Alert", message: "Field missing", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Field missing", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -151,9 +151,9 @@ extension MessagePostViewController: UITextViewDelegate {
         toolBar.barStyle = UIBarStyle.default
         toolBar.isTranslucent = true
         toolBar.tintColor = UIColor(red: 76/255, green: 217/255, blue: 100/255, alpha: 1)
-        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.done, target: self, action: #selector(MessagePostViewController.donePressed))
-        let cancelButton = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: self, action: #selector(ProfileViewController.cancelPressed))
-        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItem.Style.done, target: self, action: #selector(MessagePostViewController.donePressed))
+        let cancelButton = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: self, action: #selector(ProfileViewController.cancelPressed))
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
         toolBar.setItems([cancelButton, spaceButton, doneButton], animated: false)
         toolBar.isUserInteractionEnabled = true
         toolBar.sizeToFit()
@@ -161,7 +161,7 @@ extension MessagePostViewController: UITextViewDelegate {
         textView.delegate = self
         textView.inputAccessoryView = toolBar
     }
-    func donePressed(){
+    @objc func donePressed(){
         view.endEditing(true)
     }
     func cancelPressed(){

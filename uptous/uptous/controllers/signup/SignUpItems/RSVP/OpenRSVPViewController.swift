@@ -74,9 +74,9 @@ class OpenRSVPViewController: GeneralViewController {
         textField_comments.placeholder = "Type comments here.."
         // Observer Keyboard
         let center: NotificationCenter = NotificationCenter.default
-        center.addObserver(self, selector: #selector(OpenRSVPViewController.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        center.addObserver(self, selector: #selector(OpenRSVPViewController.keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
-        center.addObserver(self, selector: #selector(OpenRSVPViewController.keyboardDidChangeFrame(_:)), name: NSNotification.Name.UIKeyboardDidChangeFrame, object: nil)
+        center.addObserver(self, selector: #selector(OpenRSVPViewController.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        center.addObserver(self, selector: #selector(OpenRSVPViewController.keyboardWillHide(_:)), name: UIResponder.keyboardDidHideNotification, object: nil)
+        center.addObserver(self, selector: #selector(OpenRSVPViewController.keyboardDidChangeFrame(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
         
         let tapRecognizer = UITapGestureRecognizer(target: self , action: #selector(OpenRSVPViewController.HideTextKeyboard(_:)))
         tableView.addGestureRecognizer(tapRecognizer)
@@ -100,7 +100,7 @@ class OpenRSVPViewController: GeneralViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         tableView.estimatedRowHeight = 110
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
     }
     
     //Post Comment
@@ -123,7 +123,7 @@ class OpenRSVPViewController: GeneralViewController {
                 
                 if self.postCounter == 3 {
                     let msg = response["message"] as? String ?? ""
-                    if msg != "" || msg != nil {
+                    if msg != "" {
                         self.showAlertWithoutCancel(title: "Alert", message: msg)
                     }
                 }else {
@@ -157,22 +157,22 @@ class OpenRSVPViewController: GeneralViewController {
             
             let datas = (response as? NSArray)!
             let dic = datas.object(at: 0) as? NSDictionary
-            let sheet = SignupSheet(info: dic)
+            _ = SignupSheet(info: dic)
             let item = (dic?.object(forKey: "items")) as! NSArray
-            let dic1 = item.object(at: 0) as? NSDictionary
+            _ = item.object(at: 0) as? NSDictionary
             
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
     
     
     //MARK:- Keyboard
-    func HideTextKeyboard(_ sender: UITapGestureRecognizer?) {
+    @objc func HideTextKeyboard(_ sender: UITapGestureRecognizer?) {
         //textField_comments.resignFirstResponder()
         placeHolderText = "Type comments here.."
         textView_comments.text = placeHolderText
@@ -206,7 +206,7 @@ class OpenRSVPViewController: GeneralViewController {
             let numberOfRows = (self.list.count) - self.tableView.numberOfRows(inSection: numberOfSections-1)
             if numberOfRows > 0 {
                 let indexPath = IndexPath(row: 0, section: numberOfRows)
-                self.tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: animated)
+                self.tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.bottom, animated: animated)
             }
         })
     }
@@ -246,12 +246,12 @@ class OpenRSVPViewController: GeneralViewController {
     }
     
     // MARK: - UIKeyBoard Delegate
-    func keyboardWillShow(_ notification: Notification) {
+    @objc func keyboardWillShow(_ notification: Notification) {
         let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let keyboardSize = (info[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         let keyboardHeight:CGFloat = keyboardSize.height
         
-        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIViewAnimationOptions(), animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIView.AnimationOptions(), animations: {
             
             self.commentsBoxBottomSpacing.constant = keyboardHeight
             
@@ -260,9 +260,9 @@ class OpenRSVPViewController: GeneralViewController {
         })
     }
     
-    func keyboardWillHide(_ notification: Notification) {
+    @objc func keyboardWillHide(_ notification: Notification) {
         let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let keyboardSize = (info[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         let keyboardHeight:CGFloat = keyboardSize.height
         
         self.commentsBoxBottomSpacing.constant = keyboardHeight
@@ -273,15 +273,15 @@ class OpenRSVPViewController: GeneralViewController {
         
     }
     
-    func keyboardDidChangeFrame(_ notification: Notification) {
+    @objc func keyboardDidChangeFrame(_ notification: Notification) {
         
         let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
-        let keyboardSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let keyboardSize = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         
         let keyboardHeight:CGFloat = keyboardSize.height
         
         
-        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIViewAnimationOptions(), animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIView.AnimationOptions(), animations: {
             
             self.commentsBoxBottomSpacing.constant = keyboardHeight
             }, completion: nil)
@@ -380,7 +380,7 @@ extension OpenRSVPViewController: UITextViewDelegate {
             textView.text = nil
             textView.textColor = UIColor.black
         }
-        if text == "" && textView_comments.text.characters.count == 1 && textView.textColor == UIColor.black{
+        if text == "" && textView_comments.text.count == 1 && textView.textColor == UIColor.black{
             textView.text = placeHolderText
             textView.textColor = UIColor.lightGray
             textView.selectedRange = NSMakeRange(0, 0)
@@ -390,7 +390,7 @@ extension OpenRSVPViewController: UITextViewDelegate {
         
         let totalText = textView.text + text
         
-        if totalText.characters.count > 0 && totalText != placeHolderText {
+        if totalText.count > 0 && totalText != placeHolderText {
             //btn_comments.setImage(UIImage(named: "chat_send"), forState: .Normal)
         }
         else{

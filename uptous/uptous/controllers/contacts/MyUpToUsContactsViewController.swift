@@ -409,7 +409,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
      }*/
     
     //Calls this function when the tap is recognized.
-    func dismissKeyboard() {
+    @objc func dismissKeyboard() {
         view.endEditing(true)
     }
     
@@ -463,8 +463,8 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
             
         }) {
             (error) -> Void in
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             //self.present(alert, animated: true, completion: nil)
         }
     }
@@ -654,8 +654,9 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
     
     
     func showSendMailErrorAlert() {
-        let sendMailErrorAlert = UIAlertView(title: "Could Not Send Email", message: "Your device could not send e-mail.  Please check e-mail configuration and try again.", delegate: self, cancelButtonTitle: "OK")
-        sendMailErrorAlert.show()
+        let sendMailErrorAlert = UIAlertController(title: "Could Not Send Email", message: "Your device could not send e-mail.  Please check e-mail configuration and try again.", preferredStyle: .alert)
+        sendMailErrorAlert.addAction(UIAlertAction(title: "OK", style: .default) { _ in })
+        self.present(sendMailErrorAlert, animated: true){}
     }
     
     // MARK: MFMailComposeViewControllerDelegate Method
@@ -732,13 +733,12 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
         self.selectedIndexPath = rowNumber
         if(searchActive) {
             expandStatus = "1"
-            let email = filterIDArrArr[rowNumber] as? String
+            let email = filterIDArrArr[rowNumber] 
             //return self.filterListArr.count
             for i in 0..<self.allIDArr.count {
                 let email1 = allIDArr[i]
                 if email == email1 {
                     self.selectedIndexPath2 = i
-                    print(self.selectedIndexPath)
                 }
             }
         }

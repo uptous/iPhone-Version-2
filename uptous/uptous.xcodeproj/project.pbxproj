@@ -10,16 +10,6 @@
 		015281BE1FBD4A74004D4F59 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015281BD1FBD4A74004D4F59 /* Album.swift */; };
 		015B64BB1F88986B006C3761 /* ShowLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015B64B91F88986B006C3761 /* ShowLocationViewController.swift */; };
 		015B64BC1F88986B006C3761 /* ShowLocationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 015B64BA1F88986B006C3761 /* ShowLocationViewController.xib */; };
-		017326681FDFED0000AB52DF /* OpenSans-Bold.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 0173265E1FDFECDA00AB52DF /* OpenSans-Bold.ttf */; };
-		017326691FDFED0100AB52DF /* OpenSans-BoldItalic.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 017326661FDFECDF00AB52DF /* OpenSans-BoldItalic.ttf */; };
-		0173266A1FDFED0100AB52DF /* OpenSans-ExtraBold.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 017326671FDFECDF00AB52DF /* OpenSans-ExtraBold.ttf */; };
-		0173266B1FDFED0100AB52DF /* OpenSans-ExtraBoldItalic.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 0173265F1FDFECDB00AB52DF /* OpenSans-ExtraBoldItalic.ttf */; };
-		0173266C1FDFED0100AB52DF /* OpenSans-Italic.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 017326601FDFECDC00AB52DF /* OpenSans-Italic.ttf */; };
-		0173266D1FDFED0100AB52DF /* OpenSans-Light.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 017326621FDFECDD00AB52DF /* OpenSans-Light.ttf */; };
-		0173266E1FDFED0100AB52DF /* OpenSans-LightItalic.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 017326631FDFECDD00AB52DF /* OpenSans-LightItalic.ttf */; };
-		0173266F1FDFED0100AB52DF /* OpenSans-Regular.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 017326651FDFECDE00AB52DF /* OpenSans-Regular.ttf */; };
-		017326701FDFED0100AB52DF /* OpenSans-Semibold.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 017326641FDFECDE00AB52DF /* OpenSans-Semibold.ttf */; };
-		017326711FDFED0100AB52DF /* OpenSans-SemiboldItalic.ttf in Sources */ = {isa = PBXBuildFile; fileRef = 017326611FDFECDC00AB52DF /* OpenSans-SemiboldItalic.ttf */; };
 		01766D3B1FA8457900AD5D13 /* CommunityAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01766D3A1FA8457800AD5D13 /* CommunityAlbum.swift */; };
 		01992CF41FB40E0900631EB2 /* SignUpType1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01992CF31FB40E0900631EB2 /* SignUpType1ViewController.swift */; };
 		01992CF81FB40E3400631EB2 /* SignUpType3ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01992CF71FB40E3400631EB2 /* SignUpType3ViewController.swift */; };
@@ -34,6 +24,7 @@
 		01E51C891FCA75A0006DF126 /* CalendarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E51C871FCA75A0006DF126 /* CalendarTableViewCell.swift */; };
 		01E51C8A1FCA75A0006DF126 /* CalendarTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01E51C881FCA75A0006DF126 /* CalendarTableViewCell.xib */; };
 		4E33B0C0AEF05C0DC4F40225 /* Pods_uptous.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C129DEFE8C1FCE921640925D /* Pods_uptous.framework */; };
+		8247D2E3244E74BB001BEF9A /* MyUpToUsContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337354A1D8E8DA000D97C32 /* MyUpToUsContactsViewController.swift */; };
 		D30A265E1E0068A9006A651B /* AnnouncementCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D30A265D1E006875006A651B /* AnnouncementCell.xib */; };
 		D30FA9FD1D66276700BF181F /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30FA9FC1D66276700BF181F /* ActivityIndicator.swift */; };
 		D30FA9FF1D6638FA00BF181F /* CustomImgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30FA9FE1D6638FA00BF181F /* CustomImgView.swift */; };
@@ -84,7 +75,6 @@
 		D336FC051D84971B00EDDF8E /* CommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D336FC041D84971B00EDDF8E /* CommentViewController.swift */; };
 		D336FC071D84996B00EDDF8E /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = D336FC061D84996B00EDDF8E /* Constant.swift */; };
 		D33735481D8E80A400D97C32 /* MyUpToUsSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33735471D8E80A400D97C32 /* MyUpToUsSignUpViewController.swift */; };
-		D337354B1D8E8DA000D97C32 /* MyUpToUsContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337354A1D8E8DA000D97C32 /* MyUpToUsContactsViewController.swift */; };
 		D33752C11D5F1F81008E1CBB /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33752C01D5F1F81008E1CBB /* CustomView.swift */; };
 		D33752C31D5F1F8E008E1CBB /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33752C21D5F1F8E008E1CBB /* CustomTextField.swift */; };
 		D33752C61D5F201F008E1CBB /* AnnouncementCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33752C41D5F201F008E1CBB /* AnnouncementCell.swift */; };
@@ -129,7 +119,6 @@
 		D37D204E1DECA79400489DF0 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37D204C1DECA79400489DF0 /* ProfileViewController.swift */; };
 		D3870C4D1D616A0F0020BC1E /* JoinedUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3870C4B1D616A0F0020BC1E /* JoinedUserCell.swift */; };
 		D3870C4E1D616A0F0020BC1E /* JoinedUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3870C4C1D616A0F0020BC1E /* JoinedUserCell.xib */; };
-		D38802BB1E09A6270035B2B1 /* MyUpToUsContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337354A1D8E8DA000D97C32 /* MyUpToUsContactsViewController.swift */; };
 		D388AA321DF46F4500C08B59 /* RSVPVolunteerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D388AA311DF46F4400C08B59 /* RSVPVolunteerCell.swift */; };
 		D388AA381DF48AC500C08B59 /* FileListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D388AA371DF48AC500C08B59 /* FileListViewController.swift */; };
 		D388AA3A1DF48AE600C08B59 /* FileListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D388AA391DF48AE600C08B59 /* FileListCell.swift */; };
@@ -1615,7 +1604,7 @@
 					D3D8A6251D5EDB44000AB922 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = U8DTDCNJ53;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.SafariKeychain = {
@@ -1626,14 +1615,14 @@
 					D3D8A63C1D5EDB45000AB922 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = U8DTDCNJ53;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Manual;
 						TestTargetID = D3D8A6251D5EDB44000AB922;
 					};
 					D3D8A6471D5EDB45000AB922 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = U8DTDCNJ53;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Manual;
 						TestTargetID = D3D8A6251D5EDB44000AB922;
 					};
@@ -1840,16 +1829,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				017326681FDFED0000AB52DF /* OpenSans-Bold.ttf in Sources */,
-				017326691FDFED0100AB52DF /* OpenSans-BoldItalic.ttf in Sources */,
-				0173266A1FDFED0100AB52DF /* OpenSans-ExtraBold.ttf in Sources */,
-				0173266B1FDFED0100AB52DF /* OpenSans-ExtraBoldItalic.ttf in Sources */,
-				0173266C1FDFED0100AB52DF /* OpenSans-Italic.ttf in Sources */,
-				0173266D1FDFED0100AB52DF /* OpenSans-Light.ttf in Sources */,
-				0173266E1FDFED0100AB52DF /* OpenSans-LightItalic.ttf in Sources */,
-				0173266F1FDFED0100AB52DF /* OpenSans-Regular.ttf in Sources */,
-				017326701FDFED0100AB52DF /* OpenSans-Semibold.ttf in Sources */,
-				017326711FDFED0100AB52DF /* OpenSans-SemiboldItalic.ttf in Sources */,
 				F47A28371FC0AFB1009AE620 /* uptous.entitlements in Sources */,
 				D35CC7411DE13BF500F8E251 /* SDWebImageDownloader.m in Sources */,
 				D3D42DC21DFB378A00F5E5C7 /* PDFDownload.swift in Sources */,
@@ -1895,6 +1874,7 @@
 				D3D42DEF1DFB378B00F5E5C7 /* ReaderViewController.m in Sources */,
 				D35CC7461DE13BF500F8E251 /* UIImage+GIF.m in Sources */,
 				D3A21A031D9691CA00B96F00 /* SignUpOpenCell.swift in Sources */,
+				8247D2E3244E74BB001BEF9A /* MyUpToUsContactsViewController.swift in Sources */,
 				D33752C61D5F201F008E1CBB /* AnnouncementCell.swift in Sources */,
 				D336FC011D84680800EDDF8E /* NSDate+NVTimeAgo.m in Sources */,
 				D33B6BC91DD383170037E705 /* CollectionCell.swift in Sources */,
@@ -2004,7 +1984,6 @@
 				D3D42DED1DFB378B00F5E5C7 /* ReaderThumbsView.m in Sources */,
 				D3D42DE61DFB378A00F5E5C7 /* ReaderMainPagebar.m in Sources */,
 				D35F22D01DBFCE7700792D99 /* Contacts.swift in Sources */,
-				D337354B1D8E8DA000D97C32 /* MyUpToUsContactsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2021,7 +2000,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3D8A64D1D5EDB45000AB922 /* uptousUITests.swift in Sources */,
-				D38802BB1E09A6270035B2B1 /* MyUpToUsContactsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2161,7 +2139,20 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Yuval Spector (BARLF2AB37)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Yuval Spector (BARLF2AB37)";
 				CODE_SIGN_STYLE = Manual;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = U8DTDCNJ53;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alamofire\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Dropper\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/LKPullToLoadMore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RandomColorSwift\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RappleProgressHUD\"",
+					"\"${PODS_ROOT}/Crashlytics/iOS\"",
+					"\"${PODS_ROOT}/Fabric/iOS\"",
+					"\"${PODS_ROOT}/GoogleMaps/Base/Frameworks\"",
+					"\"${PODS_ROOT}/GoogleMaps/Maps/Frameworks\"",
+				);
 				INFOPLIST_FILE = uptous/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2171,7 +2162,8 @@
 				PROVISIONING_PROFILE_SPECIFIER = uptousDevelopment;
 				SWIFT_OBJC_BRIDGING_HEADER = "uptous/uptous-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -2195,7 +2187,8 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = Live_Distribution;
 				SWIFT_OBJC_BRIDGING_HEADER = "uptous/uptous-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -2208,7 +2201,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = SPA.uptousTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/uptous.app/uptous";
 			};
 			name = Debug;
@@ -2221,7 +2215,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = SPA.uptousTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/uptous.app/uptous";
 			};
 			name = Release;
@@ -2229,11 +2224,18 @@
 		D3D8A6581D5EDB45000AB922 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"build/Debug-iphoneos/LKPullToLoadMore\"",
+					"\"/Users/KGS/Library/Developer/Xcode/DerivedData/uptous-bhhaoldeennhaxcinrxbdteazqek/Build/Products/Debug-iphonesimulator/LKPullToLoadMore\"",
+				);
 				INFOPLIST_FILE = uptousUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = SPA.uptousUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SKIP_INSTALL = YES;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				TEST_TARGET_NAME = uptous;
 				USES_XCTRUNNER = YES;
 			};
@@ -2242,11 +2244,15 @@
 		D3D8A6591D5EDB45000AB922 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = uptousUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = SPA.uptousUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SKIP_INSTALL = YES;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				TEST_TARGET_NAME = uptous;
 				USES_XCTRUNNER = YES;
 			};

@@ -48,7 +48,7 @@ class SQLiteDB:NSObject {
  
 	/// Output the current SQLite database path
 	override var description:String {
-		return "SQLiteDB: \(path)"
+        return "SQLiteDB: \(path ?? "Error")"
 	}
 	
 	// MARK:- Public Methods

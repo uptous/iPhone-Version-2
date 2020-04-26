@@ -18,7 +18,7 @@ class VolunteeredCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         //Custom.fullCornerView(ownerView)
-        Custom.cornerView(cellView)
+        _ = Custom.cornerView(cellView)
     }
     
     func updateData(_ data: NSDictionary) {

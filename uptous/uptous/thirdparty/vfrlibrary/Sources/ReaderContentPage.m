@@ -285,7 +285,8 @@
 
 						NSString *target = [NSString stringWithCString:uri encoding:NSUTF8StringEncoding]; // NSString - UTF8
 
-						linkTarget = [NSURL URLWithString:[target stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+                        NSCharacterSet *set = [NSCharacterSet URLHostAllowedCharacterSet];
+						linkTarget = [NSURL URLWithString:[target stringByAddingPercentEncodingWithAllowedCharacters:set]];
 
 						if (linkTarget == nil) NSLog(@"%s Bad URI '%@'", __FUNCTION__, target);
 					}

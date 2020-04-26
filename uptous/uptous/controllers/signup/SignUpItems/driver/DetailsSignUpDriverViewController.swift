@@ -42,7 +42,7 @@ class DetailsSignUpDriverViewController: GeneralViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Custom.buttonCorner(cancelButton)
+        _ = Custom.buttonCorner(cancelButton)
         
         //headingLbl.text = ("Join the \(sheetData.name!)")
         fromLbl.text = "Driving from: \(selectedItems.name!)"
@@ -73,9 +73,9 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         textField_comments.placeholder = "Type comments here.."
         // Observer Keyboard
         let center: NotificationCenter = NotificationCenter.default
-        center.addObserver(self, selector: #selector(DetailsSignUpDriverViewController.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        center.addObserver(self, selector: #selector(DetailsSignUpDriverViewController.keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
-        center.addObserver(self, selector: #selector(DetailsSignUpDriverViewController.keyboardDidChangeFrame(_:)), name: NSNotification.Name.UIKeyboardDidChangeFrame, object: nil)
+        center.addObserver(self, selector: #selector(DetailsSignUpDriverViewController.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        center.addObserver(self, selector: #selector(DetailsSignUpDriverViewController.keyboardWillHide(_:)), name: UIResponder.keyboardDidHideNotification, object: nil)
+        center.addObserver(self, selector: #selector(DetailsSignUpDriverViewController.keyboardDidChangeFrame(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
         
         let tapRecognizer = UITapGestureRecognizer(target: self , action: #selector(DetailsSignUpDriverViewController.HideTextKeyboard(_:)))
         tableView.addGestureRecognizer(tapRecognizer)
@@ -98,7 +98,7 @@ class DetailsSignUpDriverViewController: GeneralViewController {
     override func viewWillAppear(_ animated: Bool) {
         //self.tableView.isHidden = true
         tableView.estimatedRowHeight = 110
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         let when = DispatchTime.now() + 1 // change 2 to desired number of seconds
         DispatchQueue.main.asyncAfter(deadline: when) {
             self.fetchItems()
@@ -122,8 +122,6 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
             print(response)
-            
-            print(response["status"])
             if response["status"] as? String == "0" {
                 self.dismiss(animated: true, completion: nil)
                self.navigationController?.popViewController(animated: true)
@@ -164,7 +162,7 @@ class DetailsSignUpDriverViewController: GeneralViewController {
             }else {
                 self.postCounter = self.postCounter + 1
                 if self.postCounter == 3 {
-                    let msg = response["message"] as? String ?? ""
+                    let msg = response["message"] as? String? ?? ""
                     if msg != "" || msg != nil {
                         self.showAlertWithoutCancel(title: "Alert", message: msg)
                     }
@@ -203,7 +201,7 @@ class DetailsSignUpDriverViewController: GeneralViewController {
             for index in 0..<data.count {
                 let dic = data.object(at: index) as? NSDictionary
                 if dic?.object(forKey: "id") as? Int == self.selectedItems.Id {
-                    print(dic?.object(forKey: "volunteers"))
+                    //print(dic?.object(forKey: "volunteers"))
                     self.itemsDatas = dic?.object(forKey: "volunteers") as! NSArray
                     break
                 }
@@ -214,15 +212,15 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
 
     }
     
     //MARK:- Keyboard
-    func HideTextKeyboard(_ sender: UITapGestureRecognizer?) {
+    @objc func HideTextKeyboard(_ sender: UITapGestureRecognizer?) {
         //textField_comments.resignFirstResponder()
         
         placeHolderText = "Type comments here.."
@@ -257,7 +255,7 @@ class DetailsSignUpDriverViewController: GeneralViewController {
             let numberOfRows = (self.list.count) - self.tableView.numberOfRows(inSection: numberOfSections-1)
             if numberOfRows > 0 {
                 let indexPath = IndexPath(row: 0, section: numberOfRows)
-                self.tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: animated)
+                self.tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.bottom, animated: animated)
             }
         })
     }
@@ -287,12 +285,12 @@ class DetailsSignUpDriverViewController: GeneralViewController {
     }
     
     // MARK: - UIKeyBoard Delegate
-    func keyboardWillShow(_ notification: Notification) {
+    @objc func keyboardWillShow(_ notification: Notification) {
         let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let keyboardSize = (info[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         let keyboardHeight:CGFloat = keyboardSize.height
         
-        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIViewAnimationOptions(), animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIView.AnimationOptions(), animations: {
             
             self.commentsBoxBottomSpacing.constant = keyboardHeight
             
@@ -301,9 +299,9 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         })
     }
     
-    func keyboardWillHide(_ notification: Notification) {
+    @objc func keyboardWillHide(_ notification: Notification) {
         let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let keyboardSize = (info[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         
         let keyboardHeight:CGFloat = keyboardSize.height
         
@@ -315,15 +313,15 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         
     }
     
-    func keyboardDidChangeFrame(_ notification: Notification) {
+    @objc func keyboardDidChangeFrame(_ notification: Notification) {
         
         let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
-        let keyboardSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let keyboardSize = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         
         let keyboardHeight:CGFloat = keyboardSize.height
         
         
-        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIViewAnimationOptions(), animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIView.AnimationOptions(), animations: {
             
             self.commentsBoxBottomSpacing.constant = keyboardHeight
             }, completion: nil)
@@ -361,8 +359,8 @@ extension DetailsSignUpDriverViewController: UITableViewDelegate, UITableViewDat
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "DriverItemCell") as! DriverItemCell
         let data = self.itemsDatas[(indexPath as NSIndexPath).row] as? NSDictionary
-        print(data)
-        if textView_comments.text.characters.count > 0 {
+        //print(data)
+        if textView_comments.text.count > 0 {
             cell.updateData(data!, commentText:"")
 
         }else {
@@ -429,7 +427,7 @@ extension DetailsSignUpDriverViewController: UITextViewDelegate {
             textView.text = nil
             textView.textColor = UIColor.black
         }
-        if text == "" && textView_comments.text.characters.count == 1 && textView.textColor == UIColor.black{
+        if text == "" && textView_comments.text.count == 1 && textView.textColor == UIColor.black{
             textView.text = placeHolderText
             textView.textColor = UIColor.lightGray
             textView.selectedRange = NSMakeRange(0, 0)
@@ -439,7 +437,7 @@ extension DetailsSignUpDriverViewController: UITextViewDelegate {
         
         let totalText = textView.text + text
         
-        if totalText.characters.count > 0 && totalText != placeHolderText {
+        if totalText.count > 0 && totalText != placeHolderText {
             //btn_comments.setImage(UIImage(named: "chat_send"), forState: .Normal)
         }
         else{

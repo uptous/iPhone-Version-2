@@ -41,9 +41,9 @@ class SignUpType3ViewController: UIViewController,UITableViewDelegate, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         descTableView.estimatedRowHeight = 95
-        descTableView.rowHeight = UITableViewAutomaticDimension
+        descTableView.rowHeight = UITableView.automaticDimension
         itemTableView.estimatedRowHeight = 95
-        itemTableView.rowHeight = UITableViewAutomaticDimension
+        itemTableView.rowHeight = UITableView.automaticDimension
     }
     
     func updateData(_ data: SignupSheet)  {
@@ -64,7 +64,7 @@ class SignUpType3ViewController: UIViewController,UITableViewDelegate, UITableVi
         }else {
             textHeightConstraint.constant = 250
         }*/
-        if (data.notes?.characters.count)! > 0 {
+        if (data.notes?.count)! > 0 {
             //descTableView.isHidden = false
             let font = UIFont(name: "Helvetica", size: 14.0)
             //descLabel.text = data!.notes!
@@ -88,9 +88,9 @@ class SignUpType3ViewController: UIViewController,UITableViewDelegate, UITableVi
         self.view.layoutIfNeeded()
         mainView.layoutIfNeeded()
         
-        Custom.cornerView(contentView)
-        Custom.fullCornerView1(owner1View)
-        Custom.fullCornerView1(owner2View)
+        _ = Custom.cornerView(contentView)
+        _ = Custom.fullCornerView1(owner1View)
+        _ = Custom.fullCornerView1(owner2View)
         contact1PhotoImgView.layer.cornerRadius = 25.0
         contact1PhotoImgView.layer.masksToBounds = true
         
@@ -137,12 +137,12 @@ class SignUpType3ViewController: UIViewController,UITableViewDelegate, UITableVi
                 if stringArray?.count == 1 {
                     let firstName = stringArray![0]
                     //let secondName = stringArray![1] ?? ""
-                    let resultString = "\(firstName.characters.first!)"
+                    let resultString = "\(firstName.prefix(1))"
                     owner1NameLbl.text = resultString
                 }else {
                     let firstName = stringArray![0]
                     let secondName = stringArray![1]
-                    let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
+                    let resultString = "\(firstName.prefix(1))\(secondName.prefix(1))"
                     owner1NameLbl.text = resultString
                 }
                 
@@ -162,7 +162,9 @@ class SignUpType3ViewController: UIViewController,UITableViewDelegate, UITableVi
                     let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
                         self.contact1PhotoImgView.image = image
                     }
-                    contact1PhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
+                    //contact1PhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
+                    let url = URL(string: avatarUrl)
+                    contact1PhotoImgView.sd_setImage(with: url, completed: block)
                 }
             }
         }else {
@@ -182,7 +184,7 @@ class SignUpType3ViewController: UIViewController,UITableViewDelegate, UITableVi
                 let stringArray = data.contact2?.components(separatedBy: " ")
                 let firstName = stringArray![0]
                 let secondName = stringArray![1]
-                let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
+                let resultString = "\(firstName.prefix(1))\(secondName.prefix(1))"
                 
                 owner2NameLbl.text = resultString
                 let color1 = Utility.hexStringToUIColor(hex: data.organizer1BackgroundColor!)
@@ -199,7 +201,9 @@ class SignUpType3ViewController: UIViewController,UITableViewDelegate, UITableVi
                     let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
                         self.contact2PhotoImgView.image = image
                     }
-                    contact2PhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
+                    //contact2PhotoImgView.sd_setImage(with: URL(string:avatarUrl) as URL!, completed:block)
+                    let url = URL(string: avatarUrl)
+                    contact2PhotoImgView.sd_setImage(with: url, completed: block)
                 }
             }
         }else {
@@ -253,8 +257,8 @@ class SignUpType3ViewController: UIViewController,UITableViewDelegate, UITableVi
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -303,7 +307,7 @@ class SignUpType3ViewController: UIViewController,UITableViewDelegate, UITableVi
             
         }else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! SignUpDescCell
-            //let data = self.itemsDatas[(indexPath as NSIndexPath).row] as? NSDictionary
+            _ = self.itemsDatas[(indexPath as NSIndexPath).row] as? NSDictionary
             //cell.updateView(Items(info: data!))
             cell.descLbl.text = self.data?.notes
             cell.titleLbl.text = self.data?.name

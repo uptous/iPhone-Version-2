@@ -43,7 +43,7 @@ class MyUpToUsCalendarViewController: GeneralViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.estimatedRowHeight = 60
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         
         communityView.isHidden = true
         let landingNib = UINib(nibName: "EventCollapseTableViewCell", bundle: nil)
@@ -121,8 +121,8 @@ class MyUpToUsCalendarViewController: GeneralViewController{
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -171,8 +171,8 @@ class MyUpToUsCalendarViewController: GeneralViewController{
         }) {
             (error) -> Void in
             ActivityIndicator.hide()
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             //self.present(alert, animated: true, completion: nil)
         }
     }
@@ -225,7 +225,7 @@ class MyUpToUsCalendarViewController: GeneralViewController{
             tmp = event.title!.lowercased()
             tmp1 = event.eventDescription!.lowercased()
             
-            print(tmp?.range(of: searchText.lowercased()))
+            print(tmp?.range(of: searchText.lowercased()) ?? "search text failed to print")
             //print($0.firstName!.rangeOfString(searchText) != nil)
             return (tmp?.range(of: searchText.lowercased()) != nil) || (tmp1?.range(of: searchText.lowercased()) != nil)
             
@@ -293,7 +293,7 @@ extension MyUpToUsCalendarViewController: EventExpandCellDelegate, EventCellDele
                     self.present(controller, animated: true, completion: nil)
                     
                 } else {
-                    let msg = "No Matching Location Found"
+                    //let msg = "No Matching Location Found"
                 }
             }
         }
@@ -335,7 +335,7 @@ extension MyUpToUsCalendarViewController: EventExpandCellDelegate, EventCellDele
                     self.present(controller, animated: true, completion: nil)
                     
                 } else {
-                    let msg = "No Matching Location Found"
+                    // let msg = "No Matching Location Found"
                 }
             }
         }
@@ -377,7 +377,7 @@ extension MyUpToUsCalendarViewController: EventExpandCellDelegate, EventCellDele
                     self.present(controller, animated: true, completion: nil)
                     
                 } else {
-                    let msg = "No Matching Location Found"
+                    //let msg = "No Matching Location Found"
                 }
             }
         }

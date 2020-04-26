@@ -56,7 +56,7 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         displayImage.addGestureRecognizer(rightSwipeGesture)
     }
     
-    func swipeLeft(sender: UISwipeGestureRecognizer) -> Void {
+    @objc func swipeLeft(sender: UISwipeGestureRecognizer) -> Void {
         
         if currentSelectedIndex+1 < itemsDatas.count {
             let data = self.itemsDatas[currentSelectedIndex+1] as? Library
@@ -68,7 +68,9 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
             let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
                 self.displayImage.image = image
             }
-            displayImage.sd_setImage(with: URL(string:(data?.photo)!) as URL!, completed:block)
+            //displayImage.sd_setImage(with: URL(string:(data?.photo)!) as URL!, completed:block)
+            let url = URL(string: (data?.photo)!)
+            displayImage.sd_setImage(with: url, completed: block)
             
             titleLable.text = data?.caption
             titleCreateLable.text = ("\(Custom.dayStringFromTime((data?.createTime!)!))")
@@ -80,7 +82,7 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         }
     }
     
-    func swipeRight(sender: UISwipeGestureRecognizer) -> Void {
+    @objc func swipeRight(sender: UISwipeGestureRecognizer) -> Void {
         if currentSelectedIndex-1 >= 0 {
             let data = self.itemsDatas[currentSelectedIndex-1] as? Library
             //animate(image: displayImage.image!, inLeftDirection: false)
@@ -88,7 +90,9 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
             let block: SDWebImageCompletionBlock = {(image: UIImage?, error: Error?, cacheType: SDImageCacheType!, imageURL: URL?) -> Void in
                 self.displayImage.image = image
             }
-            displayImage.sd_setImage(with: URL(string:(data?.photo)!) as URL!, completed:block)
+            //displayImage.sd_setImage(with: URL(string:(data?.photo)!) as URL!, completed:block)
+            let url = URL(string: (data?.photo)!)
+            displayImage.sd_setImage(with: url, completed: block)
             
             titleLable.text = data?.caption
             titleCreateLable.text = ("\(Custom.dayStringFromTime((data?.createTime!)!))")
@@ -154,8 +158,8 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             //self.present(alert, animated: true, completion: nil)
         }
     }
@@ -181,7 +185,7 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
             if index == self.currentSelectedIndex {
                 UIView.animate(withDuration: 0.3, animations: { () -> Void in
                     cell.thumnnailv.layer.shouldRasterize = true
-                    cell.transform = CGAffineTransform(rotationAngle: -CGFloat(M_PI_4 / 8.0))
+                    cell.transform = CGAffineTransform(rotationAngle: -CGFloat((.pi / 4) / 8.0))
                 })
             }else {
                 cell.transform = CGAffineTransform(rotationAngle: -0.0)
@@ -190,7 +194,10 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         }
         cell.activityindicator.isHidden =  false
         cell.activityindicator.startAnimating()
-        cell.thumnnailv.sd_setImage(with: URL(string:mediapath) as URL!, completed:block)
+        //cell.thumnnailv.sd_setImage(with: URL(string:mediapath) as URL!, completed:block)
+        let url = URL(string:mediapath)
+        cell.thumnnailv.sd_setImage(with: url, completed: block)
+        
     }
     
     //MARK: - Add image to Library
@@ -242,7 +249,7 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
             if indexPath.item == item {
                 UIView.animate(withDuration: 0.3, animations: {
                     cell.thumnnailv.layer.shouldRasterize = true
-                    cell.thumnnailv.transform = CGAffineTransform.init(rotationAngle: -CGFloat(M_PI_4 / 8.0))
+                    cell.thumnnailv.transform = CGAffineTransform.init(rotationAngle: -CGFloat((.pi/4) / 8.0))
                 }, completion: { (completed) in
                 })
             } else {
@@ -256,7 +263,7 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
             if indexPath.item == 0 {
                 UIView.animate(withDuration: 0.3, animations: {
                     cell.thumnnailv.layer.shouldRasterize = true
-                    cell.thumnnailv.transform = CGAffineTransform.init(rotationAngle: -CGFloat(M_PI_4 / 8.0))
+                    cell.thumnnailv.transform = CGAffineTransform.init(rotationAngle: -CGFloat((.pi/4) / 8.0))
                 }, completion: { (completed) in
                 })
             }
@@ -267,7 +274,7 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let data = self.itemsDatas[(indexPath as NSIndexPath).row] as? Library
+        // let data = self.itemsDatas[(indexPath as NSIndexPath).row] as? Library
         currentSelectedIndex = indexPath.row
         let collectioncell = collectionView.cellForItem(at: indexPath) as! MediaCollectionCell
         self.displayImage.image = collectioncell.thumnnailv.image
@@ -305,7 +312,7 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         
         let edgeInsets = (collectionViewWidth - totalCellsWidth) / 2.0
         
-        return edgeInsets > 0 ? UIEdgeInsetsMake(0, edgeInsets, 0, edgeInsets) : UIEdgeInsetsMake(0, cellSpacing, 0, cellSpacing)
+        return edgeInsets > 0 ? UIEdgeInsets.init(top: 0, left: edgeInsets, bottom: 0, right: edgeInsets) : UIEdgeInsets.init(top: 0, left: cellSpacing, bottom: 0, right: cellSpacing)
     }
     
     

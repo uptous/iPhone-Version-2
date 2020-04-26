@@ -145,8 +145,8 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -175,8 +175,8 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
         
         if selectedSegment == "0" {
             self.filterListArr = self.fullListArr.filter({( library: Library) -> Bool in
-                var tmp = library.title!.lowercased()
-                var tmp1 = library.caption!.lowercased()
+                let tmp = library.title!.lowercased()
+                let tmp1 = library.caption!.lowercased()
                 
                 return (tmp.range(of: searchText.lowercased()) != nil) || (tmp1.range(of: searchText.lowercased()) != nil)
                 
@@ -189,7 +189,7 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
             self.collectionView.reloadData()
         }else {
             self.filterListArr1 = self.fullListArr1.filter({( files: Files) -> Bool in
-                var tmp = files.title!.lowercased()
+                let tmp = files.title!.lowercased()
                 //tmp1 = sheet.name!.lowercased()
                 
                return (tmp.range(of: searchText.lowercased()) != nil)
@@ -281,8 +281,8 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "No record found.", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "No record found.", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             //self.present(alert, animated: true, completion: nil)
         }
     }
@@ -330,8 +330,8 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -399,8 +399,8 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
                 
             }else {
                 DispatchQueue.main.async(execute: { () -> Void in
-                    let alert = UIAlertController(title: "Alert", message: "Files in this format cannot be downloaded to the iPhone", preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                    let alert = UIAlertController(title: "Alert", message: "Files in this format cannot be downloaded to the iPhone", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                 })
             }

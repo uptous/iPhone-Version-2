@@ -47,13 +47,13 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         textField_comments.placeholder = "Type comments here.."
         // Observer Keyboard
         let center: NotificationCenter = NotificationCenter.default
-        center.addObserver(self, selector: #selector(ItemDetailsEditingMsgViewController.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        center.addObserver(self, selector: #selector(ItemDetailsEditingMsgViewController.keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
-        center.addObserver(self, selector: #selector(ItemDetailsEditingMsgViewController.keyboardDidChangeFrame(_:)), name: NSNotification.Name.UIKeyboardDidChangeFrame, object: nil)
+        center.addObserver(self, selector: #selector(ItemDetailsEditingMsgViewController.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        center.addObserver(self, selector: #selector(ItemDetailsEditingMsgViewController.keyboardWillHide(_:)), name: UIResponder.keyboardDidHideNotification, object: nil)
+        center.addObserver(self, selector: #selector(ItemDetailsEditingMsgViewController.keyboardDidChangeFrame(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
         let tapRecognizer = UITapGestureRecognizer(target: self , action: #selector(ItemDetailsEditingMsgViewController.HideTextKeyboard(_:)))
         tableView.addGestureRecognizer(tapRecognizer)
         
-        Custom.cornerView(contentView)
+        _ = Custom.cornerView(contentView)
         updateData(selectedItems)
         
         voluniteerdDatas = selectedItems.volunteers!
@@ -105,7 +105,7 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
     }
     
     func updateData(_ data: Items) {
-        let attributedStr = NSMutableAttributedString()
+        _ = NSMutableAttributedString()
 
         //msgLbl.text = data.notes
         
@@ -133,7 +133,7 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
     override func viewWillAppear(_ animated: Bool) {
         tableView.estimatedRowHeight = 94
         
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         let when = DispatchTime.now() + 1 // change 2 to desired number of seconds
         DispatchQueue.main.asyncAfter(deadline: when) {
             self.fetchItems()
@@ -157,7 +157,6 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
             (response) -> Void in
             print(response)
             
-            print(response["status"])
             if response["status"] as? String == "0" {
                 //self.navigationController?.popViewController(animated: true)
                 self.dismiss(animated: true, completion: nil)
@@ -169,7 +168,7 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
     func postComment(_ msg: String) {
         //let opportunityID = selectedItems.Id
         let apiName = SignupItems + ("\(sheetDataID!)") + ("/item/\(selectedItems.Id!)/Add")
-        var stringPost = "comment=" + msg
+        let stringPost = "comment=" + msg
         //stringPost += "&phone=" + ""
         
         DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
@@ -184,7 +183,7 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
             }else {
                 self.postCounter = self.postCounter + 1
                 if self.postCounter == 3 {
-                    let msg = response["message"] as? String ?? ""
+                    let msg = response["message"] as? String? ?? ""
                     if msg != "" || msg != nil {
                         self.showAlertWithoutCancel(title: "Alert", message: msg)
                     }
@@ -222,7 +221,7 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
             for index in 0..<data.count {
                 let dic = data.object(at: index) as? NSDictionary
                 if dic?.object(forKey: "id") as? Int == self.selectedItems.Id {
-                    print(dic?.object(forKey: "volunteers"))
+                    print(dic?.object(forKey: "volunteers") ?? "Failed to volunteers")
                     self.voluniteerdDatas = dic?.object(forKey: "volunteers") as! NSArray
                     break
                 }
@@ -234,8 +233,8 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             //self.present(alert, animated: true, completion: nil)
         }
     }
@@ -243,7 +242,7 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
     //***************Comment***************
     
     //MARK:- Keyboard
-    func HideTextKeyboard(_ sender: UITapGestureRecognizer?) {
+    @objc func HideTextKeyboard(_ sender: UITapGestureRecognizer?) {
         placeHolderText = "Type comments here.."
         textView_comments.text = placeHolderText
         textView_comments.textColor = UIColor.lightGray
@@ -276,7 +275,7 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
             let numberOfRows = (self.voluniteerdDatas.count) - self.tableView.numberOfRows(inSection: numberOfSections-1)
             if numberOfRows > 0 {
                 let indexPath = IndexPath(row: 0, section: numberOfRows)
-                self.tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: animated)
+                self.tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.bottom, animated: animated)
             }
         })
     }
@@ -302,12 +301,12 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
     }
     
     // MARK: - UIKeyBoard Delegate
-    func keyboardWillShow(_ notification: Notification) {
+    @objc func keyboardWillShow(_ notification: Notification) {
         let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let keyboardSize = (info[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         let keyboardHeight:CGFloat = keyboardSize.height
         
-        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIViewAnimationOptions(), animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIView.AnimationOptions(), animations: {
             
             self.commentsBoxBottomSpacing.constant = keyboardHeight
             
@@ -316,9 +315,9 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         })
     }
     
-    func keyboardWillHide(_ notification: Notification) {
+    @objc func keyboardWillHide(_ notification: Notification) {
         let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
-        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let keyboardSize = (info[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         
         let keyboardHeight:CGFloat = keyboardSize.height
         
@@ -330,15 +329,15 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         
     }
     
-    func keyboardDidChangeFrame(_ notification: Notification) {
+    @objc func keyboardDidChangeFrame(_ notification: Notification) {
         
         let info:NSDictionary = (notification as NSNotification).userInfo! as NSDictionary
-        let keyboardSize = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let keyboardSize = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         
         let keyboardHeight:CGFloat = keyboardSize.height
         
         
-        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIViewAnimationOptions(), animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: UIView.AnimationOptions(), animations: {
             
             self.commentsBoxBottomSpacing.constant = keyboardHeight
             }, completion: nil)
@@ -371,7 +370,7 @@ extension ItemDetailsEditingMsgViewController: UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailsMsgCell") as! ItemDetailsMsgCell
         let data = self.voluniteerdDatas[(indexPath as NSIndexPath).row] as? NSDictionary
-        var tblView = UIView(frame: CGRect.zero)
+        let tblView = UIView(frame: CGRect.zero)
         tableView.tableFooterView = tblView
         tableView.tableFooterView?.isHidden = true
         tableView.backgroundColor = UIColor.clear
@@ -420,7 +419,7 @@ extension ItemDetailsEditingMsgViewController: UITextViewDelegate {
             textView.text = nil
             textView.textColor = UIColor.black
         }
-        if text == "" && textView_comments.text.characters.count == 1 && textView.textColor == UIColor.black{
+        if text == "" && textView_comments.text.count == 1 && textView.textColor == UIColor.black{
             textView.text = placeHolderText
             textView.textColor = UIColor.lightGray
             textView.selectedRange = NSMakeRange(0, 0)
@@ -430,7 +429,7 @@ extension ItemDetailsEditingMsgViewController: UITextViewDelegate {
         
         let totalText = textView.text + text
         
-        if totalText.characters.count > 0 && totalText != placeHolderText {
+        if totalText.count > 0 && totalText != placeHolderText {
             //btn_comments.setImage(UIImage(named: "chat_send"), forState: .Normal)
         }
         else{

@@ -10,15 +10,27 @@ import UIKit
 
 extension UIView {
     
-    
     class func toast (_ messages:String) {
-
-     let toast =    UIAlertView(title: nil, message: messages, delegate: nil, cancelButtonTitle: nil)
         
-        toast.show()
-        delay(2) { () -> () in
-            toast.dismiss(withClickedButtonIndex: 0, animated: true)
+        let toast = UIAlertController(title: "", message: messages, preferredStyle: .alert)
+        let messageAttributes = [NSAttributedString.Key.font: UIFont(name: "Helvetica", size: 17)!]
+        let messageString = NSAttributedString(string: messages, attributes: messageAttributes)
+        toast.setValue(messageString, forKey: "attributedMessage")
+        
+        UIApplication.shared.keyWindow?.rootViewController?.present(toast, animated: true, completion: nil)
+        
+        // change to desired number of seconds (in this case 2 seconds)
+        let when = DispatchTime.now() + 2
+        DispatchQueue.main.asyncAfter(deadline: when){
+            toast.dismiss(animated: true, completion: nil)
         }
+
+     //let toast =    UIAlertView(title: nil, message: messages, delegate: nil, cancelButtonTitle: nil)
+        
+     //   toast.show()
+     //   delay(2) { () -> () in
+     //       toast.dismiss(withClickedButtonIndex: 0, animated: true)
+     //   }
         
     }
 //    class func loadWithNib(_ nibName:String, viewIndex:Int, owner: AnyObject) -> AnyObject

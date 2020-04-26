@@ -17,7 +17,7 @@ class ReadOnlyCommentCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        Custom.cornerView(cellView)
+        _ = Custom.cornerView(cellView)
     }
     
     func updateView(_ data: NSDictionary) {

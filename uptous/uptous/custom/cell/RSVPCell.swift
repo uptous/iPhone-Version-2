@@ -21,8 +21,8 @@ class RSVPCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        cornerView(volunteeredView)
-        cornerView(openView)
+        _ = cornerView(volunteeredView)
+        _ = cornerView(openView)
     }
     
     func updateView(_ data: Items) {

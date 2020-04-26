@@ -40,11 +40,11 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
         //emailTxtField.becomeFirstResponder()
         let paddingView = UIView(frame: CGRect.init(x: 0, y: 0, width: 10, height:self.emailTxtField.frame.height ))
         emailTxtField.leftView = paddingView
-        emailTxtField.leftViewMode = UITextFieldViewMode.always
+        emailTxtField.leftViewMode = UITextField.ViewMode.always
         
         let paddingView1 = UIView(frame: CGRect.init(x: 0, y: 0, width: 10, height:self.passwordTxtField.frame.height ))
         passwordTxtField.leftView = paddingView1
-        passwordTxtField.leftViewMode = UITextFieldViewMode.always
+        passwordTxtField.leftViewMode = UITextField.ViewMode.always
         
         if UserPreferences.LoginStatus ==  "Registered" {
             self.alreadyLoggedIn()
@@ -146,8 +146,8 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -238,8 +238,8 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
                             
                         }else {
                             DispatchQueue.main.async(execute: { () -> Void in
-                                let alert = UIAlertController(title: "Alert", message: "Authentication failed. Please try again or reset your password at www.uptous.com", preferredStyle: UIAlertControllerStyle.alert)
-                                alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+                                let alert = UIAlertController(title: "Alert", message: "Authentication failed. Please try again or reset your password at www.uptous.com", preferredStyle: UIAlertController.Style.alert)
+                                alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
                                 self.present(alert, animated: true, completion: nil)
                             })
                         }
@@ -247,8 +247,8 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
                     break
                     
                 case .failure(_):
-                    let alert = UIAlertController(title: "Alert", message: "Authentication failed. Please try again or reset your password at www.uptous.com", preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+                    let alert = UIAlertController(title: "Alert", message: "Authentication failed. Please try again or reset your password at www.uptous.com", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                     break
                     

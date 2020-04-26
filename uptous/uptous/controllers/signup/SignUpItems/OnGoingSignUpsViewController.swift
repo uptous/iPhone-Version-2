@@ -44,16 +44,16 @@ class OnGoingSignUpsViewController: GeneralViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Custom.cornerView(contentView)
-        Custom.fullCornerView1(owner1View)
-        Custom.fullCornerView1(owner2View)
+        _ = Custom.cornerView(contentView)
+        _ = Custom.fullCornerView1(owner1View)
+        _ = Custom.fullCornerView1(owner2View)
         //updateData(data)
         
     }
     
     func attributedString(_ str: String) -> NSAttributedString? {
         let attributes = [
-            NSUnderlineStyleAttributeName : NSUnderlineStyle.styleSingle.rawValue
+            NSAttributedString.Key.underlineStyle : NSUnderlineStyle.single.rawValue
         ]
         let attributedString = NSAttributedString(string: str, attributes: attributes)
         return attributedString
@@ -72,7 +72,7 @@ class OnGoingSignUpsViewController: GeneralViewController {
                 let stringArray = data.contact?.components(separatedBy: " ")
                 let firstName = stringArray![0]
                 let secondName = stringArray![1]
-                let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
+                let resultString = "\(firstName.prefix(1))\(secondName.prefix(1))"
                 
                 owner1NameLbl.text = resultString
                 let color1 = Utility.hexStringToUIColor(hex: data.organizer1BackgroundColor!)
@@ -106,7 +106,7 @@ class OnGoingSignUpsViewController: GeneralViewController {
                 let stringArray = data.contact2?.components(separatedBy: " ")
                 let firstName = stringArray![0]
                 let secondName = stringArray![1]
-                let resultString = "\(firstName.characters.first!)\(secondName.characters.first!)"
+                let resultString = "\(firstName.prefix(1))\(secondName.prefix(1))"
                 
                 owner2NameLbl.text = resultString
                 let color1 = Utility.hexStringToUIColor(hex: data.organizer1BackgroundColor!)
@@ -192,8 +192,8 @@ class OnGoingSignUpsViewController: GeneralViewController {
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             //self.present(alert, animated: true, completion: nil)
         }
     }
@@ -296,7 +296,7 @@ extension OnGoingSignUpsViewController: UITextViewDelegate {
             textView.text = nil
             textView.textColor = UIColor.black
         }
-        if text == "" && textView_comments.text.characters.count == 1 && textView.textColor == UIColor.black{
+        if text == "" && textView_comments.text.count == 1 && textView.textColor == UIColor.black{
             textView.text = placeHolderText
             textView.textColor = UIColor.lightGray
             textView.selectedRange = NSMakeRange(0, 0)
@@ -306,7 +306,7 @@ extension OnGoingSignUpsViewController: UITextViewDelegate {
         
         let totalText = textView.text + text
         
-        if totalText.characters.count > 0 && totalText != placeHolderText {
+        if totalText.count > 0 && totalText != placeHolderText {
             //btn_comments.setImage(UIImage(named: "chat_send"), forState: .Normal)
         }
         else{

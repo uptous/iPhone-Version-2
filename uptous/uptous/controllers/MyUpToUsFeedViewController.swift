@@ -162,9 +162,9 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         self.filterListArr = self.newsTypeList.filter({( feed: Feed) -> Bool in
             let tmp = feed.ownerName!.lowercased()
-            var tmp1 = feed.communityName!.lowercased()
-            var tmp2 = feed.newsType!.lowercased()
-            var tmp3 = feed.newsItemName!.lowercased()
+            let tmp1 = feed.communityName!.lowercased()
+            let tmp2 = feed.newsType!.lowercased()
+            let tmp3 = feed.newsItemName!.lowercased()
             
             //print(tmp?.range(of: searchText.lowercased()))
             //print($0.firstName!.rangeOfString(searchText) != nil)
@@ -262,8 +262,8 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             //self.present(alert, animated: true, completion: nil)
         }
     }
@@ -288,8 +288,9 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     
     func showSendMailErrorAlert() {
-        let sendMailErrorAlert = UIAlertView(title: "Could Not Send Email", message: "Your device could not send e-mail.  Please check e-mail configuration and try again.", delegate: self, cancelButtonTitle: "OK")
-        sendMailErrorAlert.show()
+        let sendMailErrorAlert = UIAlertController(title: "Could Not Send Email", message: "Your device could not send the e-mail. Please check configuration.", preferredStyle: UIAlertController.Style.alert)
+        sendMailErrorAlert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(sendMailErrorAlert, animated: true, completion: nil)
     }
     
     // MARK: MFMailComposeViewControllerDelegate Method
@@ -335,16 +336,16 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
                 self.tableView.reloadData()
             }else {
                 self.tableView.isHidden = true
-                let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
             
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             //self.present(alert, animated: true, completion: nil)
         }
     }
@@ -398,8 +399,8 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             //self.present(alert, animated: true, completion: nil)
         }
     }
@@ -582,7 +583,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }else {
             event = self.newsTypeList[sender]
         }
-        print(event.newsType)
+        print(event.newsType!)
         
         let apiName = SignupItems + ("\(event.newsItemId!)")
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
@@ -631,8 +632,8 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }) {
             (error) -> Void in
             
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -716,8 +717,8 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
             
         }else {
             DispatchQueue.main.async(execute: { () -> Void in
-                let alert = UIAlertController(title: "Alert", message: "Files in this format cannot be downloaded to the iPhone", preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                let alert = UIAlertController(title: "Alert", message: "Files in this format cannot be downloaded to the iPhone", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             })
         }
@@ -765,8 +766,8 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
 
 //MARK:- Degree To Radians
 extension Int {
-    var degreesToRadians: Double { return Double(self) * M_PI / 180 }
-    var radiansToDegrees: Double { return Double(self) * 180 / M_PI }
+    var degreesToRadians: Double { return Double(self) * Double.pi / 180 }
+    var radiansToDegrees: Double { return Double(self) * 180 / Double.pi }
 }
 
 protocol DoubleConvertible {
@@ -779,10 +780,10 @@ extension CGFloat: DoubleConvertible { var double: Double { return Double(self) 
 
 extension DoubleConvertible {
     var degreesToRadians: DoubleConvertible {
-        return Self(double * M_PI / 180)
+        return Self(double * Double.pi / 180)
     }
     var radiansToDegrees: DoubleConvertible {
-        return Self(double * 180 / M_PI)
+        return Self(double * 180 / Double.pi)
     }
 }
 //MARK:- TableView Delegate
