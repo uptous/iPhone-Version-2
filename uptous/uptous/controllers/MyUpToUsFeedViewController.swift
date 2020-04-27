@@ -448,7 +448,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }else {
             data = self.newsTypeList[sender]
         }
-        print(data)
+        print(data ?? "No Data")
         
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReadMoreViewController") as! ReadMoreViewController
         controller.data = data

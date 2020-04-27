@@ -1604,7 +1604,7 @@
 					D3D8A6251D5EDB44000AB922 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = U8DTDCNJ53;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1130;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.SafariKeychain = {
@@ -1615,14 +1615,14 @@
 					D3D8A63C1D5EDB45000AB922 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = U8DTDCNJ53;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1130;
 						ProvisioningStyle = Manual;
 						TestTargetID = D3D8A6251D5EDB44000AB922;
 					};
 					D3D8A6471D5EDB45000AB922 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = U8DTDCNJ53;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1130;
 						ProvisioningStyle = Manual;
 						TestTargetID = D3D8A6251D5EDB44000AB922;
 					};
@@ -1633,6 +1633,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -2163,7 +2164,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "uptous/uptous-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -2188,7 +2189,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = Live_Distribution;
 				SWIFT_OBJC_BRIDGING_HEADER = "uptous/uptous-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -2202,7 +2203,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = SPA.uptousTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/uptous.app/uptous";
 			};
 			name = Debug;
@@ -2216,7 +2217,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = SPA.uptousTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/uptous.app/uptous";
 			};
 			name = Release;
@@ -2235,7 +2236,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = uptous;
 				USES_XCTRUNNER = YES;
 			};
@@ -2252,7 +2253,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = uptous;
 				USES_XCTRUNNER = YES;
 			};

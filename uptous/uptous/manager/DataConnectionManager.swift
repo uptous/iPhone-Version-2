@@ -68,7 +68,7 @@ class DataConnectionManager: NSObject {
     
     // GET
     class func requestGETURL(api:String, para: [String : String] ,success:@escaping (Any) -> Void, failure:@escaping (Error) -> Void) {
-        print(appDelegate.loginHeaderCredentials)
+        print(appDelegate.loginHeaderCredentials ?? "requestGETURK: missing credentials")
          ActivityIndicator.show()
         
         Alamofire.request(api, method: .get, parameters: nil, encoding: URLEncoding.default, headers: appDelegate.loginHeaderCredentials).responseJSON { (response:DataResponse<Any>) in

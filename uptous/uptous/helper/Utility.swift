@@ -187,6 +187,7 @@ class Utility: NSObject {
         return false
     } //F.E.
     
+    /*
     class func calculateLabelSize(_ lbl:UILabel, width:CGFloat)-> CGSize {
         let attString:NSMutableAttributedString = NSMutableAttributedString(string: lbl.text!);
         //--
@@ -197,6 +198,7 @@ class Utility: NSObject {
         let rect:CGRect = attString.boundingRect(with: CGSize(width: width, height: 3000), options: NSStringDrawingOptions.usesLineFragmentOrigin, context: nil)
         return CGSize(width: width, height: rect.size.height);
     }
+ */
     
     class func scaleUIImageToSize( image: UIImage, size: CGSize) -> UIImage {
         let hasAlpha = false
