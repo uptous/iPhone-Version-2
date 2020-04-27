@@ -299,8 +299,8 @@
                                          [self resizeTextView:newSizeH];
                                      } 
                                      completion:^(BOOL finished) {
-                                         if ([delegate respondsToSelector:@selector(growingTextView:didChangeHeight:)]) {
-                                             [delegate growingTextView:self didChangeHeight:newSizeH];
+                        if ([self->delegate respondsToSelector:@selector(growingTextView:didChangeHeight:)]) {
+                            [self->delegate growingTextView:self didChangeHeight:newSizeH];
                                          }
                                      }];
 #endif

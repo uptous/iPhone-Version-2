@@ -317,6 +317,14 @@
 
 - (void)dealloc
 {
+    mainToolbar = nil; mainPagebar = nil;
+
+    theScrollView = nil; contentViews = nil; lastHideTime = nil;
+
+    documentInteraction = nil; printInteraction = nil;
+
+    lastAppearSize = CGSizeZero; currentPage = 0;
+    
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -435,23 +443,6 @@
 	[super viewDidDisappear:animated];
 }
 
-- (void)viewDidUnload
-{
-#ifdef DEBUG
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	mainToolbar = nil; mainPagebar = nil;
-
-	theScrollView = nil; contentViews = nil; lastHideTime = nil;
-
-	documentInteraction = nil; printInteraction = nil;
-
-	lastAppearSize = CGSizeZero; currentPage = 0;
-
-	[super viewDidUnload];
-}
-
 - (BOOL)prefersStatusBarHidden
 {
 	return YES;
@@ -462,29 +453,37 @@
 	return UIStatusBarStyleLightContent;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator
 {
-	return YES;
-}
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-	if (userInterfaceIdiom == UIUserInterfaceIdiomPad) if (printInteraction != nil) [printInteraction dismissAnimated:NO];
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 
-	ignoreDidScroll = YES;
-}
+        // Stuff you used to do in willRotateToInterfaceOrientation would go here.
+        // If you don't need anything special, you can set this block to nil.
+        if (self->userInterfaceIdiom == UIUserInterfaceIdiomPad) if (self->printInteraction != nil) [self->printInteraction dismissAnimated:NO];
+        
+        self->ignoreDidScroll = YES;
+        
+        // not sure if needed - Copied from willAnimateRotationToInterfaceOrientation
+        if (CGSizeEqualToSize(self->theScrollView.contentSize, CGSizeZero) == false)
+        {
+            [self updateContentViews:self->theScrollView]; self->lastAppearSize = CGSizeZero;
+        }
+        
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration
-{
-	if (CGSizeEqualToSize(theScrollView.contentSize, CGSizeZero) == false)
-	{
-		[self updateContentViews:theScrollView]; lastAppearSize = CGSizeZero;
-	}
-}
+        // Stuff you used to do in didRotateFromInterfaceOrientation would go here.
+        // If not needed, set to nil.
+        self->ignoreDidScroll = NO;
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-	ignoreDidScroll = NO;
+        // not sure if needed - Copied from willAnimateRotationToInterfaceOrientation
+        if (CGSizeEqualToSize(self->theScrollView.contentSize, CGSizeZero) == false)
+        {
+            [self updateContentViews:self->theScrollView]; self->lastAppearSize = CGSizeZero;
+        }
+        
+    }];
 }
 
 - (void)didReceiveMemoryWarning
