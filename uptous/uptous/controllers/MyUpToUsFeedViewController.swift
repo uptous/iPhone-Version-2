@@ -3,7 +3,7 @@
 //  uptous
 //
 //  Created by Roshan Gita  on 8/10/16.
-//  Copyright © 2016 SPA. All rights reserved.
+//  Copyright © 2016 UpToUs. All rights reserved.
 //
 
 import UIKit
@@ -115,6 +115,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         messageView.isHidden = true
         self.tableView.isHidden = true
         //Fetch Feed Items
+        print("jjjjjjjjj")
         self.getFeedList()
     }
     
@@ -132,6 +133,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         pictureBtn.isHidden = true
         //directBtn.isHidden = true
         onTimerTick()
+        print("kkkkkkkk")
         self.getFeedList()
     }
     
@@ -209,6 +211,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
                 }else {
                     if data?.object(forKey: "lastItemTime") as? NSNumber != self.defaults.object(forKey: "LastModified") as? NSNumber {
                         self.defaults.set(data?.object(forKey: "lastItemTime"), forKey: "LastModified")
+                        print("llllll")
                         self.getFeedList()
                     }
                 }
@@ -245,6 +248,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     func fetchCommunity() {
         self.communityList.removeAllObjects()
 
+        print("nnnnnn")
         DataConnectionManager.requestGETURL(api: TopMenuCommunity, para: ["":""], success: {
             (response) -> Void in
             
@@ -354,6 +358,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     func getFeedList() {
         appDelegate.tabbarView?.isHidden = false
         self.communityView.isHidden = true
+        print("oooooo")
         DataConnectionManager.requestGETURL(api: FeedAPI, para: ["":""], success: {
             (response) -> Void in
             print(response)
@@ -938,6 +943,7 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
             topMenuSelected = 0
             let data = self.communityList[(indexPath as NSIndexPath).row] as? Community
             if data?.name == "All Communities" {
+                print("hhhhhhh")
                 topMenuStatus = 0
                 headingBtn.setImage(UIImage(named: "top-down-arrow"), for: .normal)
                 headingBtn.setTitle("Feed - All Communities", for: .normal)
@@ -946,6 +952,7 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
                 UserPreferences.SelectedCommunityName = ""
                 getFeedList()
             }else {
+                print("iiiiiiii")
                 headingBtn.setImage(UIImage(named: "top-up-arrow"), for: .normal)
                 UserPreferences.SelectedCommunityName = (data?.name)!
                 headingBtn.setTitle("Feed - \((data?.name)!)", for: .normal)

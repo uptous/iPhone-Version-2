@@ -3,7 +3,7 @@
 //  uptous
 //
 //  Created by Roshan Gita  on 10/20/16.
-//  Copyright © 2016 SPA. All rights reserved.
+//  Copyright © 2016 UpToUs. All rights reserved.
 //
 
 import UIKit
@@ -69,7 +69,7 @@ class DataConnectionManager: NSObject {
         
         print("ccccc11111")
         print("api = " + api)
-        print("credential = " + (appDelegate.loginHeaderCredentials.value(for: "Authentication") ?? "No Authentication"))
+        print("credential = " + (appDelegate.loginHeaderCredentials.value(for: "Authorization") ?? "No Authentication"))
          
         AF.request(api, method: .get, parameters: nil, encoding: URLEncoding.default, headers: appDelegate.loginHeaderCredentials).responseJSON { (response:AFDataResponse<Any>) in
             

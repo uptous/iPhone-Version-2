@@ -3,7 +3,7 @@
 //  uptous
 //
 //  Created by Roshan Mishra on 11/5/17.
-//  Copyright © 2017 SPA. All rights reserved.
+//  Copyright © 2017 UpToUs. All rights reserved.
 //
 
 import UIKit

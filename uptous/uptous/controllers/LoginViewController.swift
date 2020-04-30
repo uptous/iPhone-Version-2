@@ -3,7 +3,7 @@
 //  uptous
 //
 //  Created by Roshan Gita  on 8/10/16.
-//  Copyright © 2016 SPA. All rights reserved.
+//  Copyright © 2016 UpToUs. All rights reserved.
 //
 
 import UIKit
@@ -223,7 +223,9 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
             
             ActivityIndicator.show()
             
+            print("ggggggg")
             print("login request : " + LoginAPI)
+            
             
             AF.request(LoginAPI, method: .get, parameters: nil, encoding: URLEncoding(destination: .methodDependent), headers: appDelegate.loginHeaderCredentials).responseJSON { (response:AFDataResponse<Any>) in
                 ActivityIndicator.hide()
@@ -270,6 +272,7 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
     }
     
     func checkNewFeed() {
+        print("mmmmmmm")
         DataConnectionManager.requestGETURL1(api: FeedUpdateAPI, para: ["":""], success: {
             (response) -> Void in
             print("First Time==>\(response)")

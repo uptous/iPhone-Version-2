@@ -3,7 +3,7 @@
 //  uptousUITests
 //
 //  Created by Roshan Gita  on 8/13/16.
-//  Copyright © 2016 SPA. All rights reserved.
+//  Copyright © 2016 UpToUs. All rights reserved.
 //
 
 import XCTest
