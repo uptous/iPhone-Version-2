@@ -9,15 +9,16 @@
 import UIKit
 import CoreData
 import GoogleMaps
-import Fabric
-import Crashlytics
+//import Fabric
+//import Crashlytics
+import Alamofire
 
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var loginHeaderCredentials: [String: String]!
+    var loginHeaderCredentials: HTTPHeaders = [:]
     var loginHeader64Credentials: String!
     var tabbarView: CustomTabBarView?
     var globalSignUpData: SignupSheet!
@@ -30,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         GMSServices.provideAPIKey("\(GoogleAPIKey)")
         
-        Fabric.with([Crashlytics.self])
+        //Fabric.with([Crashlytics.self])
         return true
     }
     

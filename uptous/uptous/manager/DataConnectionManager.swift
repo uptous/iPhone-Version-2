@@ -16,21 +16,21 @@ class DataConnectionManager: NSObject {
     class func requestPOSTURL(api:String, para:Parameters ,success:@escaping (AnyObject) -> Void, failure:@escaping (Error) -> Void) {
         
         ActivityIndicator.show()
-        Alamofire.request(api, method: .post,parameters: para, encoding: URLEncoding.default, headers: appDelegate.loginHeaderCredentials).responseJSON { (response:DataResponse<Any>) in
+        
+        print("ddddd")
+        
+        AF.request(api, method: .post,parameters: para, encoding: URLEncoding.default, headers: appDelegate.loginHeaderCredentials).responseJSON { (response:AFDataResponse<Any>) in
             
             print(response.result)
             print(response)
             ActivityIndicator.hide()
             switch(response.result) {
                 
-            case .success(_):
-                if response.result.isSuccess {
-                    let result = response.result.value
-                    success(result as AnyObject)
-                }
+            case .success(let result):
+                success(result as AnyObject)
                 break
                 
-            case .failure(_):
+            case .failure(let error):
                 /*if response.result.isFailure {
                  let error : Error = response.result.error!
                  failure(error)
@@ -53,14 +53,10 @@ class DataConnectionManager: NSObject {
                         //message = ""
                     //}
                 } else {
-                    if response.result.isFailure {
-                        let error : Error = response.result.error!
                         failure(error)
-                    }
                 }
                 // display alert with error message
                 break
-                
             }
 
         }
@@ -68,27 +64,26 @@ class DataConnectionManager: NSObject {
     
     // GET
     class func requestGETURL(api:String, para: [String : String] ,success:@escaping (Any) -> Void, failure:@escaping (Error) -> Void) {
-        print(appDelegate.loginHeaderCredentials ?? "requestGETURK: missing credentials")
+        
          ActivityIndicator.show()
         
-        Alamofire.request(api, method: .get, parameters: nil, encoding: URLEncoding.default, headers: appDelegate.loginHeaderCredentials).responseJSON { (response:DataResponse<Any>) in
+        print("ccccc11111")
+        print("api = " + api)
+        print("credential = " + (appDelegate.loginHeaderCredentials.value(for: "Authentication") ?? "No Authentication"))
+         
+        AF.request(api, method: .get, parameters: nil, encoding: URLEncoding.default, headers: appDelegate.loginHeaderCredentials).responseJSON { (response:AFDataResponse<Any>) in
             
-           
+           print("ccccc2222")
+            print(response)
+            print("ccccc3333")
             
             ActivityIndicator.hide()
-            switch(response.result) {
-            case .success(_):
-                if response.result.isSuccess {
-                    let result = response.result.value 
-                    success(result ?? "Success")
-                }
+            switch response.result {
+            case .success(let result):
+                success(result)
                 break
                 
-            case .failure(_):
-                /*if response.result.isFailure {
-                    let error : Error = response.result.error!
-                    failure(error)
-                }*/
+            case .failure(let error):
                 
                 //let message : String
                 if let httpStatusCode = response.response?.statusCode {
@@ -106,10 +101,7 @@ class DataConnectionManager: NSObject {
                     //    message = ""
                     //}
                 } else {
-                    if response.result.isFailure {
-                        let error : Error = response.result.error!
-                        failure(error)
-                    }
+                    failure(error)
                 }
                 // display alert with error message
                 break
@@ -137,20 +129,18 @@ class DataConnectionManager: NSObject {
     
     // GET
     class func requestGETURL1(api:String, para: [String : String] ,success:@escaping (Any) -> Void, failure:@escaping (Error) -> Void) {
-        Alamofire.request(api, method: .get, parameters: nil, encoding: URLEncoding.default, headers: appDelegate.loginHeaderCredentials).responseJSON { (response:DataResponse<Any>) in
+        AF.request(api, method: .get, parameters: nil, encoding: URLEncoding.default, headers: appDelegate.loginHeaderCredentials).responseJSON { (response:AFDataResponse<Any>) in
             
             switch(response.result) {
-            case .success(_):
-                if response.result.isSuccess {
-                    let result = response.result.value
-                    success(result ?? "Success")
-                }
+            case .success(let result):
+                success(result)
                 break
                 
-            case .failure(_):
+            case .failure(let error):
                 //let message : String
                 if let httpStatusCode = response.response?.statusCode {
                     if (httpStatusCode == 401) {
+                        print("bbbbbb")
                         self.relogin()
                     }
                     //switch(httpStatusCode) {
@@ -164,10 +154,7 @@ class DataConnectionManager: NSObject {
                     //    message = ""
                     //}
                 } else {
-                    if response.result.isFailure {
-                        let error : Error = response.result.error!
-                        failure(error)
-                    }
+                    failure(error)
                 }
                 // display alert with error message
                 break
@@ -268,6 +255,7 @@ class DataConnectionManager: NSObject {
             //using breaking point to show data
             if let response1 = response as? HTTPURLResponse {
                 if response1.statusCode == 401 {
+                    print("aaaaaa")
                     self.relogin()
                 }
             }

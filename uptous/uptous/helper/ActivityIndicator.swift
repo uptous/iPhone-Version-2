@@ -20,7 +20,7 @@ class ActivityIndicator: NSObject {
     }
     
     class func hide() {
-        RappleActivityIndicatorView.stopAnimating()
+        RappleActivityIndicatorView.stopAnimation()
     }
 
 }

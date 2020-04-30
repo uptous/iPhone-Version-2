@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class Dropper: UIView {
+open class Dropper: UIView {
     public let TableMenu: UITableView = UITableView()
     /**
     Alignment of the dropdown menu compared to the button
@@ -20,7 +20,7 @@ public class Dropper: UIView {
     - Right: Dropdown is aligned to the right of the corresponding button
     */
     public enum Alignment {
-        case Left, Center, Right
+        case left, center, right
     }
     
     /**
@@ -30,7 +30,7 @@ public class Dropper: UIView {
      - Bottom: Displayed on bottom of the dropdown
      */
     public enum Position {
-        case Top, Bottom
+        case top, bottom
     }
     
     /**
@@ -41,7 +41,7 @@ public class Dropper: UIView {
     
     */
     public enum Status {
-        case Displayed, Hidden, Shown
+        case displayed, hidden, shown
     }
     
     /**
@@ -51,42 +51,55 @@ public class Dropper: UIView {
     - White: White theme for dropdown. White background, black text
     */
     public enum Themes {
-        case Black(UIColor?), White
+        case black(UIColor?), white
     }
     
     // MARK: - Public Properties
-    public var trimCorners: Bool = false /// Automaticly applies border radius of 10 to Dropdown
-    public var defaultAnimationTime: TimeInterval = 0.1 /// The default time for animations to take
-    public var delegate: DropperDelegate? /// Delegate Property
-    public var status: Status = .Hidden /// The current state of the view
-    public var spacing: CGFloat = 10 /// The distance from the button to the dropdown
-    public var maxHeight: CGFloat? /// The maximum possible height of the dropdown
-    public var cellBackgroundColor: UIColor? /// Sets the cell background color
-    public var cellColor: UIColor? /// Sets the cell tint color and text color
-    public var cellTextSize: CGFloat? /// Sets the size of the text to provided value
-    
+    open var trimCorners: Bool = false /// Automaticly applies border radius of 10 to Dropdown
+    open var defaultAnimationTime: TimeInterval = 0.1 /// The default time for animations to take
+    open var delegate: DropperDelegate? /// Delegate Property
+    open var status: Status = .hidden /// The current state of the view
+    open var spacing: CGFloat = 10 /// The distance from the button to the dropdown
+    open var maxHeight: CGFloat? /// The maximum possible height of the dropdown
+    open var cellBackgroundColor: UIColor? /// Sets the cell background color
+    open var cellColor: UIColor? /// Sets the cell tint color and text color
+	open var cellTextSize: CGFloat? {
+		get {
+			return cellTextFont?.pointSize
+		}
+		set {
+			if let newValue = newValue {
+				cellTextFont = UIFont.systemFont(ofSize: newValue)
+			}else{
+				cellTextFont = nil
+			}
+		}
+	}
+    /// Sets the size of the text to provided value
+	open var cellTextFont: UIFont?
+	
     // MARK: - Public Computed Properties
     /// The items to be dispalyed in the tableview
-    public var items = [String]() {
+    open var items = [String]() {
         didSet {
             refreshHeight()
         }
     }
     
     /// Height of the Dropdown
-    public var height: CGFloat {
+    open var height: CGFloat {
         get { return self.frame.size.height }
         set { self.frame.size.height = newValue }
     }
     
     /// Width of the Dropdown
-    public var width: CGFloat {
+    open var width: CGFloat {
         get { return self.frame.size.width }
         set { self.frame.size.width = newValue }
     }
     
     /// Corner Radius of the Dropdown
-    public var cornerRadius: CGFloat {
+    open var cornerRadius: CGFloat {
         get { return self.layer.cornerRadius }
         set {
             TableMenu.layer.cornerRadius = newValue
@@ -95,14 +108,14 @@ public class Dropper: UIView {
     }
     
     /// Theme of dropdown menu (Defaults to White theme)
-    public var theme: Themes = .White {
+    open var theme: Themes = .white {
         didSet {
             switch theme {
-            case .White:
+            case .white:
                 cellColor = UIColor.black
                 cellBackgroundColor = UIColor.white
                 border = (1, UIColor.black)
-            case .Black(let backgroundColor):
+            case .black(let backgroundColor):
                 let defaultColor = UIColor(red:0.149,  green:0.149,  blue:0.149, alpha:1)
                 cellBackgroundColor = backgroundColor ?? defaultColor
                 cellColor = UIColor.white
@@ -118,7 +131,7 @@ public class Dropper: UIView {
     - (color: UIColor) Color of Border
     
     */
-    public var border: (width: CGFloat, color: UIColor) {
+    open var border: (width: CGFloat, color: UIColor) {
         get { return (TableMenu.layer.borderWidth, UIColor(cgColor: TableMenu.layer.borderColor!)) }
         set {
             let (borderWidth, borderColor) = newValue
@@ -129,7 +142,7 @@ public class Dropper: UIView {
     
     // MARK: - Private Computed Properties
     /// Private property used to determine if the user has set a max height or if no max height is provided then make sure its less then the height of the view
-    private var max_Height: CGFloat {
+    fileprivate var max_Height: CGFloat {
         get {
             if let height = maxHeight { // Determines if max_height is provided
                 return height
@@ -147,7 +160,7 @@ public class Dropper: UIView {
     }
     
     /// Gets the current root view of where the dropdown is
-    private var root: UIView? {
+    fileprivate var root: UIView? {
         guard let current = UIApplication.shared.keyWindow?.subviews.last else {
             print("[Dropper] &Error:100: Could not find current view. Please report this issue @ https://github.com/kirkbyo/Dropper/issues")
             return nil
@@ -156,7 +169,7 @@ public class Dropper: UIView {
     }
     
     // MARK: - Layout & Setup
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         // Size of table menu
         TableMenu.frame.size.height = self.frame.size.height + 0.1
@@ -177,7 +190,7 @@ public class Dropper: UIView {
     
     // MARK: - Private Properties
     /// Defines if the view has been shown yet
-    private var shown: Status = .Hidden
+    fileprivate var shown: Status = .hidden
     
     // MARK: - Init
     public init(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
@@ -215,28 +228,28 @@ public class Dropper: UIView {
     - parameter position: Horizontal alignment of the dropdown. Defaults to bottom.
     - parameter button:   Button to which the dropdown will be aligned to
     */
-    public func show(options: Alignment, position: Position = .Bottom, button: UIButton) {
+    open func show(_ options: Alignment, position: Position = .bottom, button: UIButton) {
         refreshHeight()
     
         switch options { // Aligns the view vertically to the button
-        case .Left:
-            self.frame.origin.x = button.frame.origin.x - 200
-        case .Right:
+        case .left:
+            self.frame.origin.x = button.frame.origin.x
+        case .right:
             self.frame.origin.x = button.frame.origin.x + button.frame.width
-        case .Center:
+        case .center:
             self.frame.origin.x = button.frame.origin.x + (button.frame.width - self.frame.width)/2
         }
         
         switch position { // Aligns the view Horizontally to the button
-        case .Top:
+        case .top:
             self.frame.origin.y = button.frame.origin.y - height - spacing
-        case .Bottom:
+        case .bottom:
             self.frame.origin.y = button.frame.origin.y + button.frame.height + spacing
         }
     
         if (!self.isHidden) {
             self.addSubview(TableMenu)
-            if let buttonRoot = findButtonFromSubviews(subviews: (button.superview?.subviews)!, button: button) {
+            if let buttonRoot = findButtonFromSubviews((button.superview?.subviews)!, button: button) {
                 buttonRoot.superview?.addSubview(self)
             } else {
                 if let rootView = root {
@@ -247,7 +260,7 @@ public class Dropper: UIView {
             self.TableMenu.isHidden = false
             self.isHidden = false
         }
-        status = .Displayed
+        status = .displayed
     }
     
     /**
@@ -257,30 +270,27 @@ public class Dropper: UIView {
     - parameter options: Position of the dropdown corresponding of the button
     - parameter button:  Button to which the dropdown will be aligned to
     */
-    public func showWithAnimation(time: TimeInterval, options: Alignment, position: Position = .Bottom, button: UIButton) {
+    open func showWithAnimation(_ time: TimeInterval, options: Alignment, position: Position = .bottom, button: UIButton) {
         if (self.isHidden) {
             refresh()
             height = self.TableMenu.frame.height
         }
         
         self.TableMenu.alpha = 0.0
-        self.show(options: options, position:  position, button: button)
+        self.show(options, position:  position, button: button)
         UIView.animate(withDuration: time, animations: {
             self.TableMenu.alpha = 1.0
-            }, completion: nil)
-        /*UIView.animateWithDuration(withDuration: time, animations: {
-            self.TableMenu.alpha = 1.0
-        })*/
+        })
     }
     
     /**
     Hides the dropdown from the view
     */
-    public func hide() {
-        status = .Hidden
+    open func hide() {
+        status = .hidden
         self.isHidden = true
-        if shown == .Hidden {
-            shown = .Shown
+        if shown == .hidden {
+            shown = .shown
         }
     }
     
@@ -289,7 +299,7 @@ public class Dropper: UIView {
     
     - parameter time: Time taken to fade out the dropdown
     */
-    public func hideWithAnimation(time: TimeInterval) {
+    open func hideWithAnimation(_ time: TimeInterval) {
         UIView.animate(withDuration: time, delay: 0.0, options: .curveEaseOut, animations: {
             self.TableMenu.alpha = 0.0
             }, completion: { finished in
@@ -300,14 +310,14 @@ public class Dropper: UIView {
     /**
     Refresh the Tablemenu. For specifically calling .reloadData() on the TableView
     */
-    public func refresh() {
+    open func refresh() {
         TableMenu.reloadData()
     }
     
     /**
     Refreshes the table view height
     */
-    private func refreshHeight() {
+    fileprivate func refreshHeight() {
         // Updates the height of the view depending on the amount of item
         let tempHeight: CGFloat = CGFloat(items.count) * TableMenu.rowHeight // Height of TableView
         if (tempHeight <= max_Height) { // Determines if tempHeight is greater then max height
@@ -325,7 +335,7 @@ public class Dropper: UIView {
     
     - returns: Found button or nil
     */
-    private func findButtonFromSubviews(subviews: [UIView], button: UIButton) -> UIView? {
+    fileprivate func findButtonFromSubviews(_ subviews: [UIView], button: UIButton) -> UIView? {
         for subview in subviews {
             if (subview is UIButton && subview == button) {
                 return button
@@ -343,9 +353,9 @@ extension Dropper: UITableViewDelegate, UITableViewDataSource, DropperExtentsion
         cell.imageItem.removeFromSuperview()
         cell.textItem.removeFromSuperview()
         cell.last = items.count - 1  // Sets the last item to the cell
-        cell.indexPath = indexPath as NSIndexPath? // Sets index path to the cell
+        cell.indexPath = indexPath // Sets index path to the cell
         cell.borderColor = border.color // Sets the border color for the seperator
-        let item = items[indexPath.row]
+        let item = items[(indexPath as NSIndexPath).row]
         
         if let color = cellBackgroundColor {
             cell.backgroundColor = color
@@ -356,15 +366,15 @@ extension Dropper: UITableViewDelegate, UITableViewDataSource, DropperExtentsion
             cell.imageItem.tintColor = color
         }
         
-        if let size = cellTextSize {
-            cell.textItem.font = UIFont.systemFont(ofSize: size)
+        if let font = cellTextFont {
+            cell.textItem.font = font
         }
         
-        if let image = toImage(name: item) { // Determines if item is an image or not
-            cell.cellType = .Icon
+        if let image = toImage(item) { // Determines if item is an image or not
+            cell.cellType = .icon
             cell.imageItem.image = image
         } else {
-            cell.cellType = .Text
+            cell.cellType = .text
             cell.textItem.text = item
         }
         
@@ -375,15 +385,13 @@ extension Dropper: UITableViewDelegate, UITableViewDataSource, DropperExtentsion
         return items.count
     }
     
-    public func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    public func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    public func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        delegate?.DropperSelectedRow(path: indexPath, contents: items[indexPath.row])
-        //delegate?.DropperSelectedRow(indexPath, contents: items[indexPath.row])
-        delegate?.DropperSelectedRow(path: indexPath, contents: items[indexPath.row], tag: self.tag)
-        //delegate?.DropperSelectedRow(indexPath, contents: items[indexPath.row], tag: self.tag)
-        self.hideWithAnimation(time: defaultAnimationTime)
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        delegate?.DropperSelectedRow(indexPath, contents: items[(indexPath as NSIndexPath).row])
+        delegate?.DropperSelectedRow(indexPath, contents: items[(indexPath as NSIndexPath).row], tag: self.tag)
+        self.hideWithAnimation(defaultAnimationTime)
     }
 }

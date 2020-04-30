@@ -2,7 +2,7 @@
 //  GMSMapView.h
 //  Google Maps SDK for iOS
 //
-//  Copyright 2012 Google Inc.
+//  Copyright 2012 Google LLC
 //
 //  Usage of this SDK is subject to the Google Maps/Google Earth APIs Terms of
 //  Service: https://developers.google.com/maps/terms
@@ -35,7 +35,7 @@
 @class GMSOverlay;
 @class GMSProjection;
 
-NS_ASSUME_NONNULL_BEGIN;
+NS_ASSUME_NONNULL_BEGIN
 
 /** Delegate for events on GMSMapView. */
 @protocol GMSMapViewDelegate<NSObject>
@@ -47,7 +47,8 @@ NS_ASSUME_NONNULL_BEGIN;
  * tapping on the "My Location" button) or by being updated explicitly via the camera or a
  * zero-length animation on layer.
  *
- * @param gesture If YES, this is occuring due to a user gesture.
+ * @param mapView The map view that was tapped.
+ * @param gesture If YES, this is occurring due to a user gesture.
 */
 - (void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture;
 
@@ -184,6 +185,14 @@ NS_ASSUME_NONNULL_BEGIN;
 - (BOOL)didTapMyLocationButtonForMapView:(GMSMapView *)mapView;
 
 /**
+ * Called when the My Location Dot is tapped.
+ *
+ * @param mapView The map view that was tapped.
+ * @param location The location of the user when the location dot was tapped.
+ */
+- (void)mapView:(GMSMapView *)mapView didTapMyLocation:(CLLocationCoordinate2D)location;
+
+/**
  * Called when tiles have just been requested or labels have just started rendering.
  */
 - (void)mapViewDidStartTileRendering:(GMSMapView *)mapView;
@@ -202,9 +211,12 @@ NS_ASSUME_NONNULL_BEGIN;
 @end
 
 /**
+ * \defgroup MapViewType GMSMapViewType
+ * @{
+ */
+
+/**
  * Display types for GMSMapView.
- *
- * @related GMSMapView
  */
 typedef NS_ENUM(NSUInteger, GMSMapViewType) {
   /** Basic maps.  The default. */
@@ -224,10 +236,15 @@ typedef NS_ENUM(NSUInteger, GMSMapViewType) {
 
 };
 
+/**@}*/
+
+/**
+ * \defgroup FrameRate GMSFrameRate
+ * @{
+ */
+
 /**
  * Rendering frame rates for GMSMapView.
- *
- * @related GMSMapView
  */
 typedef NS_ENUM(NSUInteger, GMSFrameRate) {
   /** Use the minimum frame rate to conserve battery usage. */
@@ -244,6 +261,34 @@ typedef NS_ENUM(NSUInteger, GMSFrameRate) {
    */
   kGMSFrameRateMaximum,
 };
+
+/**@}*/
+
+/**
+ * \defgroup MapViewPaddingAdjustmentBehavior GMSMapViewPaddingAdjustmentBehavior
+ * @{
+ */
+
+/**
+ * Constants indicating how safe area insets are added to padding.
+ */
+typedef NS_ENUM(NSUInteger, GMSMapViewPaddingAdjustmentBehavior) {
+  /** Always include the safe area insets in the padding. */
+  kGMSMapViewPaddingAdjustmentBehaviorAlways,
+
+  /**
+   * When the padding value is smaller than the safe area inset for a particular edge, use the safe
+   * area value for layout, else use padding.
+   */
+  kGMSMapViewPaddingAdjustmentBehaviorAutomatic,
+
+  /**
+   * Never include the safe area insets in the padding. This was the behavior prior to version 2.5.
+   */
+  kGMSMapViewPaddingAdjustmentBehaviorNever,
+};
+
+/**@}*/
 
 /**
  * This is the main class of the Google Maps SDK for iOS and is the entry point for all methods
@@ -280,51 +325,51 @@ typedef NS_ENUM(NSUInteger, GMSFrameRate) {
 /**
  * Controls whether the My Location dot and accuracy circle is enabled. Defaults to NO.
  */
-@property(nonatomic, assign, getter=isMyLocationEnabled) BOOL myLocationEnabled;
+@property(nonatomic, getter=isMyLocationEnabled) BOOL myLocationEnabled;
 
 /**
  * If My Location is enabled, reveals where the user location dot is being drawn. If it is disabled,
  * or it is enabled but no location data is available, this will be nil.  This property is
  * observable using KVO.
  */
-@property(nonatomic, strong, readonly, nullable) CLLocation *myLocation;
+@property(nonatomic, readonly, nullable) CLLocation *myLocation;
 
 /**
  * The marker that is selected.  Setting this property selects a particular marker, showing an info
  * window on it.  If this property is non-nil, setting it to nil deselects the marker, hiding the
  * info window.  This property is observable using KVO.
  */
-@property(nonatomic, strong, nullable) GMSMarker *selectedMarker;
+@property(nonatomic, nullable) GMSMarker *selectedMarker;
 
 /**
  * Controls whether the map is drawing traffic data, if available.  This is subject to the
  * availability of traffic data.  Defaults to NO.
  */
-@property(nonatomic, assign, getter=isTrafficEnabled) BOOL trafficEnabled;
+@property(nonatomic, getter=isTrafficEnabled) BOOL trafficEnabled;
 
 /**
  * Controls the type of map tiles that should be displayed.  Defaults to kGMSTypeNormal.
  */
-@property(nonatomic, assign) GMSMapViewType mapType;
+@property(nonatomic) GMSMapViewType mapType;
 
 /**
  * Controls the style of the map.
  *
  * A non-nil mapStyle will only apply if mapType is Normal.
  */
-@property(nonatomic, strong, nullable) GMSMapStyle *mapStyle;
+@property(nonatomic, nullable) GMSMapStyle *mapStyle;
 
 /**
  * Minimum zoom (the farthest the camera may be zoomed out). Defaults to kGMSMinZoomLevel. Modified
  * with -setMinZoom:maxZoom:.
  */
-@property(nonatomic, assign, readonly) float minZoom;
+@property(nonatomic, readonly) float minZoom;
 
 /**
  * Maximum zoom (the closest the camera may be to the Earth). Defaults to kGMSMaxZoomLevel. Modified
  * with -setMinZoom:maxZoom:.
  */
-@property(nonatomic, assign, readonly) float maxZoom;
+@property(nonatomic, readonly) float maxZoom;
 
 /**
  * If set, 3D buildings will be shown where available.  Defaults to YES.
@@ -332,7 +377,7 @@ typedef NS_ENUM(NSUInteger, GMSFrameRate) {
  * This may be useful when adding a custom tile layer to the map, in order to make it clearer at
  * high zoom levels.  Changing this value will cause all tiles to be briefly invalidated.
  */
-@property(nonatomic, assign, getter=isBuildingsEnabled) BOOL buildingsEnabled;
+@property(nonatomic, getter=isBuildingsEnabled) BOOL buildingsEnabled;
 
 /**
  * Sets whether indoor maps are shown, where available. Defaults to YES.
@@ -340,18 +385,18 @@ typedef NS_ENUM(NSUInteger, GMSFrameRate) {
  * If this is set to NO, caches for indoor data may be purged and any floor currently selected by
  * the end-user may be reset.
  */
-@property(nonatomic, assign, getter=isIndoorEnabled) BOOL indoorEnabled;
+@property(nonatomic, getter=isIndoorEnabled) BOOL indoorEnabled;
 
 /**
  * Gets the GMSIndoorDisplay instance which allows to observe or control aspects of indoor data
  * display.
  */
-@property(nonatomic, strong, readonly) GMSIndoorDisplay *indoorDisplay;
+@property(nonatomic, readonly) GMSIndoorDisplay *indoorDisplay;
 
 /**
  * Gets the GMSUISettings object, which controls user interface settings for the map.
  */
-@property(nonatomic, strong, readonly) GMSUISettings *settings;
+@property(nonatomic, readonly) GMSUISettings *settings;
 
 /**
  * Controls the 'visible' region of the view.  By applying padding an area around the edge of the
@@ -364,7 +409,16 @@ typedef NS_ENUM(NSUInteger, GMSFrameRate) {
  *
  * This property may be animated within a UIView-based animation block.
  */
-@property(nonatomic, assign) UIEdgeInsets padding;
+@property(nonatomic) UIEdgeInsets padding;
+
+/**
+ * Controls how safe area insets are added to the padding values. Like padding, safe area insets
+ * position map controls such as the compass, my location button and floor picker within the device
+ * safe area.
+ *
+ * Defaults to kGMSMapViewPaddingAdjustmentBehaviorAlways.
+ */
+@property(nonatomic) GMSMapViewPaddingAdjustmentBehavior paddingAdjustmentBehavior;
 
 /**
  * Defaults to YES. If set to NO, GMSMapView will generate accessibility elements for overlay
@@ -383,13 +437,18 @@ typedef NS_ENUM(NSUInteger, GMSFrameRate) {
 /**
  * Controls the rendering frame rate. Default value is kGMSFrameRateMaximum.
  */
-@property(nonatomic, assign) GMSFrameRate preferredFrameRate;
+@property(nonatomic) GMSFrameRate preferredFrameRate;
 
 /**
  * If not nil, constrains the camera target so that gestures cannot cause it to leave the specified
  * bounds.
  */
 @property(nonatomic, nullable) GMSCoordinateBounds *cameraTargetBounds;
+
+/**
+ * Convenience initializer that builds and returns a GMSMapView, with a frame and camera target.
+ */
+- (instancetype)initWithFrame:(CGRect)frame camera:(GMSCameraPosition *)camera;
 
 /**
  * Builds and returns a GMSMapView, with a frame and camera target.
@@ -458,4 +517,4 @@ extern NSString *const kGMSAccessibilityCompass;
  */
 extern NSString *const kGMSAccessibilityMyLocation;
 
-NS_ASSUME_NONNULL_END;
+NS_ASSUME_NONNULL_END

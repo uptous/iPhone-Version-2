@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class UserPreferences: NSObject {
     
@@ -30,12 +31,14 @@ class UserPreferences: NSObject {
         }
     }
     
-    class var LoginHeaderCodition: [String: String] {
+    class var LoginHeaderCodition: [String:String] {
         get {
-            return (UserDefaults.standard.object(forKey: "loginHeader") as? [String: String]) ?? [:]
+            print("fffffGET")
+            return (UserDefaults.standard.object(forKey: "loginHeader") as? [String:String]) ?? [:]
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "loginHeader")
+            print("fffffSET")
+            UserDefaults.standard.set(newValue, forKey: "loginHeader" )
             UserDefaults.standard.synchronize()
         }
     }

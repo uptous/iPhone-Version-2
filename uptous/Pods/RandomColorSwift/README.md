@@ -1,14 +1,32 @@
 # Random Color Swift
 
-Inspired by David Merfield's [randomColor.js](https://github.com/davidmerfield/randomColor). It is a ported version to Swift. You can use the library to generate attractive random colors on iOS or OSX.
-
-See the [demo and site](http://llllll.li/randomColor/) to know why does this exist.
+Inspired by David Merfield's [randomColor.js](https://github.com/davidmerfield/randomColor). It is a ported version to Swift. You can use the library to generate attractive random colors on iOS or macOS.
 
 ![](https://raw.githubusercontent.com/onevcat/RandomColorSwift/master/demo.png)
 
 ## Install
 
-This framework supports Swift 3.0 / Xcode 8 and above. If you need an earlier version for Swift 2, use [version 0.1.0](https://github.com/onevcat/RandomColorSwift/releases/tag/0.1.0) instead.
+This framework supports Swift 4.0/4.2/5.0 and above.
+
+### Swift Package Manager
+
+Just like using any other Swift Package, add this repo to the `dependencies` section and depend it in your target:
+
+```swift
+let package = Package(
+    name: "MyApp",
+    //...
+    dependencies: [
+        .package(url: "https://github.com/onevcat/RandomColorSwift.git", .upToNextMajor(from: "2.0.0")),
+    ],
+    targets: [
+        .target(
+            name: "MyApp",
+            dependencies: ["RandomColor"]),
+    ]
+```
+
+Or, use the Swift Package Manager integrated in Xcode 11 or above to [add this package as a dependency to your app](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app).
 
 ### CocoaPods
 
@@ -40,25 +58,25 @@ Clone this repo and throw the source files under `RandomColor` folder into your 
 ## Example
 
 ```swift
-import RandomColorSwift
+import RandomColor
 
 // Returns a UIColor or NSColor object for an attractive color
 let color = randomColor()
 
 // Returns an array of ten green colors
-let greenColors = randomColors(count: 10, hue: .Green)
+let greenColors = randomColors(count: 10, hue: .green)
 
 // Returns a color for light blue
-let lightBlurColor = randomColor(hue: .Blue, luminosity: .Light)
+let lightBlurColor = randomColor(hue: .blue, luminosity: .light)
 
 // Returns a color for a 'truly random' color
-let randomColor = randomColor(hue: .Random, luminosity: .Random)
+let randomColor = randomColor(hue: .random, luminosity: .random)
 
 // Returns an array of ten dark pink colors
-let darkPinkColors = randomColors(count: 10, hue: .Pink, luminosity: .Dark)
+let darkPinkColors = randomColors(count: 10, hue: .pink, luminosity: .dark)
 
 // Returns an array of twenty colors at hue of 120
-let colors = randomColors(count: 20, hue: .Value(120), luminosity: .Random)
+let colors = randomColors(count: 20, hue: .value(120), luminosity: .random)
 
 ```
 

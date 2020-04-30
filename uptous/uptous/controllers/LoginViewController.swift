@@ -48,7 +48,6 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
         
         if UserPreferences.LoginStatus ==  "Registered" {
             self.alreadyLoggedIn()
-            
         }
         signInBtn.layer.cornerRadius = 3
         
@@ -153,7 +152,11 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
     }
     
     func alreadyLoggedIn() {
-        appDelegate.loginHeaderCredentials = UserPreferences.LoginHeaderCodition
+        print("eeeee")
+        print(UserPreferences.LoginHeaderCodition)
+        
+        appDelegate.loginHeaderCredentials.add(name:"Authorization", value:UserPreferences.LoginHeaderCodition.values.first!)
+
         let controller = self.storyboard?.instantiateViewController(withIdentifier: MainStoryBoard.ViewControllerIdentifiers.tabbarViewController) as! TabBarViewController
         
         if UserPreferences.DeepLinkingStatus == "" {
@@ -209,40 +212,44 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
                 BaseUIView.toast("Please enter a valid email address")
                 return
             }
+            
             let username = emailTxtField.text!.trimmingCharacters(in: CharacterSet.whitespaces)
             let password = passwordTxtField.text!.trimmingCharacters(in: CharacterSet.whitespaces)
             let credentialData = "\(username):\(password)".data(using: String.Encoding.utf8)!
             let base64Credentials = credentialData.base64EncodedString(options: [])
+            
             appDelegate.loginHeader64Credentials = base64Credentials
             appDelegate.loginHeaderCredentials = ["Authorization": "Basic \(base64Credentials)"]
+            
             ActivityIndicator.show()
-            Alamofire.request(LoginAPI, method: .get, parameters: nil, encoding: URLEncoding(destination: .methodDependent), headers: appDelegate.loginHeaderCredentials).responseJSON { (response:DataResponse<Any>) in
+            
+            print("login request : " + LoginAPI)
+            
+            AF.request(LoginAPI, method: .get, parameters: nil, encoding: URLEncoding(destination: .methodDependent), headers: appDelegate.loginHeaderCredentials).responseJSON { (response:AFDataResponse<Any>) in
                 ActivityIndicator.hide()
-                switch(response.result) {
-                case .success(_):
-                    if response.result.isSuccess {
-                        //let result = response.result.value
-                        let result = response.result.value as? NSDictionary
-                        if (result?.object(forKey: "result"))! as! String == "Authenticated" {
-                            
-                            //self.getTotalContacts()
-                            self.checkNewContact()
-                            self.checkNewFeed()
-                            //self.getFirstContacts()
-                            UserPreferences.LoginHeaderCodition = appDelegate.loginHeaderCredentials
-                            UserPreferences.LoginStatus = "Registered"
-                            UserPreferences.LoginID = username
-                            UserPreferences.Password = password
-                            
-                            self.alreadyLoggedIn()
-                            
-                        }else {
-                            DispatchQueue.main.async(execute: { () -> Void in
-                                let alert = UIAlertController(title: "Alert", message: "Authentication failed. Please try again or reset your password at www.uptous.com", preferredStyle: UIAlertController.Style.alert)
-                                alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
-                                self.present(alert, animated: true, completion: nil)
-                            })
-                        }
+                print("login response : " + response.debugDescription)
+                switch response.result {
+                case .success(let result):
+                    let dictionary = result as? [String: Any]
+                    let authResult = dictionary?["result"] as? String
+                    if (authResult == "Authenticated") {
+                        //self.getTotalContacts()
+                        self.checkNewContact()
+                        self.checkNewFeed()
+                        //self.getFirstContacts()
+                        UserPreferences.LoginHeaderCodition = ["Authorization": appDelegate.loginHeaderCredentials.value(for: "Authorization")!]
+                        UserPreferences.LoginStatus = "Registered"
+                        UserPreferences.LoginID = username
+                        UserPreferences.Password = password
+                        
+                        self.alreadyLoggedIn()
+                        
+                    }else {
+                        DispatchQueue.main.async(execute: { () -> Void in
+                            let alert = UIAlertController(title: "Alert", message: "Authentication failed. Please try again or reset your password at www.uptous.com", preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
+                            self.present(alert, animated: true, completion: nil)
+                        })
                     }
                     break
                     

@@ -1,13 +1,3 @@
-//
-//  GoogleMaps.h
-//  Google Maps SDK for iOS
-//
-//  Copyright 2017 Google Inc.
-//
-//  Usage of this SDK is subject to the Google Maps/Google Earth APIs Terms of
-//  Service: https://developers.google.com/maps/terms
-//
-
 #import "GMSIndoorBuilding.h"
 #import "GMSIndoorLevel.h"
 #import "GMSAddress.h"
@@ -32,8 +22,12 @@
 #import "GMSMarker.h"
 #import "GMSMarkerLayer.h"
 #import "GMSOverlay.h"
+#import "GMSOverlayLayer.h"
 #import "GMSPolygon.h"
+#import "GMSPolygonLayer.h"
 #import "GMSPolyline.h"
+#import "GMSStrokeStyle.h"
+#import "GMSStyleSpan.h"
 #import "GMSSyncTileLayer.h"
 #import "GMSTileLayer.h"
 #import "GMSURLTileLayer.h"
@@ -44,4 +38,5 @@
 #import "GMSPanoramaLayer.h"
 #import "GMSPanoramaLink.h"
 #import "GMSPanoramaService.h"
+#import "GMSPanoramaSource.h"
 #import "GMSPanoramaView.h"

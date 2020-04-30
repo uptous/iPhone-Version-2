@@ -1776,7 +1776,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" 9391b18fa2f8d67ac12712d86124d894aeeb89d7 ef9a13d04ce1a88ecf864c8e912a07b32196b043c597f0ebf776982932449e56";
+			shellScript = "
+";
 		};
 		979E86DFA9F62B15676FDF9A /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1784,7 +1785,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-uptous/Pods-uptous-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-uptous/Pods-uptous-resources.sh",
 				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -1793,7 +1794,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-uptous/Pods-uptous-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-uptous/Pods-uptous-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B5B76DCA47D3C4E5E5494035 /* [CP] Embed Pods Frameworks */ = {
@@ -1802,7 +1803,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-uptous/Pods-uptous-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-uptous/Pods-uptous-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/Dropper/Dropper.framework",
 				"${BUILT_PRODUCTS_DIR}/LKPullToLoadMore/LKPullToLoadMore.framework",
@@ -1819,7 +1820,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-uptous/Pods-uptous-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-uptous/Pods-uptous-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2173,8 +2174,16 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/LKPullToLoadMore\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/RandomColorSwift\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/RappleProgressHUD\"",
-					"\"${PODS_ROOT}/Crashlytics/iOS\"",
-					"\"${PODS_ROOT}/Fabric/iOS\"",
+					"\"${PODS_ROOT}/GoogleMaps/Base/Frameworks\"",
+					"\"${PODS_ROOT}/GoogleMaps/Maps/Frameworks\"",
+				);
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alamofire\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Dropper\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/LKPullToLoadMore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RandomColorSwift\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RappleProgressHUD\"",
 					"\"${PODS_ROOT}/GoogleMaps/Base/Frameworks\"",
 					"\"${PODS_ROOT}/GoogleMaps/Maps/Frameworks\"",
 				);
@@ -2204,6 +2213,16 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: UTU, Inc. (U8DTDCNJ53)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = U8DTDCNJ53;
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alamofire\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Dropper\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/LKPullToLoadMore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RandomColorSwift\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RappleProgressHUD\"",
+					"\"${PODS_ROOT}/GoogleMaps/Base/Frameworks\"",
+					"\"${PODS_ROOT}/GoogleMaps/Maps/Frameworks\"",
+				);
 				INFOPLIST_FILE = uptous/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

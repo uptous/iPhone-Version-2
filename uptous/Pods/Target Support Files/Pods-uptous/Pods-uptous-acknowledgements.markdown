@@ -3,7 +3,7 @@ This application makes use of the following third party libraries:
 
 ## Alamofire
 
-Copyright (c) 2014-2016 Alamofire Software Foundation (http://alamofire.org/)
+Copyright (c) 2014-2020 Alamofire Software Foundation (http://alamofire.org/)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-
-## Crashlytics
-
-Fabric: Copyright 2017 Google, Inc. All Rights Reserved. Use of this software is subject to the terms and conditions of the Fabric Software and Services Agreement located at https://fabric.io/terms. Crashlytics Kit: Copyright 2017 Crashlytics, Inc. All Rights Reserved. Use of this software is subject to the terms and conditions of the Crashlytics Terms of Service located at http://try.crashlytics.com/terms/terms-of-service.pdf and the Crashlytics Privacy Policy located at http://try.crashlytics.com/terms/privacy-policy.pdf. OSS: http://get.fabric.io/terms/opensource.txt
 
 ## Dropper
 
@@ -51,13 +47,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-## Fabric
-
-Fabric: Copyright 2017 Google, Inc. All Rights Reserved. Use of this software is subject to the terms and conditions of the Fabric Software and Services Agreement located at https://fabric.io/terms. OSS: http://get.fabric.io/terms/opensource.txt
-
 ## GoogleMaps
 
-Copyright 2017 Google
+Copyright 2020 Google
 
 ## LKPullToLoadMore
 
@@ -106,7 +98,7 @@ SOFTWARE.
 
 ## RappleProgressHUD
 
-Copyright (c) 2015 Rajeev Prasad <rjeprasad@gmail.com>
+Copyright (c) 2015-2019 Rajeev Prasad <rjeprasad@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
