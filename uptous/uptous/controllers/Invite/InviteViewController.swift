@@ -63,7 +63,7 @@ class InviteViewController: GeneralViewController,InviteCellDelegate {
         DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
             
-            print(response["status"]!)
+            print("InviteViewController : acceot: "); print(response["status"]!)
             if response["status"] as? String == "0" {
                 self.fetchInviteList()
                 Utility.showAlertWithoutCancel("Alert", message: "You Successfully Joined This Community.")

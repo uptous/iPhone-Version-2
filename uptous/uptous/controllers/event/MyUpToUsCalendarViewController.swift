@@ -223,8 +223,7 @@ class MyUpToUsCalendarViewController: GeneralViewController{
             tmp = event.title!.lowercased()
             tmp1 = event.eventDescription!.lowercased()
             
-            print(tmp?.range(of: searchText.lowercased()) ?? "search text failed to print")
-            //print($0.firstName!.rangeOfString(searchText) != nil)
+            print("MyUpToUsCalendarViewController: searchBar: "); print(tmp?.range(of: searchText.lowercased()) ?? "search text failed to print")
             return (tmp?.range(of: searchText.lowercased()) != nil) || (tmp1?.range(of: searchText.lowercased()) != nil)
             
         })
@@ -319,10 +318,6 @@ extension MyUpToUsCalendarViewController: EventExpandCellDelegate, EventCellDele
                 
                 if let location = location {
                     let coordinate = location.coordinate
-                    let latitiudeText = "\(coordinate.latitude)"
-                    let longitudeText = "\(coordinate.longitude)"
-                    print(latitiudeText)
-                    print(longitudeText)
                     
                     let controller = ShowLocationViewController(nibName: "ShowLocationViewController", bundle: nil)
                     controller.calendarEvent = data

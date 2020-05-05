@@ -33,7 +33,6 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
     
     
     override func viewDidLoad() {
-        print ("Type1 Volunteer: viewDidLoad")
         super.viewDidLoad()
         _ = Custom.cornerView(contentView)
         descTableView.estimatedRowHeight = 95
@@ -95,7 +94,6 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print ("Type1 Volunteer: viewWillAppear")
         let when = DispatchTime.now() + 1 // change 2 to desired number of seconds
         DispatchQueue.main.asyncAfter(deadline: when) {
             self.fetchSignUpItems()
@@ -241,7 +239,6 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
                 }else if item.volunteerStatus == "Full" {
                 }
             }else if signUpType == "103" {
-                print("Type1 Signup - displatching Driver Item")
                 if item.volunteerStatus == "Open" {
                     let controller = self.storyboard?.instantiateViewController(withIdentifier: "DetailsSignUpDriverViewController") as! DetailsSignUpDriverViewController
                     controller.modalPresentationStyle = UIModalPresentationStyle.currentContext

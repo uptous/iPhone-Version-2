@@ -155,7 +155,7 @@ class MyUpToUsSignUpViewController: GeneralViewController,UISearchBarDelegate,UI
             }else {
                 let communityID = UserPreferences.SelectedCommunityID
                 self.fullListArr = self.fullListArr.filter{ $0.communityId == communityID }
-                print(self.fullListArr.count)
+                print("MyUpToUsSignUpViewController: fetchSignupSheetList: ");print(self.fullListArr.count)
             }
             
             if self.fullListArr.count > 0 {

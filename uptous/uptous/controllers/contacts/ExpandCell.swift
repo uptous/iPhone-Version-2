@@ -108,8 +108,7 @@ class ExpandCell: UITableViewCell {
             nameLbl.text = "- -"
             ownerNameLbl.text = "- -"
         }
-        //print("\(data.firstName!)")
-        //print("\(data.photo!)")
+        
         if data.photo == "" {
             let color1 = Utility.hexStringToUIColor(hex: data.memberBackgroundColor!)
             let color2 = Utility.hexStringToUIColor(hex: data.memberTextColor!)

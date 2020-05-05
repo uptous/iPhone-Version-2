@@ -82,7 +82,7 @@ class CommentViewController: GeneralViewController {
         DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
             
-            print(response["status"]!)
+            print("Comment View Controller: postComment status: "); print(response["status"]!)
             if response["status"] as? String == "0" {
                 self.fetchCommentList()
             }
@@ -310,7 +310,6 @@ extension CommentViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ReadMoreCell") as! ReadMoreCell
         let data = commentList[(indexPath as NSIndexPath).row] as? NSDictionary
-        print(Comment(info: data))
         cell.updateData(Comment(info: data!))
         return cell
     }

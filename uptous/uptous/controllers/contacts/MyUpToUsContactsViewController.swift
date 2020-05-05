@@ -136,8 +136,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         DataConnectionManager.requestGETURL(api: api, para: ["":""], success: {
             (jsonResult) -> Void in
             let listArr = jsonResult as! NSArray
-            print(listArr.count)
-//            print(listArr)
+            print("MyUpToUsContactsViewController: getContacts: "); print(listArr.count)
 
             for index in 0..<listArr.count {
                 let dic = listArr.object(at: index) as! NSDictionary

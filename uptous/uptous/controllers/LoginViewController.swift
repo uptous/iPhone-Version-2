@@ -225,7 +225,6 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
             
             AF.request(LoginAPI, method: .get, parameters: nil, encoding: URLEncoding(destination: .methodDependent), headers: appDelegate.loginHeaderCredentials).responseJSON { (response:AFDataResponse<Any>) in
                 ActivityIndicator.hide()
-                print("login response : " + response.debugDescription)
                 switch response.result {
                 case .success(let result):
                     let dictionary = result as? [String: Any]
@@ -268,7 +267,7 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
     }
     
     func checkNewFeed() {
-        print("Checking new feedß")
+        print("Checking new feed")
         DataConnectionManager.requestGETURL1(api: FeedUpdateAPI, para: ["":""], success: {
             (response) -> Void in
             print("First Time==>\(response)")

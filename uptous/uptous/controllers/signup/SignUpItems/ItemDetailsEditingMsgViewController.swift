@@ -57,7 +57,7 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         updateData(selectedItems)
         
         voluniteerdDatas = selectedItems.volunteers!
-        print(voluniteerdDatas)
+        print("ItemDetailsEditingMsgView: viewDidLoad: "; print(voluniteerdDatas)
         
         //headingLbl.text = data.name
         msgLbl.text = selectedItems.name
@@ -223,7 +223,7 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
                     break
                 }
             }
-            print("self.voluniteerdDatas==\(self.voluniteerdDatas.count)")
+            print("ItemDetailsEditingMsgViewController: FetchItems: self.voluniteerdDatas==\(self.voluniteerdDatas.count)")
             
             self.tableView.reloadData()
             

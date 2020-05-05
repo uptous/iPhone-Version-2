@@ -42,7 +42,6 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         //headingLbl.text = ("Join the \(sheetData.name!)")
         fromLbl.text = "Driving from: \(selectedItems.name!)"
         toLbl.text = "To: \(selectedItems.extra!)"
-        //print("\(Custom.dayStringFromTime1(selectedItems.dateTime!))")
         if selectedItems.dateTime == 0 {
             dateTimeLbl.text = ""
             
@@ -154,7 +153,6 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         let apiName = SignupItems + ("\(sheetDataID!)")
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
-            print("Details Driver: Fetching Driver Volunteers")
             
             let datas  = (response as? NSArray)!
             let dic = datas.object(at: 0) as? NSDictionary
@@ -164,12 +162,10 @@ class DetailsSignUpDriverViewController: GeneralViewController {
             for index in 0..<data.count {
                 let dic = data.object(at: index) as? NSDictionary
                 if dic?.object(forKey: "id") as? Int == self.selectedItems.Id {
-                    //print(dic?.object(forKey: "volunteers"))
                     self.itemsDatas = dic?.object(forKey: "volunteers") as! NSArray
                     break
                 }
             }
-            print("Number of volunteers: " + "\(self.itemsDatas.count)")
             
             self.tableView.reloadData()
         }) {

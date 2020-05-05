@@ -91,8 +91,6 @@ class OpenRSVPViewController: GeneralViewController {
         let advTimeGif = UIImage.gifImageWithData(imageData!)
         gifImageView.image = advTimeGif*/
         
-        print(self.itemData.volunteers!)
-        print(self.itemData.volunteers!.count)
         self.volunteerData = self.itemData.volunteers!
         self.tableView.reloadData()
        

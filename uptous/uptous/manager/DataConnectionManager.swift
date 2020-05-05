@@ -197,7 +197,7 @@ class DataConnectionManager: NSObject {
             
             let task = URLSession.shared.dataTask(with: request as URLRequest, completionHandler: {(data,response,error)->Void in
                 //using breaking point to show data
-                print(response ?? "response not found")
+                //print(response ?? "response not found")
                 //let strData = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
                 //("Body: \(strData)")
                 
@@ -250,7 +250,6 @@ class DataConnectionManager: NSObject {
             }
             
             let strData = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-            print("Body: \(strData ?? "Failed to print strData")")
             
             let result = try! JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any]
             success(result!)

@@ -124,7 +124,6 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
     func fetchProfile() {
         DataConnectionManager.requestGETURL(api: Profile, para: ["":""], success: {
                 (response) -> Void in
-           print(response)
            let data = response as? NSDictionary
            let profileData = UserProfile(info: data)
             self.firstNameTxtField.text = profileData.firstName
@@ -163,7 +162,6 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
         
         DataConnectionManager.requestPOSTURL1(api: UpdateProfile, stringPost: stringPost, success: {
                 (response) -> Void in
-            print(response)
             
             if response["status"] as? String == "0" {
                 self.imgUploadStatus = false
