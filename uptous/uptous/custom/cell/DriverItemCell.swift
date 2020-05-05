@@ -13,7 +13,7 @@ class DriverItemCell: UITableViewCell {
     @IBOutlet weak var cellView: UIView!
     @IBOutlet weak var nameLbl: UILabel!
     @IBOutlet weak var phoneLbl: UILabel!
-    @IBOutlet weak var commentLbl: UILabel!
+    @IBOutlet weak var seatsLbl: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -25,12 +25,12 @@ class DriverItemCell: UITableViewCell {
     }
     
     func updateData(_ data: NSDictionary, commentText:String) {
-         let name = data.object(forKey: "firstName") as? String ?? ""
-        
+        let name = data.object(forKey: "firstName") as? String ?? ""
         let phone = data.object(forKey: "phone") as? String ?? ""
+        let seats = data.object(forKey: "comment") as? String ?? ""
         nameLbl.text = name
-        phoneLbl.text = phone
-        commentLbl.text = commentText
+        if phone.isEmpty {phoneLbl.text = ""} else {phoneLbl.text = "Phone: " + phone}
+        if seats.isEmpty {seatsLbl.text = ""} else if seats.isNumeric {seatsLbl.text = "# of seats: " + seats} else {seatsLbl.text = "Comment: " + seats}
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -39,4 +39,12 @@ class DriverItemCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+}
+
+extension String {
+    var isNumeric: Bool {
+        guard !self.isEmpty else {return false}
+        let nums: Set<Character> = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        return Set(self).isSubset(of: nums)
+    }
 }

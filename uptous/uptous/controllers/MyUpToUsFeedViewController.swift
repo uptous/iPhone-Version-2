@@ -16,6 +16,8 @@ enum feedNewsType : String {
     case Announcement = "Announcement"
     case Opportunity = "Opportunity"
     case PrivateThreads = "Private Threads"
+    case Sms = "SMS"
+    case PrivateSms = "Private SMS"
     //case PersonalAnnouncement = "Private Threads"
     /*case Post
      case Announcement
@@ -115,7 +117,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         messageView.isHidden = true
         self.tableView.isHidden = true
         //Fetch Feed Items
-        print("jjjjjjjjj")
+        print("Fetching feed")
         self.getFeedList()
     }
     
@@ -133,7 +135,6 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         pictureBtn.isHidden = true
         //directBtn.isHidden = true
         onTimerTick()
-        print("kkkkkkkk")
         self.getFeedList()
     }
     
@@ -168,8 +169,6 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
             let tmp2 = feed.newsType!.lowercased()
             let tmp3 = feed.newsItemName!.lowercased()
             
-            //print(tmp?.range(of: searchText.lowercased()))
-            //print($0.firstName!.rangeOfString(searchText) != nil)
             return (tmp.range(of: searchText.lowercased()) != nil) || (tmp1.range(of: searchText.lowercased()) != nil) || (tmp2.range(of: searchText.lowercased()) != nil) || (tmp3.range(of: searchText.lowercased()) != nil)
             
         })
@@ -211,7 +210,6 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
                 }else {
                     if data?.object(forKey: "lastItemTime") as? NSNumber != self.defaults.object(forKey: "LastModified") as? NSNumber {
                         self.defaults.set(data?.object(forKey: "lastItemTime"), forKey: "LastModified")
-                        print("llllll")
                         self.getFeedList()
                     }
                 }
@@ -248,7 +246,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     func fetchCommunity() {
         self.communityList.removeAllObjects()
 
-        print("nnnnnn")
+        print("Fetching community")
         DataConnectionManager.requestGETURL(api: TopMenuCommunity, para: ["":""], success: {
             (response) -> Void in
             
@@ -307,7 +305,6 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         self.communityView.isHidden = true
         DataConnectionManager.requestGETURL1(api: FeedAPI, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             
             self.newsTypeList.removeAll()
             self.newsList = response as! NSArray
@@ -317,12 +314,14 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
                 let data = Feed(info: result)
                 
                 if UserPreferences.SelectedCommunityID == 001 {
-                    if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" {
+                    if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" ||
+                        data.newsType == "SMS" || data.newsType == "Private SMS" {
                         self.newsTypeList.append(data)
                     }
                 }else {
                     if data.communityId == UserPreferences.SelectedCommunityID {
-                        if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" {
+                        if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" ||
+                            data.newsType == "SMS" || data.newsType == "Private SMS" {
                             self.newsTypeList.append(data)
                         }
                     }
@@ -358,10 +357,8 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     func getFeedList() {
         appDelegate.tabbarView?.isHidden = false
         self.communityView.isHidden = true
-        print("oooooo")
         DataConnectionManager.requestGETURL(api: FeedAPI, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             
             self.newsTypeList.removeAll()
             self.newsList = response as! NSArray
@@ -371,12 +368,14 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
                 let data = Feed(info: result)
                 
                 if UserPreferences.SelectedCommunityID == 001 {
-                    if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" {
+                    if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" ||
+                        data.newsType == "SMS" || data.newsType == "Private SMS" {
                         self.newsTypeList.append(data)
                     }
                 }else {
                     if data.communityId == UserPreferences.SelectedCommunityID {
-                        if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" {
+                        if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" ||
+                            data.newsType == "SMS" || data.newsType == "Private SMS" {
                             self.newsTypeList.append(data)
                         }
                     }
@@ -453,7 +452,6 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }else {
             data = self.newsTypeList[sender]
         }
-        print(data ?? "No Data")
         
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReadMoreViewController") as! ReadMoreViewController
         controller.data = data
@@ -588,12 +586,11 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }else {
             event = self.newsTypeList[sender]
         }
-        print(event.newsType!)
+        print("Feed News Type: " + event.newsType!)
         
         let apiName = SignupItems + ("\(event.newsItemId!)")
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             
             let driverDatas = (response as? NSArray)!
             let dic = driverDatas.object(at: 0) as? NSDictionary
@@ -879,7 +876,18 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
                 cell.updateData(data)
                 
                 return cell
+
+            case .Sms :
+                let cell: AnnouncementCell = tableView.dequeueReusableCell(withIdentifier: announcementCellConstants.cellIdentifier ) as! AnnouncementCell
+                cell.replyAllBtn.tag = (indexPath as NSIndexPath).row
+                cell.postBtn.tag = (indexPath as NSIndexPath).row
+                cell.replyToBtn.tag = (indexPath as NSIndexPath).row
+                cell.delegate = self
                 
+                cell.updateData(data)
+                
+                return cell
+
             case .Opportunity :
                 let cell: OpportunityCell = tableView.dequeueReusableCell(withIdentifier: opportunityCellConstants.cellIdentifier ) as! OpportunityCell
                 cell.commentBtn.tag = (indexPath as NSIndexPath).row
@@ -893,6 +901,17 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
                 return cell
                 
             case .PrivateThreads :
+                let cell: PrivateThreadsCell = tableView.dequeueReusableCell(withIdentifier: personalThreadsCellConstants.cellIdentifier ) as! PrivateThreadsCell
+                cell.replyAllBtn.tag = (indexPath as NSIndexPath).row
+                cell.replyToBtn.tag = (indexPath as NSIndexPath).row
+                cell.commentBtn.tag = (indexPath as NSIndexPath).row
+                cell.delegate = self
+                
+                cell.updateData(data)
+                
+                return cell
+                
+            case .PrivateSms :
                 let cell: PrivateThreadsCell = tableView.dequeueReusableCell(withIdentifier: personalThreadsCellConstants.cellIdentifier ) as! PrivateThreadsCell
                 cell.replyAllBtn.tag = (indexPath as NSIndexPath).row
                 cell.replyToBtn.tag = (indexPath as NSIndexPath).row
@@ -927,11 +946,17 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
                 
             case .Announcement :
                 return 310
+            
+            case .Sms :
+                return 310
                 
             case .Opportunity :
                 return 270
                 
             case .PrivateThreads :
+                return 310
+            
+            case .PrivateSms :
                 return 310
             }
         }
@@ -943,7 +968,6 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
             topMenuSelected = 0
             let data = self.communityList[(indexPath as NSIndexPath).row] as? Community
             if data?.name == "All Communities" {
-                print("hhhhhhh")
                 topMenuStatus = 0
                 headingBtn.setImage(UIImage(named: "top-down-arrow"), for: .normal)
                 headingBtn.setTitle("Feed - All Communities", for: .normal)
@@ -952,7 +976,6 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
                 UserPreferences.SelectedCommunityName = ""
                 getFeedList()
             }else {
-                print("iiiiiiii")
                 headingBtn.setImage(UIImage(named: "top-up-arrow"), for: .normal)
                 UserPreferences.SelectedCommunityName = (data?.name)!
                 headingBtn.setTitle("Feed - \((data?.name)!)", for: .normal)
@@ -984,7 +1007,6 @@ extension MyUpToUsFeedViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         var subString: NSString = searchTextField.text! as NSString
         subString = subString.replacingCharacters(in: range, with: string) as NSString
-        print(subString)
         getFilteredFilter(subString as String)
         return true
     }

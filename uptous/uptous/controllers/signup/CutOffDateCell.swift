@@ -26,7 +26,6 @@ class CutOffDateCell: UITableViewCell {
     }
     
     func update(_ data: SignupSheet) {
-        print(data)
         let todaysDate:Date = Date()
         let dateFormatter:DateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM d"

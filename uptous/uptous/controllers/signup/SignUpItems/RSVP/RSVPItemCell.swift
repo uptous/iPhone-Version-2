@@ -21,17 +21,15 @@ class RSVPItemCell: UITableViewCell {
     }
     
     func updateData(_ data: NSDictionary) {
-        print(data)
-        //commentDescriptionLbl.text = data.object(forKey: "comment") as? String
         commentDescriptionLbl.text = data.object(forKey: "comment") as? String ?? ""
         let name = data.object(forKey: "firstName") as? String ?? ""
-        let attendes = data.object(forKey: "attendees") as? Int ?? 0
+        //let attendes = data.object(forKey: "attendees") as? Int ?? 0
         
-        if attendes == 0 {
+        //if attendes == 0 {
             nameLbl.text = name
-        }else {
-            nameLbl.text = name + (" - \(attendes)")
-        }
+        //}else {
+        //    nameLbl.text = name + (" - \(attendes)")
+        //}
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

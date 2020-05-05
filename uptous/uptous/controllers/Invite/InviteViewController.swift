@@ -39,7 +39,6 @@ class InviteViewController: GeneralViewController,InviteCellDelegate {
         self.inviteList.removeAll()
         DataConnectionManager.requestGETURL(api: Invites, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             let list = response as! NSArray
             
             for i in 0..<list.count {
@@ -63,7 +62,6 @@ class InviteViewController: GeneralViewController,InviteCellDelegate {
         
         DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
-            print(response)
             
             print(response["status"]!)
             if response["status"] as? String == "0" {

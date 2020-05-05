@@ -88,7 +88,6 @@ class MyUpToUsSignUpViewController: GeneralViewController,UISearchBarDelegate,UI
         self.communityList.removeAllObjects()
         DataConnectionManager.requestGETURL(api: TopMenuCommunity, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             
             let item = response as! NSArray
             var dic1 = [String : String]()
@@ -141,7 +140,6 @@ class MyUpToUsSignUpViewController: GeneralViewController,UISearchBarDelegate,UI
         self.communityView.isHidden = true
          DataConnectionManager.requestGETURL(api: SignupListSheet, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             
             let item = response as! NSArray
             if item.count > 0 {

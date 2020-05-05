@@ -85,7 +85,6 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
         let stringPost = "contents=" + msg
         DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
-            print(response)
             
             if response["status"] as? String == "0" {
                 self.fetchOldReplyList()
@@ -109,7 +108,6 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
         let apiName = FetchReplyAPI + ("\(data.newsItemId!)")
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             
             self.commentList = response as! NSArray
             if self.commentList.count > 0 {

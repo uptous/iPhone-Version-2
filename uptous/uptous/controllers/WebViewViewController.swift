@@ -48,12 +48,10 @@ class WebViewViewController: UIViewController,WKNavigationDelegate {
     }
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        print("Strat to load")
         ActivityIndicator.show()
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        print("finish to load")
         ActivityIndicator.hide()
     }
     

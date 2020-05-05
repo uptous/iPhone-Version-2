@@ -139,7 +139,6 @@ class DetailsLibraryViewController: GeneralViewController, UICollectionViewDeleg
         }
         DataConnectionManager.requestGETURL(api: apiName!, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             let item = response as! NSArray
             if item.count > 0 {
                 for index in 0..<item.count {

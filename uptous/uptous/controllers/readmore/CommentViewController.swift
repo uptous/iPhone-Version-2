@@ -81,7 +81,6 @@ class CommentViewController: GeneralViewController {
         let stringPost = "contents=" + msg
         DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
-            print(response)
             
             print(response["status"]!)
             if response["status"] as? String == "0" {
@@ -106,7 +105,6 @@ class CommentViewController: GeneralViewController {
         let apiName = FetchCommentAPI + ("\(data.feedId!)")
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             
             self.commentList = response as! NSArray
             if self.commentList.count > 0 {

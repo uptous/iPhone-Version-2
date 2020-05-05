@@ -99,7 +99,6 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
             
             DataConnectionManager.requestPOSTURL1(api: urlString, stringPost: stringPost, success: {
                 (response) -> Void in
-                print(response)
                 
                 if response["status"] as? String == "0" {
                     DispatchQueue.main.async(execute: {
@@ -125,7 +124,6 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
         
         DataConnectionManager.requestPOSTURL1(api: urlString, stringPost: stringPost, success: {
             (response) -> Void in
-            print(response)
             
             if response["status"] as? String == "0" {
                 self.uploadedAlbumID = Int(response["albumId"] as! String)!//response["albumId"] as! Int

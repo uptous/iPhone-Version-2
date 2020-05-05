@@ -35,7 +35,6 @@ class MessagePostViewController: UIViewController,DropperDelegate {
     func fetchCommunity() {
         DataConnectionManager.requestGETURL(api: TopMenuCommunity, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             
             let item = response as! NSArray
             for index in 0..<item.count {

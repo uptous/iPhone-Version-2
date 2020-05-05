@@ -448,7 +448,6 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
         self.communityList.removeAllObjects()
         DataConnectionManager.requestGETURL(api: TopMenuCommunity, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             
             let item = response as! NSArray
             var dic1 = [String : String]()

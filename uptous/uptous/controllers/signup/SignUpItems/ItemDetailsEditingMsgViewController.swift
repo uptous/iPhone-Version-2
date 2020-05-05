@@ -155,7 +155,6 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         let stringPost = ""
         DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
-            print(response)
             
             if response["status"] as? String == "0" {
                 //self.navigationController?.popViewController(animated: true)
@@ -173,7 +172,6 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         
         DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
-            print(response)
             
             if response["status"] as? String == "0" {
                 DispatchQueue.main.async(execute: {
@@ -211,7 +209,6 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         let apiName = SignupItems + ("\(sheetDataID!)")
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             
             self.driverDatas = (response as? NSArray)!
             let dic = self.driverDatas.object(at: 0) as? NSDictionary
@@ -221,7 +218,7 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
             for index in 0..<data.count {
                 let dic = data.object(at: index) as? NSDictionary
                 if dic?.object(forKey: "id") as? Int == self.selectedItems.Id {
-                    print(dic?.object(forKey: "volunteers") ?? "Failed to volunteers")
+                    print(dic?.object(forKey: "volunteers") ?? "Failed to load volunteers")
                     self.voluniteerdDatas = dic?.object(forKey: "volunteers") as! NSArray
                     break
                 }

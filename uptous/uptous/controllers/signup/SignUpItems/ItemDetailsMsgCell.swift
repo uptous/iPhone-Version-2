@@ -24,7 +24,6 @@ class ItemDetailsMsgCell: UITableViewCell {
     }
     
     func updateData(_ data: NSDictionary) {
-        print(data)
         let name = data.object(forKey: "firstName") as? String ?? ""
         let comment = data.object(forKey: "comment") as? String ?? ""
         nameLbl.text = name

@@ -16,14 +16,10 @@ class DetailsSignUpDriverViewController: GeneralViewController {
     @IBOutlet weak var toLbl: UILabel!
     @IBOutlet weak var dateTimeLbl: UILabel!
     @IBOutlet weak var phoneTxtField: UITextField!
-    //@IBOutlet weak var adultsTxtField: UITextField!
-    //@IBOutlet weak var childrenTxtField: UITextField!
+    @IBOutlet weak var seatsTxtField: UITextField!
     @IBOutlet weak var cancelButton: UIButton!
-    @IBOutlet weak var commentsTextView: UIView!
-    @IBOutlet weak var textField_comments: UITextField!
     @IBOutlet weak var btn_comments: UIButton!
     @IBOutlet var commentsBoxBottomSpacing: NSLayoutConstraint!
-    @IBOutlet weak var textView_comments: HPTextViewInternal!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var gifImageView: UIImageView!
     
@@ -34,7 +30,6 @@ class DetailsSignUpDriverViewController: GeneralViewController {
     var sheetData: SignupSheet!
     var scrollToTop = false
     var offset = 0
-    var placeHolderText = "Type comments here.."
     var isCommentEdit_1_replyEdit_2 : Int?
     var list = NSArray()
     var sheetDataID: String!
@@ -42,12 +37,12 @@ class DetailsSignUpDriverViewController: GeneralViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        _ = Custom.buttonCorner(cancelButton)
+        //_ = Custom.buttonCorner(cancelButton)
         
         //headingLbl.text = ("Join the \(sheetData.name!)")
         fromLbl.text = "Driving from: \(selectedItems.name!)"
         toLbl.text = "To: \(selectedItems.extra!)"
-        print("\(Custom.dayStringFromTime1(selectedItems.dateTime!))")
+        //print("\(Custom.dayStringFromTime1(selectedItems.dateTime!))")
         if selectedItems.dateTime == 0 {
             dateTimeLbl.text = ""
             
@@ -61,38 +56,20 @@ class DetailsSignUpDriverViewController: GeneralViewController {
                 dateTimeLbl.text = "\(Custom.dayStringSignupItems(selectedItems.dateTime!)), " + "" + " \(Custom.dayStringFromTime4(selectedItems.dateTime!)) - " + "" + "\(selectedItems.endTime!)"
             }
         }
-        //dateTimeLbl.text = ("\(Custom.dayStringFromTime1(selectedItems.dateTime!))")
         
-        //phoneTxtField.text = selectedItems.volunteers![0].objectForKey("phone") as? String ?? ""
-        //adultsTxtField.text = data.volunteers![0].objectForKey("") as? String ?? "0"
-        //childrenTxtField.text = data.volunteers![0].objectForKey("") as? String ?? "0"
-        
-        textView_comments.placeholder = placeHolderText
-        textView_comments.text = placeHolderText
-        textView_comments.textColor = UIColor.lightGray
-        textField_comments.placeholder = "Type comments here.."
         // Observer Keyboard
         let center: NotificationCenter = NotificationCenter.default
         center.addObserver(self, selector: #selector(DetailsSignUpDriverViewController.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         center.addObserver(self, selector: #selector(DetailsSignUpDriverViewController.keyboardWillHide(_:)), name: UIResponder.keyboardDidHideNotification, object: nil)
         center.addObserver(self, selector: #selector(DetailsSignUpDriverViewController.keyboardDidChangeFrame(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
         
-        let tapRecognizer = UITapGestureRecognizer(target: self , action: #selector(DetailsSignUpDriverViewController.HideTextKeyboard(_:)))
-        tableView.addGestureRecognizer(tapRecognizer)
+        //let tapRecognizer = UITapGestureRecognizer(target: self , action: #selector(DetailsSignUpDriverViewController.HideTextKeyboard(_:)))
+        //tableView.addGestureRecognizer(tapRecognizer)
         
-        
+        //self.fetchItems()
         self.itemsDatas = selectedItems.volunteers!
-        self.tableView.reloadData()
+        //self.tableView.reloadData()
         
-        /*let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
-            //self.updateData(self.data)
-            //self.fetchCommentList()
-        }*/
-        
-        /*let imageData = try? Data(contentsOf: Bundle.main.url(forResource: "smiley_test", withExtension: "gif")!)
-        let advTimeGif = UIImage.gifImageWithData(imageData!)
-        gifImageView.image = advTimeGif*/
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -102,6 +79,7 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         let when = DispatchTime.now() + 1 // change 2 to desired number of seconds
         DispatchQueue.main.asyncAfter(deadline: when) {
             self.fetchItems()
+            self.tableView.reloadData()
         }
     }
     
@@ -121,43 +99,28 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         let stringPost = ""
         DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
-            print(response)
             if response["status"] as? String == "0" {
                 self.dismiss(animated: true, completion: nil)
-               self.navigationController?.popViewController(animated: true)
+               //self.navigationController?.popViewController(animated: true)
             }
         })
-       /* DataConnectionManager.requestPOSTURL(api: apiName, para: ["":""], success: {
-            (response) -> Void in
-            print(response)
-            
-            //self.fetchItems()
-            self.navigationController?.popViewController(animated: true)
-            
-        }) {
-            (error) -> Void in
-            
-            self.navigationController?.popViewController(animated: true)
-
-        }*/
 
     }
     
     //Post Comment
-    func postComment(_ msg: String,phone: String) {
+    func postComment(phone: String, seats: String) {
         let apiName = SignupItems + ("\(sheetDataID!)") + ("/item/\(selectedItems.Id!)/Add")
         
-        var stringPost = "comment=" + msg
+        var stringPost = "comment=" + seats
         stringPost += "&phone=" + phone
         
         DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
-            print(response)
             
             if response["status"] as? String == "0" {
                 DispatchQueue.main.async(execute: {
                     self.dismiss(animated: true, completion: nil)
-                    let _ = self.navigationController?.popViewController(animated: true)
+                    //let _ = self.navigationController?.popViewController(animated: true)
                 })
             }else {
                 self.postCounter = self.postCounter + 1
@@ -167,7 +130,7 @@ class DetailsSignUpDriverViewController: GeneralViewController {
                         self.showAlertWithoutCancel(title: "Alert", message: msg)
                     }
                 }else {
-                    self.postComment(self.textView_comments.text, phone: self.phoneTxtField.text!)
+                    self.postComment(phone: self.phoneTxtField.text!, seats: self.seatsTxtField.text!)
                 }
             }
         })
@@ -191,7 +154,7 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         let apiName = SignupItems + ("\(sheetDataID!)")
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
-            print(response)
+            print("Details Driver: Fetching Driver Volunteers")
             
             let datas  = (response as? NSArray)!
             let dic = datas.object(at: 0) as? NSDictionary
@@ -206,7 +169,7 @@ class DetailsSignUpDriverViewController: GeneralViewController {
                     break
                 }
             }
-            print("self.voluniteerdDatas==\(self.itemsDatas.count)")
+            print("Number of volunteers: " + "\(self.itemsDatas.count)")
             
             self.tableView.reloadData()
         }) {
@@ -219,6 +182,7 @@ class DetailsSignUpDriverViewController: GeneralViewController {
 
     }
     
+    /*
     //MARK:- Keyboard
     @objc func HideTextKeyboard(_ sender: UITapGestureRecognizer?) {
         //textField_comments.resignFirstResponder()
@@ -228,6 +192,7 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         textView_comments.textColor = UIColor.lightGray
         textView_comments.resignFirstResponder()
     }
+ */
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         
@@ -237,10 +202,6 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         
         if (maximumOffset - currentOffset <= 200.0) {
             
-            //            if commentArray?.count > 0 {
-            //                getCommentsListForStatus ()
-            //
-            //            }
         }
     }
     
@@ -261,27 +222,9 @@ class DetailsSignUpDriverViewController: GeneralViewController {
     }
     
     @IBAction func commentsSend_btnAction(_ sender: UIButton) {
-        if textView_comments.text == "Type comments here.." {
-            textView_comments.text = ""
-        }
-        postComment(textView_comments.text, phone: phoneTxtField.text!)
-        textView_comments.text = ""
+        postComment(phone: phoneTxtField.text!, seats: seatsTxtField.text!)
         phoneTxtField.text = ""
-        
-       /* if (textView_comments.text != "" ||  textView_comments.text != " ") && textView_comments.textColor == UIColor.black {
-            
-            if phoneTxtField.text == "" || phoneTxtField.text == nil {
-                BaseUIView.toast("Please enter Phone Number.")
-            }else {
-                postComment(textView_comments.text, phone: phoneTxtField.text!)
-                textView_comments.text = ""
-                phoneTxtField.text == ""
-            }
-            
-        }else {
-            BaseUIView.toast("Please enter text")
-        }
-        return*/
+        seatsTxtField.text = ""
     }
     
     // MARK: - UIKeyBoard Delegate
@@ -359,14 +302,7 @@ extension DetailsSignUpDriverViewController: UITableViewDelegate, UITableViewDat
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "DriverItemCell") as! DriverItemCell
         let data = self.itemsDatas[(indexPath as NSIndexPath).row] as? NSDictionary
-        //print(data)
-        if textView_comments.text.count > 0 {
-            cell.updateData(data!, commentText:"")
-
-        }else {
-            cell.updateData(data!, commentText:"")
- 
-        }
+        cell.updateData(data!, commentText: "")
         
         return cell
     }
@@ -386,65 +322,3 @@ extension DetailsSignUpDriverViewController: UITextFieldDelegate {
     }
 }
 
-
-// MARK: - Extensions for UITextView
-extension DetailsSignUpDriverViewController: UITextViewDelegate {
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        
-        textView.selectedRange = NSMakeRange(0, 0)
-        if textView.textColor == UIColor.lightGray && textView.text != placeHolderText && isCommentEdit_1_replyEdit_2 == 0{
-            textView.text = nil
-            textView.textColor = UIColor.black
-        }
-        else{
-            
-        }
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.isEmpty {
-            textView.text = placeHolderText
-            textView.textColor = UIColor.lightGray
-        }
-    }
-    
-    func textViewDidChange(_ textView: UITextView) {
-        //self.textView_comments.textViewDidChange(textView)
-    }
-    
-    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        
-        if textView.text == "Add caption tag another user with @username..." {
-            textView.text = nil
-        }
-        return true
-    }
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        
-        if textView.textColor == UIColor.lightGray && textView.text == placeHolderText {
-            textView.text = nil
-            textView.textColor = UIColor.black
-        }
-        if text == "" && textView_comments.text.count == 1 && textView.textColor == UIColor.black{
-            textView.text = placeHolderText
-            textView.textColor = UIColor.lightGray
-            textView.selectedRange = NSMakeRange(0, 0)
-        }
-        if text == "\n" {
-        }
-        
-        let totalText = textView.text + text
-        
-        if totalText.count > 0 && totalText != placeHolderText {
-            //btn_comments.setImage(UIImage(named: "chat_send"), forState: .Normal)
-        }
-        else{
-            //btn_comments.setImage(UIImage(named: "chat_send_gray"), forState: .Normal)
-        }
-        
-        return true
-    }
-    
-}

@@ -13,7 +13,7 @@ class VolunteeredCell: UITableViewCell {
     @IBOutlet weak var cellView: UIView!
     @IBOutlet weak var nameLbl: UILabel!
     @IBOutlet weak var phoneLbl: UILabel!
-    @IBOutlet weak var commentLbl: UILabel!
+    @IBOutlet weak var seatsLbl: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -23,12 +23,12 @@ class VolunteeredCell: UITableViewCell {
     
     func updateData(_ data: NSDictionary) {
         let name = data.object(forKey: "firstName") as? String ?? ""
-        
         let phone = data.object(forKey: "phone") as? String ?? ""
-        let comment = data.object(forKey: "comment") as? String ?? ""
+        let seats = data.object(forKey: "comment") as? String ?? ""
         nameLbl.text = name
-        phoneLbl.text = phone
-        commentLbl.text = comment
+        if phone.isEmpty {phoneLbl.text = ""} else {phoneLbl.text = "Phone: " + phone}
+        print ("seats = " + seats)
+        if seats.isEmpty {seatsLbl.text = ""} else if seats.isNumeric {seatsLbl.text = "# of seats: " + seats} else {seatsLbl.text = "Comment: " + seats}
     }
     
 
@@ -39,3 +39,5 @@ class VolunteeredCell: UITableViewCell {
     }
 
 }
+
+

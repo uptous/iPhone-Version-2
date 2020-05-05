@@ -88,7 +88,6 @@ class RSVPVolunteerViewController: UIViewController {
         let stringPost = ""
         DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
-            print(response)
             
             if response["status"] as? String == "0" {
                 DispatchQueue.main.async(execute: {

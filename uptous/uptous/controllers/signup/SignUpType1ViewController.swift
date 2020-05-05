@@ -33,6 +33,7 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
     
     
     override func viewDidLoad() {
+        print ("Type1 Volunteer: viewDidLoad")
         super.viewDidLoad()
         _ = Custom.cornerView(contentView)
         descTableView.estimatedRowHeight = 95
@@ -44,25 +45,11 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
     
     func updateData(_ data: SignupSheet) {
         self.data = data
-        if (data.notes?.count)! > 0 {
-            let font = UIFont(name: "Helvetica", size: 14.0)
-            //descLabel.text = data!.notes!
-            let height = heightForView(text: data.notes!, font: font!, width: descTableView.frame.size.width)
-            if height < 20 {
-                textHeightConstraint.constant = 170 + 10//CGFloat(height)
-            }else if height < 70{
-                textHeightConstraint.constant = 170 + 20
-            }else if height < 100{
-                textHeightConstraint.constant = 170 + 40
-            }else {
-                textHeightConstraint.constant = 170 + 75//CGFloat(height)
-            }
-            
-        }else {
-            textHeightConstraint.constant = 150
-        }
+        let notesLength = data.notes?.count ?? 0
+        print("Notes Length: " + String(notesLength))
+        let notesHeight = 150.0 + Double(notesLength / 2)
+        contentView.updateConstraint(attribute: NSLayoutConstraint.Attribute.height, constant: CGFloat(notesHeight))
         
-        viewHeightConstraint.constant = textHeightConstraint.constant
         self.view.layoutIfNeeded()
         mainView.layoutIfNeeded()
         descTableView.reloadData()
@@ -91,16 +78,16 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
         }
     }
 
-    func heightForView(text:String, font:UIFont, width:CGFloat) -> CGFloat{
-        let label:UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: CGFloat.greatestFiniteMagnitude))
-        label.numberOfLines = 0
-        label.lineBreakMode = NSLineBreakMode.byWordWrapping
-        label.font = font
-        label.text = text
-        label.sizeToFit()
+    //func heightForView(text:String, font:UIFont, width:CGFloat) -> CGFloat{
+    //    let label:UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: //CGFloat.greatestFiniteMagnitude))
+        //label.numberOfLines = 0
+        //label.lineBreakMode = NSLineBreakMode.byWordWrapping
+        //label.font = font
+        //label.text = text
+        //label.sizeToFit()
         
-        return label.frame.height
-    }
+        //return label.frame.height
+    //}
     
     @IBAction func back(_ sender: UIButton) {
         //self.navigationController?.popViewController(animated: true)
@@ -108,6 +95,7 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        print ("Type1 Volunteer: viewWillAppear")
         let when = DispatchTime.now() + 1 // change 2 to desired number of seconds
         DispatchQueue.main.asyncAfter(deadline: when) {
             self.fetchSignUpItems()
@@ -201,6 +189,7 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
             if signUpType == "100" || signUpType == "101" {
                 if item.volunteerStatus == "Open" {
                     let controller = self.storyboard?.instantiateViewController(withIdentifier: "ItemDetailsEditingMsgViewController") as! ItemDetailsEditingMsgViewController
+                    controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                     controller.selectedItems = item
                     if data1 != nil {
                         controller.sheetDataID = ("\(data1.newsItemId!)")
@@ -212,6 +201,7 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
                     
                 }else if item.volunteerStatus == "Volunteered" || item.volunteerStatus == "Full"{
                     let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReadOnlyCommentViewController") as! ReadOnlyCommentViewController
+                    controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                     controller.selectedItems = item
                     if data1 != nil {
                         controller.sheetDataID = ("\(data1.newsItemId!)")
@@ -223,6 +213,7 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
             }else if signUpType == "102" {
                 if item.volunteerStatus == "Open" {
                     let controller = self.storyboard?.instantiateViewController(withIdentifier: "OpenRSVPViewController") as! OpenRSVPViewController
+                    controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                     controller.itemData = Items(info: dic)
                     if data1 != nil {
                         controller.rsvpType = rsvpTypeFromFeed
@@ -235,7 +226,7 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
                     //self.navigationController?.pushViewController(controller, animated: true)
                 }else if item.volunteerStatus == "Volunteered" {
                     let controller = self.storyboard?.instantiateViewController(withIdentifier: "RSVPVolunteerViewController") as! RSVPVolunteerViewController
-                    
+                    controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                     if data1 != nil {
                         controller.rsvpType = rsvpTypeFromFeed
                         controller.sheetDataID = ("\(data1.newsItemId!)")
@@ -250,8 +241,10 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
                 }else if item.volunteerStatus == "Full" {
                 }
             }else if signUpType == "103" {
+                print("Type1 Signup - displatching Driver Item")
                 if item.volunteerStatus == "Open" {
                     let controller = self.storyboard?.instantiateViewController(withIdentifier: "DetailsSignUpDriverViewController") as! DetailsSignUpDriverViewController
+                    controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                     controller.selectedItems = item
                     if data1 != nil {
                         controller.sheetDataID = ("\(data1.newsItemId!)")
@@ -262,6 +255,7 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
                     //self.navigationController?.pushViewController(controller, animated: true)
                 }else if item.volunteerStatus == "Volunteered" {
                     let controller = self.storyboard?.instantiateViewController(withIdentifier: "VolunteeredViewController") as! VolunteeredViewController
+                    controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                     if data1 != nil {
                         controller.sheetDataID = ("\(data1.newsItemId!)")
                     }else {
@@ -283,6 +277,16 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+}
+
+extension UIView {
+
+    func updateConstraint(attribute: NSLayoutConstraint.Attribute, constant: CGFloat) -> Void {
+        if let constraint = (self.constraints.filter{$0.firstAttribute == attribute}.first) {
+            constraint.constant = constant
+            self.layoutIfNeeded()
+        }
     }
 }
 

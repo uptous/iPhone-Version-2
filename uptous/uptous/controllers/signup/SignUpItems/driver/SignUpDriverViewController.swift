@@ -93,6 +93,7 @@ class SignUpDriverViewController: GeneralViewController {
             self.updateData(SignupSheet(info: dic))
             self.driverItemsDatas = (dic?.object(forKey: "items")) as! NSArray
             self.tableView.reloadData()
+            print ("Fetch Driver Items List and Reloaded")
         }) {
             (error) -> Void in
             

@@ -99,7 +99,6 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
         
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             let signUpDatas = (response as? NSArray)!
             let dic = signUpDatas.object(at: 0) as? NSDictionary
             let dataSheet = SignupSheet(info: dic)
@@ -152,8 +151,6 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
     }
     
     func alreadyLoggedIn() {
-        print("eeeee")
-        print(UserPreferences.LoginHeaderCodition)
         
         appDelegate.loginHeaderCredentials.add(name:"Authorization", value:UserPreferences.LoginHeaderCodition.values.first!)
 
@@ -223,7 +220,6 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
             
             ActivityIndicator.show()
             
-            print("ggggggg")
             print("login request : " + LoginAPI)
             
             
@@ -272,7 +268,7 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
     }
     
     func checkNewFeed() {
-        print("mmmmmmm")
+        print("Checking new feedß")
         DataConnectionManager.requestGETURL1(api: FeedUpdateAPI, para: ["":""], success: {
             (response) -> Void in
             print("First Time==>\(response)")

@@ -31,7 +31,6 @@ class EventDateCell: UITableViewCell {
     }
     
     func update(_ data: SignupSheet, communityList:NSMutableArray) {
-        print(data)
         let format = DateFormatter()
         format.date(from: "MMM d")
         let today = format.string(from: Date())

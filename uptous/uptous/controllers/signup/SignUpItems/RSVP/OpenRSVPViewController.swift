@@ -15,7 +15,7 @@ class OpenRSVPViewController: GeneralViewController {
     @IBOutlet weak var headingLbl: UILabel!
     @IBOutlet weak var rsvpLbl: UILabel!
     @IBOutlet weak var dateTimeLbl: UILabel!
-    @IBOutlet weak var attendeesTxtField: UITextField!
+    //@IBOutlet weak var attendeesTxtField: UITextField!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var commentsTextView: UIView!
     @IBOutlet weak var textField_comments: UITextField!
@@ -25,7 +25,7 @@ class OpenRSVPViewController: GeneralViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var gifImageView: UIImageView!
     @IBOutlet weak var webView: UIWebView!
-    @IBOutlet weak var attendView: UIView!
+    //@IBOutlet weak var attendView: UIView!
 
     
     var volunteerData = NSArray()
@@ -60,11 +60,11 @@ class OpenRSVPViewController: GeneralViewController {
                 dateTimeLbl.text = "\(Custom.dayStringSignupItems(itemData.dateTime!)), " + "" + " \(Custom.dayStringFromTime4(itemData.dateTime!)) - " + "" + "\(itemData.endTime!)"
             }
         }
-        if rsvpType == "Vote" {
-           attendView.isHidden = true
-        }else {
-            attendView.isHidden = false
-        }
+        //if rsvpType == "Vote" {
+        //   attendView.isHidden = true
+        //}else {
+        //    attendView.isHidden = false
+       // }
         
         //attendeesTxtField.text = data.volunteers![0].objectForKey("phone") as? String ?? ""
         
@@ -104,19 +104,18 @@ class OpenRSVPViewController: GeneralViewController {
     }
     
     //Post Comment
-    func postComment(_ msg: String,attendees: String) {
+    func postComment(_ msg: String) {
         let apiName = SignupItems + ("\(sheetDataID!)") + ("/item/\(itemData.Id!)/Add")
-        var stringPost = "comment=" + msg
-        stringPost += "&numberOfAttendees=" + attendees
+        let stringPost = "comment=" + msg
+        //stringPost += "&numberOfAttendees=" + attendees
         
         DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
-            print(response)
             
             if response["status"] as? String == "0" {
                 DispatchQueue.main.async(execute: {
                     self.dismiss(animated: true, completion: nil)
-                    let _ = self.navigationController?.popViewController(animated: true)
+                    //let _ = self.navigationController?.popViewController(animated: true)
                 })
             }else {
                 self.postCounter = self.postCounter + 1
@@ -127,7 +126,7 @@ class OpenRSVPViewController: GeneralViewController {
                         self.showAlertWithoutCancel(title: "Alert", message: msg)
                     }
                 }else {
-                    self.postComment(self.textView_comments.text, attendees: self.attendeesTxtField.text!)
+                    self.postComment(self.textView_comments.text)
                 }
 
             }
@@ -153,7 +152,6 @@ class OpenRSVPViewController: GeneralViewController {
         
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             
             let datas = (response as? NSArray)!
             let dic = datas.object(at: 0) as? NSDictionary
@@ -222,26 +220,10 @@ class OpenRSVPViewController: GeneralViewController {
         if textView_comments.text == "Type comments here.." {
             textView_comments.text = ""
         }
-        postComment(textView_comments.text, attendees: attendeesTxtField.text!)
-        attendeesTxtField.text = ""
+        postComment(textView_comments.text)
+        //attendeesTxtField.text = ""
         textView_comments.text = ""
         
-        /*if (textView_comments.text != "" || textView_comments.text != " ") && textView_comments.textColor == UIColor.black {
-            if attendeesTxtField.text == "" || attendeesTxtField.text == nil {
-                BaseUIView.toast("Please enter Attendees.")
-                attendeesTxtField.becomeFirstResponder()
-                textView_comments.resignFirstResponder()
-            }else {
-                postComment(textView_comments.text, attendees: attendeesTxtField.text!)
-                attendeesTxtField.text = ""
-                textView_comments.text = ""
-                attendeesTxtField.becomeFirstResponder()
-                textView_comments.resignFirstResponder()
-            }
-            
-        }else {
-            BaseUIView.toast("Please enter text")
-        }*/
         return
     }
     

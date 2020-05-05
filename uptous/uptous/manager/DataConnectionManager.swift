@@ -17,12 +17,8 @@ class DataConnectionManager: NSObject {
         
         ActivityIndicator.show()
         
-        print("ddddd")
-        
         AF.request(api, method: .post,parameters: para, encoding: URLEncoding.default, headers: appDelegate.loginHeaderCredentials).responseJSON { (response:AFDataResponse<Any>) in
             
-            print(response.result)
-            print(response)
             ActivityIndicator.hide()
             switch(response.result) {
                 
@@ -37,7 +33,6 @@ class DataConnectionManager: NSObject {
                  }*/
                 
                 //let message : String
-                print(response)
                 if let httpStatusCode = response.response?.statusCode {
                     if (httpStatusCode == 401) {
                         self.relogin()
@@ -67,15 +62,9 @@ class DataConnectionManager: NSObject {
         
          ActivityIndicator.show()
         
-        print("ccccc11111")
-        print("api = " + api)
-        print("credential = " + (appDelegate.loginHeaderCredentials.value(for: "Authorization") ?? "No Authentication"))
+        print("Request api = " + api)
          
         AF.request(api, method: .get, parameters: nil, encoding: URLEncoding.default, headers: appDelegate.loginHeaderCredentials).responseJSON { (response:AFDataResponse<Any>) in
-            
-           print("ccccc2222")
-            print(response)
-            print("ccccc3333")
             
             ActivityIndicator.hide()
             switch response.result {
@@ -140,7 +129,6 @@ class DataConnectionManager: NSObject {
                 //let message : String
                 if let httpStatusCode = response.response?.statusCode {
                     if (httpStatusCode == 401) {
-                        print("bbbbbb")
                         self.relogin()
                     }
                     //switch(httpStatusCode) {
@@ -188,7 +176,6 @@ class DataConnectionManager: NSObject {
             
             let boundary = NSString(format: "---------------------------14737809831466499882746641449")
             let contentType = NSString(format: "multipart/form-data; boundary=%@",boundary)
-              print("Content Type \(contentType)")
             request.addValue(contentType as String, forHTTPHeaderField: "Content-Type")
             request.setValue("Basic \(base64Credentials)", forHTTPHeaderField: "Authorization")
             
@@ -255,7 +242,6 @@ class DataConnectionManager: NSObject {
             //using breaking point to show data
             if let response1 = response as? HTTPURLResponse {
                 if response1.statusCode == 401 {
-                    print("aaaaaa")
                     self.relogin()
                 }
             }

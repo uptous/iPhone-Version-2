@@ -105,7 +105,6 @@ class MyUpToUsCalendarViewController: GeneralViewController{
         self.communityList.removeAllObjects()
         DataConnectionManager.requestGETURL(api: TopMenuCommunity, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             
             let item = response as! NSArray
             var dic1 = [String : String]()
@@ -140,7 +139,6 @@ class MyUpToUsCalendarViewController: GeneralViewController{
         self.eventList.removeAll()
         DataConnectionManager.requestGETURL(api: EventAPI, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             self.newsList = response as! NSArray
             
             for i in 0 ..< self.newsList.count {
@@ -281,10 +279,8 @@ extension MyUpToUsCalendarViewController: EventExpandCellDelegate, EventCellDele
                 
                 if let location = location {
                     let coordinate = location.coordinate
-                    let latitiudeText = "\(coordinate.latitude)"
-                    let longitudeText = "\(coordinate.longitude)"
-                    print(latitiudeText)
-                    print(longitudeText)
+                    //let latitiudeText = "\(coordinate.latitude)"
+                    //let longitudeText = "\(coordinate.longitude)"
                     
                     let controller = ShowLocationViewController(nibName: "ShowLocationViewController", bundle: nil)
                     controller.calendarEvent = data
@@ -365,10 +361,8 @@ extension MyUpToUsCalendarViewController: EventExpandCellDelegate, EventCellDele
                 
                 if let location = location {
                     let coordinate = location.coordinate
-                    let latitiudeText = "\(coordinate.latitude)"
-                    let longitudeText = "\(coordinate.longitude)"
-                    print(latitiudeText)
-                    print(longitudeText)
+                    //let latitiudeText = "\(coordinate.latitude)"
+                    //let longitudeText = "\(coordinate.longitude)"
                     
                     let controller = ShowLocationViewController(nibName: "ShowLocationViewController", bundle: nil)
                     controller.calendarEvent = data

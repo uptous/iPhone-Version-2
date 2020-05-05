@@ -129,7 +129,6 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
 
         DataConnectionManager.requestGETURL(api: TopMenuCommunity, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             
             let item = response as! NSArray
             var dic1 = [String : String]()
@@ -247,7 +246,6 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
         
         DataConnectionManager.requestGETURL(api: PhotoLibrary, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             self.collectionView.isHidden = false
 
             let item = response as! NSArray
@@ -295,7 +293,6 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
         appDelegate.tabbarView?.isHidden = false
         DataConnectionManager.requestGETURL(api: FetchAllFiles, para: ["":""], success: {
             (response) -> Void in
-            print(response)
             self.collectionView.isHidden = true
 
             let item = response as! NSArray

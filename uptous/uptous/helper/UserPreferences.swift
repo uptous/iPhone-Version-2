@@ -33,11 +33,9 @@ class UserPreferences: NSObject {
     
     class var LoginHeaderCodition: [String:String] {
         get {
-            print("fffffGET")
             return (UserDefaults.standard.object(forKey: "loginHeader") as? [String:String]) ?? [:]
         }
         set {
-            print("fffffSET")
             UserDefaults.standard.set(newValue, forKey: "loginHeader" )
             UserDefaults.standard.synchronize()
         }
