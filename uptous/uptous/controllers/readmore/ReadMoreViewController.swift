@@ -148,7 +148,7 @@ class ReadMoreViewController: GeneralViewController {
         DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
             (response) -> Void in
             
-            print(response["status"]!)
+            print("ReadMoewViewController: postComment status: ");print(response["status"]!)
             if response["status"] as? String == "0" {
                 self.fetchCommentList()
             }

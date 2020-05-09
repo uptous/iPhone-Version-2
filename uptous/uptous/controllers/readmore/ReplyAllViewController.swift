@@ -361,7 +361,6 @@ extension ReplyAllViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ReplyAllCell") as! ReplyAllCell
         let data = commentList[(indexPath as NSIndexPath).row] as? NSDictionary
-        print(Comment(info: data))
         cell.updateData(Comment(info: data!))
         return cell
     }

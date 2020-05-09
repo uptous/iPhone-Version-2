@@ -28,6 +28,8 @@ class SignUpDriversCell: UITableViewCell {
     @IBOutlet weak var gifImageView: UIImageView!
     @IBOutlet weak var ownerPhotoImgView: CircularImageView!
     @IBOutlet weak var identifierView: GroupIdentifierView!
+    @IBOutlet weak var spotLbl: UILabel!
+    @IBOutlet weak var statusLbl: UILabel!
     
     
     override func awakeFromNib() {
@@ -42,6 +44,8 @@ class SignUpDriversCell: UITableViewCell {
     func updateView(_ data: Items) {
         let attributedStr = NSMutableAttributedString()
         let attributedStr1 = NSMutableAttributedString()
+        let attributedStr3 = NSMutableAttributedString()
+        
         if data.volunteerStatus == "Open" {
             volunteeredView.isHidden = true
             fullView.isHidden = true
@@ -56,11 +60,17 @@ class SignUpDriversCell: UITableViewCell {
             attributedStr1.append(Custom.attributedString("To: ",size: 16.0)!)
             attributedStr1.append(attributedString2)
             openToLbl.attributedText = attributedStr1
-            //dateTime = 1485532800000;
-            /*
-             dateTime = 1485878400000;
-             endTime = "9:00AM";
- */
+            
+            let count = data.numVolunteers! - data.volunteerCount!
+            attributedStr3.append(Custom.attributedString1(("\(count) "),size: 14.0)!)
+            let attributedString3 = NSAttributedString(string: "spots open", attributes: nil)
+            attributedStr3.append(attributedString3)
+            if data.numVolunteers! == 0 {
+                spotLbl.text = "Open"
+            }else {
+                spotLbl.attributedText = attributedStr3
+            }
+            
             if data.dateTime == 0 {
                 openDateLbl.text = ""
                 
@@ -76,10 +86,15 @@ class SignUpDriversCell: UITableViewCell {
             }
             
             
-        }else if data.volunteerStatus == "Volunteered" {
+        }else if data.volunteerStatus == "Volunteered" || data.volunteerStatus == "Full" {
             volunteeredView.isHidden = false
             fullView.isHidden = true
             openView.isHidden = true
+            
+            statusLbl.text="Volunteered"
+            if data.volunteerStatus == "Full" {
+                statusLbl.text="Full"
+            }
             
             let attributedString1 = NSAttributedString(string: ("\(data.name!)"), attributes: nil)
             attributedStr.append(Custom.attributedString("From: ",size: 16.0)!)
@@ -105,49 +120,29 @@ class SignUpDriversCell: UITableViewCell {
                     volunteeredDateLbl.text = "\(Custom.dayStringSignupItems(data.dateTime!)), " + "" + " \(Custom.dayStringFromTime4(data.dateTime!)) - " + "" + "\(data.endTime!)"
                 }
             }
+        }
 
             
-        }else if data.volunteerStatus == "Full" {
-            volunteeredView.isHidden = true
-            fullView.isHidden = false
-            openView.isHidden = true
+//        }else if data.volunteerStatus == "Full" {
+//            volunteeredView.isHidden = true
+//            fullView.isHidden = false
+//            openView.isHidden = true
             
-            if data.dateTime == 0 {
-                fullDateLbl.text = ""
+//            if data.dateTime == 0 {
+//                fullDateLbl.text = ""
                 
-            }else {
-                if Custom.dayStringFromTime4(data.dateTime!) == "1:00AM" {
-                    fullDateLbl.text =  "\(Custom.dayStringSignupItems(data.dateTime!))"
-                }else if data.endTime == "" || data.endTime == "1:00AM" {
+//            }else {
+//                if Custom.dayStringFromTime4(data.dateTime!) == "1:00AM" {
+//                    fullDateLbl.text =  "\(Custom.dayStringSignupItems(data.dateTime!))"
+//                }else if data.endTime == "" || data.endTime == "1:00AM" {
                     
-                    fullDateLbl.text = "\(Custom.dayStringSignupItems(data.dateTime!))," + "" + " \(Custom.dayStringFromTime4(data.dateTime!))"
-                }else {
-                    fullDateLbl.text = "\(Custom.dayStringSignupItems(data.dateTime!)), " + "" + " \(Custom.dayStringFromTime4(data.dateTime!)) - " + "" + "\(data.endTime!)"
-                }
-            }
+//                    fullDateLbl.text = "\(Custom.dayStringSignupItems(data.dateTime!))," + "" + " \(Custom.dayStringFromTime4(data.dateTime!))"
+//                }else {
+//                    fullDateLbl.text = "\(Custom.dayStringSignupItems(data.dateTime!)), " + "" + " \(Custom.dayStringFromTime4(data.dateTime!)) - " + "" + "\(data.endTime!)"
+//                }
+//            }
             
-        }
-       /* if data.dateTime == 0 {
-            if data.createDate! == 0 {
-                eventDateLbl.text = ""
-            }else {
-                eventDateLbl.text = Custom.dayStringFromTime1(data.createDate!)
-                
-            }
-            
-        }else {
-            eventDateLbl.text = Custom.dayStringFromTime1(data.dateTime!)
-            
-        }
-        
-        if data.cutoffDate == 0 {
-            cutOffDateLbl.text = ""
-            
-        }else {
-            cutOffDateLbl.text = Custom.dayStringFromTime1(data.cutoffDate!)
-        }
-        typeLbl.text = data.name!
-        teamLbl.text =  "Community Name"//data.type!*/
+//        }
         
     }
 

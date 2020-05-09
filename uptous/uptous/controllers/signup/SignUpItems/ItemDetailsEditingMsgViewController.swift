@@ -53,11 +53,10 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
         let tapRecognizer = UITapGestureRecognizer(target: self , action: #selector(ItemDetailsEditingMsgViewController.HideTextKeyboard(_:)))
         tableView.addGestureRecognizer(tapRecognizer)
         
-        _ = Custom.cornerView(contentView)
+        //_ = Custom.cornerView(contentView)
         updateData(selectedItems)
         
         voluniteerdDatas = selectedItems.volunteers!
-        print("ItemDetailsEditingMsgView: viewDidLoad: "; print(voluniteerdDatas)
         
         //headingLbl.text = data.name
         msgLbl.text = selectedItems.name
@@ -218,7 +217,6 @@ class ItemDetailsEditingMsgViewController: GeneralViewController {
             for index in 0..<data.count {
                 let dic = data.object(at: index) as? NSDictionary
                 if dic?.object(forKey: "id") as? Int == self.selectedItems.Id {
-                    print(dic?.object(forKey: "volunteers") ?? "Failed to load volunteers")
                     self.voluniteerdDatas = dic?.object(forKey: "volunteers") as! NSArray
                     break
                 }

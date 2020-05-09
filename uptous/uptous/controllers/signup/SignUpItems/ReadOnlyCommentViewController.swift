@@ -32,7 +32,7 @@ class ReadOnlyCommentViewController: GeneralViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         eventDateLbl.text = eventDateValue
-        _ = Custom.cornerView(contentView)
+        //_ = Custom.cornerView(contentView)
         _ = nameLbl.text = selectedItems.name!
         _ = headingLbl.text = selectedItems.name!
        // eventDateLbl.text = ("\(Custom.dayStringFromTime3(selectedItems.dateTime!))")

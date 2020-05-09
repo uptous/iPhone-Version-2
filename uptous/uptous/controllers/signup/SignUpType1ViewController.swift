@@ -5,6 +5,8 @@
 //  Created by Roshan on 11/9/17.
 //  Copyright © 2017 UpToUs. All rights reserved.
 //
+// This contoller handles item list when NO Organizers are present
+//
 
 import UIKit
 
@@ -12,9 +14,7 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
 
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var eventDateLbl: UILabel!
-    @IBOutlet weak var eventTimeLbl: UILabel!
     @IBOutlet weak var cutoffDateLbl: UILabel!
-    @IBOutlet weak var cutoffTimeLbl: UILabel!
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var itemTableView: UITableView!
     @IBOutlet weak var descTableView: UITableView!
@@ -30,6 +30,7 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
     var itemsDatas = NSArray()
     var signUpType = ""
     var rsvpTypeFromFeed = ""
+    var eventTimeText = ""
     
     
     override func viewDidLoad() {
@@ -37,7 +38,6 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
         _ = Custom.cornerView(contentView)
         descTableView.estimatedRowHeight = 95
         descTableView.rowHeight = UITableView.automaticDimension
-        
         itemTableView.estimatedRowHeight = 95
         itemTableView.rowHeight = UITableView.automaticDimension
     }
@@ -46,7 +46,10 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
         self.data = data
         let notesLength = data.notes?.count ?? 0
         print("Notes Length: " + String(notesLength))
-        let notesHeight = 150.0 + Double(notesLength / 2)
+        var notesHeight = 120.0
+        if (notesLength > 0) {
+            notesHeight = 150.0 + Double(notesLength / 2)
+        }
         contentView.updateConstraint(attribute: NSLayoutConstraint.Attribute.height, constant: CGFloat(notesHeight))
         
         self.view.layoutIfNeeded()
@@ -55,19 +58,25 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
         
         //For Event Date and Time
         if data.dateTime == 0 {
-            eventTimeLbl.text = ""
+            eventTimeText = ""
         }else {
-            eventDateLbl.text = Custom.dayStringFromTime1(data.dateTime!)
             
             if data.endTime == "" || data.endTime == "1:00AM" {
                 if Custom.dayStringFromTime4(data.dateTime!) != "1:00AM" {
-                    eventTimeLbl.text = "\(Custom.dayStringFromTime4(data.dateTime!))"
+                    eventTimeText = "\(Custom.dayStringFromTime4(data.dateTime!))"
                 }
             }else {
                 if Custom.dayStringFromTime4(data.dateTime!) != "1:00AM" {
-                    eventTimeLbl.text = "\(Custom.dayStringFromTime4(data.dateTime!)) - " + "" + "\(data.endTime!)"
+                    eventTimeText = "\(Custom.dayStringFromTime4(data.dateTime!)) - " + "" + "\(data.endTime!)"
                 }
             }
+            
+            if (eventTimeText.isEmpty) {
+                eventDateLbl.text = Custom.dayStringFromTime1(data.dateTime!)
+            } else {
+                eventDateLbl.text = Custom.dayStringFromTime1(data.dateTime!) + ", " + eventTimeText
+            }
+            
         }
         //For Cuttoff Date and Time
         if data.cutoffDate == 0 {
@@ -250,7 +259,7 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
                     }
                     self.present(controller, animated: true, completion: nil)
                     //self.navigationController?.pushViewController(controller, animated: true)
-                }else if item.volunteerStatus == "Volunteered" {
+                }else if item.volunteerStatus == "Volunteered" || item.volunteerStatus == "Full" {
                     let controller = self.storyboard?.instantiateViewController(withIdentifier: "VolunteeredViewController") as! VolunteeredViewController
                     controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                     if data1 != nil {
@@ -261,8 +270,6 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
                     controller.data = item
                     self.present(controller, animated: true, completion: nil)
                     //self.navigationController?.pushViewController(controller, animated: true)
-                    
-                }else if item.volunteerStatus == "Full" {
                     
                 }
             }

@@ -75,11 +75,11 @@ class DetailsSignUpDriverViewController: GeneralViewController {
         //self.tableView.isHidden = true
         tableView.estimatedRowHeight = 110
         tableView.rowHeight = UITableView.automaticDimension
-        let when = DispatchTime.now() + 1 // change 2 to desired number of seconds
-        DispatchQueue.main.asyncAfter(deadline: when) {
-            self.fetchItems()
-            self.tableView.reloadData()
-        }
+        //let when = DispatchTime.now() + 1 // change 2 to desired number of seconds
+        //DispatchQueue.main.asyncAfter(deadline: when) {
+        //    self.fetchItems()
+        //    self.tableView.reloadData()
+       // }
     }
     
     //MARK:- Delete 

@@ -28,7 +28,7 @@ class VolunteeredCell: UITableViewCell {
         nameLbl.text = name
         if phone.isEmpty {phoneLbl.text = ""} else {phoneLbl.text = "Phone: " + phone}
         print ("seats = " + seats)
-        if seats.isEmpty {seatsLbl.text = ""} else if seats.isNumeric {seatsLbl.text = "# of seats: " + seats} else {seatsLbl.text = "Comment: " + seats}
+        if seats.isEmpty {seatsLbl.text = ""} else if seats.isNumeric {seatsLbl.text = "Seats: " + seats} else {seatsLbl.text = "Comment: " + seats}
     }
     
 

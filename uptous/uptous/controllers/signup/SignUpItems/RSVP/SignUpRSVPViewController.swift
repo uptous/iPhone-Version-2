@@ -170,7 +170,7 @@ extension SignUpRSVPViewController: UITableViewDelegate, UITableViewDataSource {
             controller.data = data
             self.navigationController?.pushViewController(controller, animated: true)
             
-        }else if data.volunteerStatus == "Full" {
+        }else if data.volunteerStatus == "Full" { //option doesn't exist on server side for RSVP
         }
     }
     

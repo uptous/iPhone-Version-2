@@ -249,7 +249,7 @@ class DataConnectionManager: NSObject {
                 return
             }
             
-            let strData = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
+            //let strData = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
             
             let result = try! JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any]
             success(result!)
