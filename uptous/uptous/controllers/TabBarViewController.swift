@@ -15,19 +15,15 @@ class TabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print ("TabBarViewConroller: viewDidLoad")
         self.tabBar.isHidden = true
         appDelegate.tabbarView =  Bundle.main.loadNibNamed("CustomTabBarView", owner: nil, options: nil)?.first! as? CustomTabBarView
         appDelegate.tabbarView?.frame = CGRect(x: 0, y: self.view.frame.height - 50, width: self.view.frame.width, height: 50)
-        print ("TabBarViewConroller: viewDidLoad: Adding subview")
         self.view.addSubview(appDelegate.tabbarView!)
         self.selectedIndex = 0
-        print ("TabBarViewConroller: viewDidLoad: Subview Added")
         
         //Custom Button Action
         appDelegate.tabbarView!.newsFeedTapHandler = {
             (firstTabBar: CustomTabBarView) in
-            //print ("TabBarViewConroller: viewDidLoad: 1st Tap Handler Init")
             self.selectedIndex = 0
             
             firstTabBar.deselectButton()
@@ -94,8 +90,6 @@ class TabBarViewController: UITabBarController {
             fifthTabBar.libraryBtn1.isHidden = true
             fifthTabBar.calendarBtn1.isHidden = false
         }
-        
-        print ("TabBarViewConroller: viewDidLoad: Finished")
         
     }
     

@@ -103,19 +103,16 @@ class DataConnectionManager: NSObject {
     
     class func relogin() {
         
-        print ("Data connection manager: in relogin")
         let alert = UIAlertController(title: "Alert", message: "Password changed. Please login again", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (alert) in
            // let login = LoginViewController(nibName: "LoginViewController", bundle: nil)
             
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             let navController = appDelegate.window?.rootViewController as? UINavigationController
-            print ("Data connection manager: popping Root")
             navController?.popToRootViewController(animated: true)
             
           
         }))
-        print ("Data connection manager: presenting Root")
         UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
     }
     
@@ -204,10 +201,6 @@ class DataConnectionManager: NSObject {
             request.httpBody = body as Data
             
             let task = URLSession.shared.dataTask(with: request as URLRequest, completionHandler: {(data,response,error)->Void in
-                //using breaking point to show data
-                //print(response ?? "response not found")
-                //let strData = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-                //("Body: \(strData)")
                 
                 //let data1 = text.data(using: .utf8)
                 _ = try! JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any]

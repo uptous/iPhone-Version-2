@@ -89,7 +89,6 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     override func viewDidLoad() {
         
-        print ("MyUpToUsFeedController - in viewDidLoad")
         super.viewDidLoad()
         
         communityView.isHidden = true
@@ -116,18 +115,13 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
             headingBtn.setTitle(UserPreferences.SelectedCommunityName, for: .normal)
         }
         
-        print ("MyUpToUsFeedController: viewDidLoad: Done with table view registrations")
         messageView.isHidden = true
         self.tableView.isHidden = true
-        //print("MyUpToUsFeedViewController: viewDidLoad: Fetching feed")
-        //self.getFeedList()
-        //self.tableView.reloadData()
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         
-        print ("MyUpToUsFeedController - in viewWillAppear")
         super.viewWillAppear(animated)
         searchBar.text = ""
         if UserPreferences.SelectedCommunityName == "" {
@@ -142,7 +136,6 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         //directBtn.isHidden = true
         //onTimerTick()
 
-        //self.navigationController?.pushViewController(self, animated: true)
         self.getFeedList(reload: true)
     }
     
@@ -190,7 +183,6 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
                 self.searchBar.resignFirstResponder()
             }
         })
-        print ("MyUpToUsFeedController: searchBar: Reloading data")
         self.tableView.reloadData()
     }
 
@@ -216,7 +208,6 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
             
             if data != nil {
                 let status = data?.object(forKey: "status") as? String
-                print ("MyUpToUsFeedController: OnTimerTick: Status = " + (status ?? "No Status"))
                 if (status == "2") {
                     //self.notifNoRecordsView.isHidden = false
 
@@ -259,7 +250,6 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     func fetchCommunity() {
         self.communityList.removeAllObjects()
 
-        print("Fetching community")
         DataConnectionManager.requestGETURL(api: TopMenuCommunity, para: ["":""], success: {
             (response) -> Void in
             
@@ -273,7 +263,6 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
                 let dic = item.object(at: index) as! NSDictionary
                 self.communityList.add(Community(info: dic))
             }
-            print ("MyUpToUsFeedViewController: fetchCommunity: reloading community data")
             self.communityTableView.reloadData()
         }) {
             (error) -> Void in
@@ -315,13 +304,11 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     }
     
     func getFeedList(reload: Bool) {
-        print ("MyUpToUsFeedController: in getFeedList")
         appDelegate.tabbarView?.isHidden = false
         self.communityView.isHidden = true
         DataConnectionManager.requestGETURL(api: FeedAPI, para: ["":""], success: {
             (response) -> Void in
             
-            print ("MyUpToUsFeedController: getFeedList : fetched feed from server")
             self.newsTypeList.removeAll()
             self.newsList = response as! NSArray
             
@@ -354,7 +341,6 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
                 self.tableView.isHidden = false
                 self.messageView.isHidden = true
                 if reload {
-                    print ("MyUpToUsFeedController: reloading data")
                     self.tableView.reloadData()
                 }
             }else {
@@ -561,7 +547,6 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }else {
             event = self.newsTypeList[sender]
         }
-        print("Feed News Type: " + event.newsType!)
         
         let apiName = SignupItems + ("\(event.newsItemId!)")
         DataConnectionManager.requestGETURL(api: apiName, para: ["":""], success: {
@@ -953,7 +938,6 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
                 communityView.isHidden = true
                 UserPreferences.SelectedCommunityID = 001
                 UserPreferences.SelectedCommunityName = ""
-                print("MyUpToUsFeedController: table view all communities : getting feed list")
                 getFeedList(reload: true)
             }else {
                 headingBtn.setImage(UIImage(named: "top-up-arrow"), for: .normal)
@@ -961,7 +945,6 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
                 headingBtn.setTitle("Feed - \((data?.name)!)", for: .normal)
                 UserPreferences.SelectedCommunityID = (data?.communityId)!
                 communityView.isHidden = true
-                print("MyUpToUsFeedController: table view specific community: getting feed list")
                 getFeedList(reload: true)
             }
         }

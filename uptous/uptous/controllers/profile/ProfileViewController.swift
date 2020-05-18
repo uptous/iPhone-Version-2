@@ -25,8 +25,6 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print ("ProfileViewController: viewDidLoad")
-       // profileImage.layer.co
         profileImage.layer.borderColor = UIColor.black.cgColor
         profileImage.layer.borderWidth = 2.0
         profileImage.layer.cornerRadius = 60.0

@@ -27,7 +27,6 @@ class VolunteeredCell: UITableViewCell {
         let seats = data.object(forKey: "comment") as? String ?? ""
         nameLbl.text = name
         if phone.isEmpty {phoneLbl.text = ""} else {phoneLbl.text = "Phone: " + phone}
-        print ("seats = " + seats)
         if seats.isEmpty {seatsLbl.text = ""} else if seats.isNumeric {seatsLbl.text = "Seats: " + seats} else {seatsLbl.text = "Comment: " + seats}
     }
     

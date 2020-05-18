@@ -46,7 +46,6 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
         passwordTxtField.leftView = paddingView1
         passwordTxtField.leftViewMode = UITextField.ViewMode.always
         
-        print ("LoginViewController: viewDidLoad")
         if UserPreferences.LoginStatus ==  "Registered" {
             self.alreadyLoggedIn()
         }
@@ -88,12 +87,10 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
     //MARK:-SFSafariViewController Delegate
     func safariViewControllerDidFinish(_ controller: SFSafariViewController)
     {
-        print ("LoginViewController: SafariViewControllerDidFinish")
         controller.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func signInBtnClick(_ sender: UIButton) {
-        print ("LoginViewController: signInBtnClick")
        login()
     }
     
@@ -158,20 +155,13 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
     
     func alreadyLoggedIn() {
         
-        print ("LoginController: alreadyLoggedIn")
         appDelegate.loginHeaderCredentials.add(name:"Authorization", value:UserPreferences.LoginHeaderCodition.values.first!)
         
         let controller = self.storyboard?.instantiateViewController(withIdentifier: MainStoryBoard.ViewControllerIdentifiers.tabbarViewController) as! TabBarViewController
         
         if UserPreferences.DeepLinkingStatus == "" {
-            print ("LoginController: alreadyLoggedIn: PushingViewController - no deep link")
             controller.selectedIndex = 0
             self.navigationController?.pushViewController(controller, animated: false)
-            
-            print ("LoginController: alreadyLoggedIn: View (tabbar) is pushed - no deep link")
-            
-            //appDelegate.window!.rootViewController = controller
-            //appDelegate.window!.makeKeyAndVisible()
 
         }else {
             let array = "\(UserPreferences.DeepLinkingStatus)".components(separatedBy: "/")
@@ -220,7 +210,6 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
     }
     
     func login() {
-        print ("loginViewController: Login()")
         if emailTxtField.text != "" &&  passwordTxtField.text != "" {
             if !Utility.isEmailAdddressValid(emailTxtField.text!) {
                 BaseUIView.toast("Please enter a valid email address")
@@ -236,9 +225,6 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
             appDelegate.loginHeaderCredentials = ["Authorization": "Basic \(base64Credentials)"]
             
             ActivityIndicator.show()
-            
-            print("login request : " + LoginAPI)
-            
             
             AF.request(LoginAPI, method: .get, parameters: nil, encoding: URLEncoding(destination: .methodDependent), headers: appDelegate.loginHeaderCredentials).responseJSON { (response:AFDataResponse<Any>) in
                 ActivityIndicator.hide()
@@ -256,7 +242,6 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
                         UserPreferences.LoginID = username
                         UserPreferences.Password = password
                         
-                        print("LoginController: Login: calling alreadyLogin")
                         self.alreadyLoggedIn()
                         
                     }else {
@@ -285,10 +270,8 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
     }
     
     func checkNewFeed() {
-        print("Checking new feed")
         DataConnectionManager.requestGETURL1(api: FeedUpdateAPI, para: ["":""], success: {
             (response) -> Void in
-            print("First Time==>\(response)")
             
             let data = response as? NSDictionary
             self.defaults.set(data?.object(forKey: "lastItemTime"), forKey: "LastModified")
