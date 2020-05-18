@@ -131,7 +131,9 @@ class MyUpToUsSignUpViewController: GeneralViewController,UISearchBarDelegate,UI
     
     @IBAction func menuButtonClick(_ sender: UIButton) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-        self.present(controller, animated: true, completion: nil)
+        
+        let navController = appDelegate.window?.rootViewController as? UINavigationController
+        navController?.pushViewController(controller, animated: true)
     }
 
     //MARK:- Signup Sheet List
@@ -237,12 +239,14 @@ class MyUpToUsSignUpViewController: GeneralViewController,UISearchBarDelegate,UI
             
             if dataSheet.contact == "" && dataSheet.contact2 == "" {
                 let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpType1ViewController") as! SignUpType1ViewController
+                controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                 controller.data = dataSheet
                 //controller.data1 = data1
                 controller.signUpType = signUpType
                 self.present(controller, animated: true, completion: nil)
             }else {
                 let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpType3ViewController") as! SignUpType3ViewController
+                controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                 controller.data = dataSheet
                 //controller.data1 = data1
                 controller.signUpType = signUpType

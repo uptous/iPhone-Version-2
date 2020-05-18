@@ -367,12 +367,12 @@ class SignUpType3ViewController: UIViewController,UITableViewDelegate, UITableVi
                     let controller = self.storyboard?.instantiateViewController(withIdentifier: "DetailsSignUpDriverViewController") as! DetailsSignUpDriverViewController
                     
                     controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
-                    controller.selectedItems = item
                     if data1 != nil {
                         controller.sheetDataID = ("\(data1.newsItemId!)")
                     }else {
                         controller.sheetDataID = ("\(self.data.id!)")
                     }
+                    controller.selectedItems = item
                     self.present(controller, animated: true, completion: nil)
                     //self.navigationController?.pushViewController(controller, animated: true)
                 }else if item.volunteerStatus == "Volunteered" || item.volunteerStatus == "Full" {

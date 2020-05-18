@@ -17,6 +17,8 @@ class DataConnectionManager: NSObject {
         
         ActivityIndicator.show()
         
+        print("RequestPOSTURL api = " + api)
+        
         AF.request(api, method: .post,parameters: para, encoding: URLEncoding.default, headers: appDelegate.loginHeaderCredentials).responseJSON { (response:AFDataResponse<Any>) in
             
             ActivityIndicator.hide()
@@ -62,7 +64,7 @@ class DataConnectionManager: NSObject {
         
          ActivityIndicator.show()
         
-        print("Request api = " + api)
+        print("RequestGETURL api = " + api)
          
         AF.request(api, method: .get, parameters: nil, encoding: URLEncoding.default, headers: appDelegate.loginHeaderCredentials).responseJSON { (response:AFDataResponse<Any>) in
             
@@ -101,16 +103,19 @@ class DataConnectionManager: NSObject {
     
     class func relogin() {
         
+        print ("Data connection manager: in relogin")
         let alert = UIAlertController(title: "Alert", message: "Password changed. Please login again", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (alert) in
            // let login = LoginViewController(nibName: "LoginViewController", bundle: nil)
             
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             let navController = appDelegate.window?.rootViewController as? UINavigationController
+            print ("Data connection manager: popping Root")
             navController?.popToRootViewController(animated: true)
             
           
         }))
+        print ("Data connection manager: presenting Root")
         UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
     }
     
@@ -118,6 +123,9 @@ class DataConnectionManager: NSObject {
     
     // GET
     class func requestGETURL1(api:String, para: [String : String] ,success:@escaping (Any) -> Void, failure:@escaping (Error) -> Void) {
+        
+        print("RequestGETURL1 api = " + api)
+        
         AF.request(api, method: .get, parameters: nil, encoding: URLEncoding.default, headers: appDelegate.loginHeaderCredentials).responseJSON { (response:AFDataResponse<Any>) in
             
             switch(response.result) {
@@ -213,6 +221,7 @@ class DataConnectionManager: NSObject {
     //POST
     class func requestPOSTURL1(api:String, stringPost:String ,success:@escaping ([String: Any]) -> Void) {
         
+        print("RequestPOSTURL1 api = " + api)
         //UserPreferences.LoginID = username
         //UserPreferences.Password = password
         let username = UserPreferences.LoginID //UserDefaults.standard.value(forKey: "email") as? String//"asmithutu@gmail.com"

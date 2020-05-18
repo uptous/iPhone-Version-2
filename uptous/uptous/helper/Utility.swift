@@ -226,6 +226,7 @@ class Utility: NSObject {
         }
         alertController.addAction(OKAction)
         
+        print ("Utility: Showing alert from root")
         (UIApplication.shared.delegate as! AppDelegate).window!.rootViewController?.present(alertController, animated: true, completion: nil)
     }
     
@@ -238,6 +239,7 @@ class Utility: NSObject {
         }
         alertController.addAction(OKAction)
         
+        print ("Utility: Showing alert from root without cancel")
         (UIApplication.shared.delegate as! AppDelegate).window!.rootViewController?.present(alertController, animated: true, completion: nil)
     }
 

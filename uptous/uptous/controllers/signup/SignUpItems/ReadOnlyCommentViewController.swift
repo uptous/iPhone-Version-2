@@ -102,10 +102,10 @@ class ReadOnlyCommentViewController: GeneralViewController {
     
     @IBAction func back(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)
-        DispatchQueue.main.async(execute: {
-            self.dismiss(animated: true, completion: nil)
-            let _ = self.navigationController?.popViewController(animated: true)
-        })
+        //DispatchQueue.main.async(execute: {
+        //    self.dismiss(animated: true, completion: nil)
+        //    let _ = self.navigationController?.popViewController(animated: true)
+        //})
     }
     
     

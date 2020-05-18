@@ -46,6 +46,7 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
         passwordTxtField.leftView = paddingView1
         passwordTxtField.leftViewMode = UITextField.ViewMode.always
         
+        print ("LoginViewController: viewDidLoad")
         if UserPreferences.LoginStatus ==  "Registered" {
             self.alreadyLoggedIn()
         }
@@ -64,6 +65,7 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         //emailTxtField.text! = ""
         //passwordTxtField.text! = ""
         //UserPreferences.AllContactList.a
@@ -86,10 +88,12 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
     //MARK:-SFSafariViewController Delegate
     func safariViewControllerDidFinish(_ controller: SFSafariViewController)
     {
+        print ("LoginViewController: SafariViewControllerDidFinish")
         controller.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func signInBtnClick(_ sender: UIButton) {
+        print ("LoginViewController: signInBtnClick")
        login()
     }
     
@@ -122,6 +126,7 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
                     controller.signUpType = "101"
                 }
                 
+                controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                 self.present(controller, animated: true, completion: nil)
             }else {
                 let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpType3ViewController") as! SignUpType3ViewController
@@ -138,6 +143,7 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
                 }else if (dataSheet.type! == "Volunteer" || dataSheet.type! == "Potluck" || dataSheet.type! == "Wish List" || dataSheet.type! == "Potluck/Party" || dataSheet.type! == "Ongoing Volunteering") {
                     controller.signUpType = "101"
                 }
+                controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                 self.present(controller, animated: true, completion: nil)
             }
             
@@ -152,13 +158,21 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
     
     func alreadyLoggedIn() {
         
+        print ("LoginController: alreadyLoggedIn")
         appDelegate.loginHeaderCredentials.add(name:"Authorization", value:UserPreferences.LoginHeaderCodition.values.first!)
-
+        
         let controller = self.storyboard?.instantiateViewController(withIdentifier: MainStoryBoard.ViewControllerIdentifiers.tabbarViewController) as! TabBarViewController
         
         if UserPreferences.DeepLinkingStatus == "" {
+            print ("LoginController: alreadyLoggedIn: PushingViewController - no deep link")
             controller.selectedIndex = 0
             self.navigationController?.pushViewController(controller, animated: false)
+            
+            print ("LoginController: alreadyLoggedIn: View (tabbar) is pushed - no deep link")
+            
+            //appDelegate.window!.rootViewController = controller
+            //appDelegate.window!.makeKeyAndVisible()
+
         }else {
             let array = "\(UserPreferences.DeepLinkingStatus)".components(separatedBy: "/")
             if array[3] == "communitySignup" {
@@ -189,6 +203,7 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
                 
                 let pushVC = self.storyboard?.instantiateViewController(withIdentifier: "DetailsLibraryViewController") as! DetailsLibraryViewController
                 pushVC.albumID = array[5]
+                pushVC.modalPresentationStyle = UIModalPresentationStyle.currentContext
                 self.present(pushVC, animated: false, completion: nil)
                 self.navigationController?.pushViewController(controller, animated: false)
                 UserPreferences.DeepLinkingStatus = ""
@@ -196,6 +211,7 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
             }else if array[3] == "communityInvite" {
                 controller.selectedIndex = 0
                 let pushVC = self.storyboard?.instantiateViewController(withIdentifier: "InviteViewController") as! InviteViewController
+                pushVC.modalPresentationStyle = UIModalPresentationStyle.currentContext
                 self.present(pushVC, animated: false, completion: nil)
                 self.navigationController?.pushViewController(controller, animated: false)
                 UserPreferences.DeepLinkingStatus = ""
@@ -204,6 +220,7 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
     }
     
     func login() {
+        print ("loginViewController: Login()")
         if emailTxtField.text != "" &&  passwordTxtField.text != "" {
             if !Utility.isEmailAdddressValid(emailTxtField.text!) {
                 BaseUIView.toast("Please enter a valid email address")
@@ -239,6 +256,7 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
                         UserPreferences.LoginID = username
                         UserPreferences.Password = password
                         
+                        print("LoginController: Login: calling alreadyLogin")
                         self.alreadyLoggedIn()
                         
                     }else {

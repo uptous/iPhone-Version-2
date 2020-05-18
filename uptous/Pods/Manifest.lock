@@ -6,6 +6,8 @@ PODS:
   - GoogleMaps/Base (3.8.0)
   - GoogleMaps/Maps (3.8.0):
     - GoogleMaps/Base
+  - IBAnimatable (6.1.0)
+  - IBDesignable (0.1.6)
   - LKPullToLoadMore (1.3.0)
   - RandomColorSwift (2.0.0)
   - RappleProgressHUD (4.1)
@@ -14,6 +16,8 @@ DEPENDENCIES:
   - Alamofire
   - Dropper
   - GoogleMaps
+  - IBAnimatable
+  - IBDesignable
   - LKPullToLoadMore
   - RandomColorSwift
   - RappleProgressHUD
@@ -23,6 +27,8 @@ SPEC REPOS:
     - Alamofire
     - Dropper
     - GoogleMaps
+    - IBAnimatable
+    - IBDesignable
     - LKPullToLoadMore
     - RandomColorSwift
     - RappleProgressHUD
@@ -31,10 +37,12 @@ SPEC CHECKSUMS:
   Alamofire: 9d5c5f602928e512395b30950c5984eca840093c
   Dropper: 52a020beb6fef2e4b1d55447f17099e5776954ef
   GoogleMaps: 7c8d66d70e4e8c300f43a7219d8fdaad7b325a9a
+  IBAnimatable: 99dddd4c0625884a301ba3ecbc1615f8a390368e
+  IBDesignable: c4e20a1e2650640da7471ed1f9cb13e79895d3f3
   LKPullToLoadMore: 09afcc528ef02750280572391967430e895baaa8
   RandomColorSwift: d18b9b025403137b5543a002187489b06cc1782b
   RappleProgressHUD: f29bc5dc5f9834c2caa9c2ae21ba11f3ff2b5a85
 
-PODFILE CHECKSUM: bb77fd62ed1e26f3fb01d7bce6b18886f7a9ebe2
+PODFILE CHECKSUM: 6d9869ca0f575853d299ee096bb8eee213557fbd
 
 COCOAPODS: 1.9.1

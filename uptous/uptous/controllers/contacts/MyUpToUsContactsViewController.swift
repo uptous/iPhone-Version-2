@@ -626,7 +626,9 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
     
     @IBAction func menuButtonClick(_ sender: UIButton) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-        self.present(controller, animated: true, completion: nil)
+        
+        let navController = appDelegate.window?.rootViewController as? UINavigationController
+        navController?.pushViewController(controller, animated: true)
     }
     
     func openEmailClick(_ sender: NSInteger) {
@@ -643,6 +645,7 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
             mail.setToRecipients([(data?.email!)!])
             mail.setMessageBody("", isHTML: true)
             
+            mail.modalPresentationStyle = UIModalPresentationStyle.currentContext
             present(mail, animated: true, completion: nil)
         } else {
             // show failure alert
@@ -699,6 +702,7 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
                 controller.body = ""
                 controller.recipients = [(data?.mobile)!]
                 controller.messageComposeDelegate = self
+                controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                 self.present(controller, animated: true, completion: nil)
             }
         })
@@ -709,7 +713,7 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
         optionMenu.addAction(click)
         optionMenu.addAction(library)
         optionMenu.addAction(cancelAction)
-        
+        optionMenu.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(optionMenu, animated: true, completion: nil)
         
     }

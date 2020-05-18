@@ -88,6 +88,8 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     }
     
     override func viewDidLoad() {
+        
+        print ("MyUpToUsFeedController - in viewDidLoad")
         super.viewDidLoad()
         
         communityView.isHidden = true
@@ -113,15 +115,19 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }else{
             headingBtn.setTitle(UserPreferences.SelectedCommunityName, for: .normal)
         }
-         //notifNoRecordsView.isHidden = true
+        
+        print ("MyUpToUsFeedController: viewDidLoad: Done with table view registrations")
         messageView.isHidden = true
         self.tableView.isHidden = true
-        //Fetch Feed Items
-        print("Fetching feed")
-        self.getFeedList()
+        //print("MyUpToUsFeedViewController: viewDidLoad: Fetching feed")
+        //self.getFeedList()
+        //self.tableView.reloadData()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        print ("MyUpToUsFeedController - in viewWillAppear")
         super.viewWillAppear(animated)
         searchBar.text = ""
         if UserPreferences.SelectedCommunityName == "" {
@@ -134,8 +140,10 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         messageBtn.isHidden = true
         pictureBtn.isHidden = true
         //directBtn.isHidden = true
-        onTimerTick()
-        self.getFeedList()
+        //onTimerTick()
+
+        //self.navigationController?.pushViewController(self, animated: true)
+        self.getFeedList(reload: true)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -182,17 +190,21 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
                 self.searchBar.resignFirstResponder()
             }
         })
+        print ("MyUpToUsFeedController: searchBar: Reloading data")
         self.tableView.reloadData()
     }
 
 
     @IBAction func menuButtonClick(_ sender: UIButton) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-        self.present(controller, animated: true, completion: nil)
+        
+        let navController = appDelegate.window?.rootViewController as? UINavigationController
+        navController?.pushViewController(controller, animated: true)
     }
     
     @IBAction func inviteButtonClick(_ sender: UIButton) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "InviteViewController") as! InviteViewController
+        controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -204,13 +216,14 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
             
             if data != nil {
                 let status = data?.object(forKey: "status") as? String
+                print ("MyUpToUsFeedController: OnTimerTick: Status = " + (status ?? "No Status"))
                 if (status == "2") {
                     //self.notifNoRecordsView.isHidden = false
 
                 }else {
                     if data?.object(forKey: "lastItemTime") as? NSNumber != self.defaults.object(forKey: "LastModified") as? NSNumber {
                         self.defaults.set(data?.object(forKey: "lastItemTime"), forKey: "LastModified")
-                        self.getFeedList()
+                        self.getFeedList(reload:true)
                     }
                 }
             }
@@ -260,6 +273,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
                 let dic = item.object(at: index) as! NSDictionary
                 self.communityList.add(Community(info: dic))
             }
+            print ("MyUpToUsFeedViewController: fetchCommunity: reloading community data")
             self.communityTableView.reloadData()
         }) {
             (error) -> Void in
@@ -280,7 +294,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
             let sub = "Re: \(data.newsItemName!)"
             mail.setMessageBody("", isHTML: true)
             mail.setSubject("\(sub.removingPercentEncoding!)")
-            
+            //mail.modalPresentationStyle = UIModalPresentationStyle.currentContext
             present(mail, animated: true, completion: nil)
         } else {
             // show failure alert
@@ -300,66 +314,14 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         controller.dismiss(animated: true, completion: nil)
     }
     
-    func getFeedList1() {
-        appDelegate.tabbarView?.isHidden = false
-        self.communityView.isHidden = true
-        DataConnectionManager.requestGETURL1(api: FeedAPI, para: ["":""], success: {
-            (response) -> Void in
-            
-            self.newsTypeList.removeAll()
-            self.newsList = response as! NSArray
-            
-            for i in 0 ..< self.newsList.count {
-                let result = self.newsList.object(at: i) as? NSDictionary
-                let data = Feed(info: result)
-                
-                if UserPreferences.SelectedCommunityID == 001 {
-                    if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" ||
-                        data.newsType == "SMS" || data.newsType == "Private SMS" {
-                        self.newsTypeList.append(data)
-                    }
-                }else {
-                    if data.communityId == UserPreferences.SelectedCommunityID {
-                        if data.newsType == "File" || data.newsType == "Private Threads" || data.newsType == "Announcement" || data.newsType == "Photos" || data.newsType == "Opportunity" ||
-                            data.newsType == "SMS" || data.newsType == "Private SMS" {
-                            self.newsTypeList.append(data)
-                        }
-                    }
-                }
-            }
-            
-            if UserPreferences.SelectedCommunityID == 001 {
-            }else {
-                let communityID = UserPreferences.SelectedCommunityID
-                self.newsTypeList = self.newsTypeList.filter{ $0.communityId == communityID }
-            }
-            
-            if self.newsTypeList.count > 0 {
-                self.tableView.isHidden = false
-                self.tableView.reloadData()
-            }else {
-                self.tableView.isHidden = true
-                let alert = UIAlertController(title: "Alert", message: "No Record Found", preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            }
-            
-        }) {
-            (error) -> Void in
-            
-            let alert = UIAlertController(title: "Alert", message: "Error", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: nil))
-            //self.present(alert, animated: true, completion: nil)
-        }
-    }
-    
-    
-    func getFeedList() {
+    func getFeedList(reload: Bool) {
+        print ("MyUpToUsFeedController: in getFeedList")
         appDelegate.tabbarView?.isHidden = false
         self.communityView.isHidden = true
         DataConnectionManager.requestGETURL(api: FeedAPI, para: ["":""], success: {
             (response) -> Void in
             
+            print ("MyUpToUsFeedController: getFeedList : fetched feed from server")
             self.newsTypeList.removeAll()
             self.newsList = response as! NSArray
             
@@ -391,7 +353,10 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
             if self.newsTypeList.count > 0 {
                 self.tableView.isHidden = false
                 self.messageView.isHidden = true
-                self.tableView.reloadData()
+                if reload {
+                    print ("MyUpToUsFeedController: reloading data")
+                    self.tableView.reloadData()
+                }
             }else {
                 self.tableView.isHidden = true
                  self.messageView.isHidden = false
@@ -430,6 +395,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReadMoreViewController") as! ReadMoreViewController
         controller.data = data
+        controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -442,6 +408,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReadMoreViewController") as! ReadMoreViewController
         controller.data = data
+        controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -455,6 +422,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReadMoreViewController") as! ReadMoreViewController
         controller.data = data
+        controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -467,6 +435,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "DetailsLibraryViewController") as! DetailsLibraryViewController
         controller.albumID = ("\(data.newsItemId!)")
+        controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -491,6 +460,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReplyAllViewController") as! ReplyAllViewController
         controller.data = data
+        controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -503,6 +473,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReplyAllViewController") as! ReplyAllViewController
         controller.data = data
+        controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -527,6 +498,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReplyAllViewController") as! ReplyAllViewController
         controller.data = data
+        controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -540,6 +512,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReplyAllViewController") as! ReplyAllViewController
         controller.data = data
+        controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -563,6 +536,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "CommentViewController") as! CommentViewController
         controller.data = data
+        controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -575,6 +549,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         }
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "CommentViewController") as! CommentViewController
         controller.data = data
+        controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -617,12 +592,14 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
             if dataSheet.contact == "" && dataSheet.contact2 == "" {
                 let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpType1ViewController") as! SignUpType1ViewController
                 //controller.data = dataSheet
+                controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                 controller.data1 = data1
                 controller.signUpType = signUpType
                 self.present(controller, animated: true, completion: nil)
             }else {
                 let controller = self.storyboard?.instantiateViewController(withIdentifier: "SignUpType3ViewController") as! SignUpType3ViewController
                 //controller.data = dataSheet
+                controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                 controller.data1 = data1
                 controller.signUpType = signUpType
                 self.present(controller, animated: true, completion: nil)
@@ -685,6 +662,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "CommentViewController") as! CommentViewController
         controller.data = data
+        controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -698,6 +676,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "CommentViewController") as! CommentViewController
         controller.data = data
+        controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -715,6 +694,7 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
         if docFile == "doc" || docFile == "docx" || docFile == "pdf" || docFile == "JPG" || docFile == "png" || docFile == "xls" || docFile == "xlsx" || docFile == "MOV" || docFile == "MP3" || docFile == "mp3"  || docFile == "jpg"  || docFile == "PNG"  || docFile == "mov" {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "FileListViewController") as! FileListViewController
             controller.filePath = data.newsItemUrl
+            controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
             self.present(controller, animated: true, completion: nil)
             
         }else {
@@ -748,11 +728,13 @@ class MyUpToUsFeedViewController: GeneralViewController,PhotosCellDelegate,Annou
     
     @IBAction func messageBtnClick(_ sender: UIButton) {
         let controller = MessagePostViewController(nibName: "MessagePostViewController", bundle: nil)
+        controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(controller, animated: true, completion: nil)
     }
     
     @IBAction func pictureBtnClick(_ sender: UIButton) {
         let controller = ImagePostViewController(nibName: "ImagePostViewController", bundle: nil)
+        controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -822,7 +804,6 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         if tableView == communityTableView {
             let cell = tableView.dequeueReusableCell(withIdentifier: "CommunityCell") as! CommunityCell
             let data = self.communityList[(indexPath as NSIndexPath).row] as? Community
@@ -926,7 +907,6 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
         if tableView == communityTableView {
             return 50
         }else {
@@ -963,7 +943,6 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         if tableView == communityTableView {
             topMenuSelected = 0
             let data = self.communityList[(indexPath as NSIndexPath).row] as? Community
@@ -974,14 +953,16 @@ extension MyUpToUsFeedViewController: UITableViewDataSource,UITableViewDelegate 
                 communityView.isHidden = true
                 UserPreferences.SelectedCommunityID = 001
                 UserPreferences.SelectedCommunityName = ""
-                getFeedList()
+                print("MyUpToUsFeedController: table view all communities : getting feed list")
+                getFeedList(reload: true)
             }else {
                 headingBtn.setImage(UIImage(named: "top-up-arrow"), for: .normal)
                 UserPreferences.SelectedCommunityName = (data?.name)!
                 headingBtn.setTitle("Feed - \((data?.name)!)", for: .normal)
                 UserPreferences.SelectedCommunityID = (data?.communityId)!
                 communityView.isHidden = true
-                getFeedList()
+                print("MyUpToUsFeedController: table view specific community: getting feed list")
+                getFeedList(reload: true)
             }
         }
     }

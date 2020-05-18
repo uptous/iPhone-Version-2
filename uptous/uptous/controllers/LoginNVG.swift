@@ -11,6 +11,7 @@ import UIKit
 class LoginNVG: UINavigationController {
 
     override func viewDidLoad() {
+        print ("loginNVG: viewDidLoad - hiding navigation bar")
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = true
         // Do any additional setup after loading the view.

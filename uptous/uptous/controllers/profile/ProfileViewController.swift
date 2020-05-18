@@ -25,6 +25,7 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print ("ProfileViewController: viewDidLoad")
        // profileImage.layer.co
         profileImage.layer.borderColor = UIColor.black.cgColor
         profileImage.layer.borderWidth = 2.0
@@ -45,6 +46,7 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         registerForKeyboardNotifications()
     }
     
@@ -115,12 +117,11 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
         UserPreferences.AllContactList = []
         UserPreferences.LoginID = ""
         UserPreferences.Password = ""
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        
         let navController = appDelegate.window?.rootViewController as? UINavigationController
         navController?.popToRootViewController(animated: true)
-        
-       
     }
+    
     func fetchProfile() {
         DataConnectionManager.requestGETURL(api: Profile, para: ["":""], success: {
                 (response) -> Void in
@@ -185,7 +186,7 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
     }
        
     @IBAction func back(_ sender: UIButton) {
-        self.dismiss(animated: true, completion: nil)
+        self.navigationController!.popViewController(animated: true)
     }
     
     @IBAction func saveClick(_ sender: UIButton) {
@@ -220,6 +221,7 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
         optionMenu.addAction(library)
         optionMenu.addAction(cancelAction)
         
+        //self.modalPresentationStyle = UIModalPresentationStyle.currentContext
         self.present(optionMenu, animated: true, completion: nil)
     }
     

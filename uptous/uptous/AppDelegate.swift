@@ -27,9 +27,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
                 // Override point for customization after application launch.
         
+        print ("AppDelegate: In application")
         _ = db.openDB(copyFile:false)
         
         GMSServices.provideAPIKey("\(GoogleAPIKey)")
+
+        //if UserPreferences.LoginStatus ==  "Registered" {
+            
+        //    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        //    let loadingController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+            
+        //    loadingController.alreadyLoggedIn()
+            
+        //}
         
         //Fabric.with([Crashlytics.self])
         return true
@@ -39,6 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      continue userActivity: NSUserActivity,
                      restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         
+        print ("AppDelegate: Deep Linking")
         let alert = UIAlertController(title: "Alert", message: "Deep Linking Working.", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (alert) in
             // let login = LoginViewController(nibName: "LoginViewController", bundle: nil)
@@ -55,6 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UserPreferences.DeepLinkingStatus = "\(userActivity.webpageURL!)"
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        print ("AppDelegate: initializing root view controller")
         let loadingController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
         let nvgController = UINavigationController.init(rootViewController: loadingController)
         nvgController.isNavigationBarHidden = true

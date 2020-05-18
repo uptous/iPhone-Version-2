@@ -178,17 +178,16 @@ class DetailsSignUpDriverViewController: GeneralViewController {
 
     }
     
-    /*
+    
     //MARK:- Keyboard
     @objc func HideTextKeyboard(_ sender: UITapGestureRecognizer?) {
         //textField_comments.resignFirstResponder()
         
-        placeHolderText = "Type comments here.."
-        textView_comments.text = placeHolderText
-        textView_comments.textColor = UIColor.lightGray
-        textView_comments.resignFirstResponder()
+        //placeHolderText = "Type comments here.."
+        //textView_comments.text = placeHolderText
+        //textView_comments.textColor = UIColor.lightGray
+        //textView_comments.resignFirstResponder()
     }
- */
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         
@@ -272,7 +271,6 @@ class DetailsSignUpDriverViewController: GeneralViewController {
     //MARK: - Button Action
     @IBAction func back(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)
-        self.navigationController?.popViewController(animated: true)
     }
 
     override func didReceiveMemoryWarning() {

@@ -9,6 +9,8 @@ target "uptous" do
     pod "Dropper"
     pod 'LKPullToLoadMore'
     pod 'GoogleMaps'
+    pod 'IBAnimatable'
+    pod "IBDesignable"
 end
 
 

@@ -74,7 +74,11 @@ class MyUpToUsCalendarViewController: GeneralViewController{
     
     @IBAction func menuButtonClick(_ sender: UIButton) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-        self.present(controller, animated: true, completion: nil)
+        controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
+        
+        let navController = appDelegate.window?.rootViewController as? UINavigationController
+        navController?.pushViewController(controller, animated: true)
+        
     }
     
     //MARk:- Top Menu Community
@@ -285,6 +289,7 @@ extension MyUpToUsCalendarViewController: EventExpandCellDelegate, EventCellDele
                     controller.calendarEvent = data
                     controller.latitude = coordinate.latitude
                     controller.longitude = coordinate.longitude
+                    controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                     self.present(controller, animated: true, completion: nil)
                     
                 } else {
@@ -323,6 +328,7 @@ extension MyUpToUsCalendarViewController: EventExpandCellDelegate, EventCellDele
                     controller.calendarEvent = data
                     controller.latitude = coordinate.latitude
                     controller.longitude = coordinate.longitude
+                    controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                     self.present(controller, animated: true, completion: nil)
                     
                 } else {
@@ -363,6 +369,7 @@ extension MyUpToUsCalendarViewController: EventExpandCellDelegate, EventCellDele
                     controller.calendarEvent = data
                     controller.latitude = coordinate.latitude
                     controller.longitude = coordinate.longitude
+                    controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                     self.present(controller, animated: true, completion: nil)
                     
                 } else {

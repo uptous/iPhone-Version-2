@@ -39,7 +39,7 @@ class VolunteeredViewController: GeneralViewController {
                 dateTimeLbl.text =  "\(Custom.dayStringSignupItems(data.dateTime!))"
                 
             }else if data.endTime == "" || data.endTime == "1:00AM" {
-                dateTimeLbl.text = "\(Custom.dayStringSignupItems(data.dateTime!))," + "" + " \(Custom.dayStringFromTime4(data.dateTime!))"
+                dateTimeLbl.text = "\(Custom.dayStringSignupItems(data.dateTime!)), " + "" + " \(Custom.dayStringFromTime4(data.dateTime!))"
             }else {
                 dateTimeLbl.text = "\(Custom.dayStringSignupItems(data.dateTime!)), " + "" + " \(Custom.dayStringFromTime4(data.dateTime!)) - " + "" + "\(data.endTime!)"
             }

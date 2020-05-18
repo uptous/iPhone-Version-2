@@ -12,7 +12,6 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
-    @IBOutlet weak var backButton : UIButton!
     @IBOutlet weak var menuButton : UIButton!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var fileLabel: UILabel!
@@ -35,7 +34,6 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
     var screenSize: CGRect!
     var screenWidth: CGFloat!
     var screenHeight: CGFloat!
-    var screenComeFrom: String?
     
     @IBOutlet weak var communityTableView: UITableView!
     @IBOutlet weak var communityView: UIView!
@@ -50,13 +48,7 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
         super.viewDidLoad()
         communityView.isHidden = true
         tableView.isHidden = true
-        if screenComeFrom == "feed" {
-            backButton.isHidden = false
-            menuButton.isHidden = true
-        }else {
-            backButton.isHidden = true
-            menuButton.isHidden = false
-        }
+        menuButton.isHidden = false
         appDelegate.tabbarView?.isHidden = false
         message1View.isHidden = true
         message2View.isHidden = true
@@ -233,7 +225,10 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
     
     @IBAction func menuButtonClick(_ sender: UIButton) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-        self.present(controller, animated: true, completion: nil)
+        
+        let navController = appDelegate.window?.rootViewController as? UINavigationController
+        navController?.pushViewController(controller, animated: true)
+
     }
     
     //MARK: Fetch Library Records
@@ -370,6 +365,7 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
                 records = self.fullListArr[(indexPath as NSIndexPath).row]
             }
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "DetailsLibraryViewController") as! DetailsLibraryViewController
+            controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
             controller.data = records
             self.present(controller, animated: true, completion: nil)
         }
@@ -392,6 +388,7 @@ class MyUpToUsLibraryViewController: GeneralViewController, UICollectionViewDele
             if docFile == "doc" || docFile == "docx" || docFile == "pdf" || docFile == "PDF" || docFile == "JPG" || docFile == "png" || docFile == "xls" || docFile == "xlsx" || docFile == "MOV" || docFile == "MP3" || docFile == "mp3"  || docFile == "jpg"  || docFile == "PNG" || docFile == "mov" {
                 let controller = self.storyboard?.instantiateViewController(withIdentifier: "FileListViewController") as! FileListViewController
                 controller.filePath = data.path
+                controller.modalPresentationStyle = UIModalPresentationStyle.currentContext
                 self.present(controller, animated: true, completion: nil)
                 
             }else {
