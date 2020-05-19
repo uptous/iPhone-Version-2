@@ -132,11 +132,10 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     //MARK:- SEARCH API HIT
     func getContacts(searchItem: String, offset: Int, limit: Int) {
          let api = ("\(Members)") + ("/community/0") + ("/search/\(searchItem)") + ("/limit/\(limit)") + ("/offset/\(offset)")
-        print("api==>\(api)")
         DataConnectionManager.requestGETURL(api: api, para: ["":""], success: {
             (jsonResult) -> Void in
             let listArr = jsonResult as! NSArray
-            print("MyUpToUsContactsViewController: getContacts: "); print(listArr.count)
+            print("MyUpToUsContactsViewController: getContacts: " + "\(listArr.count)");
 
             for index in 0..<listArr.count {
                 let dic = listArr.object(at: index) as! NSDictionary
@@ -184,15 +183,20 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     
     func getContacts1(searchItem: String, offset: Int, limit: Int) {
         
-        self.filterListArr.removeAll()
-        self.fullListArr.removeAll()
-        self.allIDArr.removeAll()
-        
         let api = ("\(Members)") + ("/community/0") + ("/search/\(searchItem)") + ("/limit/\(limit)") + ("/offset/\(offset)")
-        print("api==>\(api)")
+        
         DataConnectionManager.requestGETURL1(api: api, para: ["":""], success: {
             (jsonResult) -> Void in
+            
+            //DispatchQueue.main.async {
+                
+            self.filterListArr.removeAll()
+            self.fullListArr.removeAll()
+            self.allIDArr.removeAll()
+            
             let listArr = jsonResult as! NSArray
+            print("MyUpToUsContactsViewController: getContacts1: " + "\(listArr.count)");
+            
             for index in 0..<listArr.count {
                 let dic = listArr.object(at: index) as! NSDictionary
                 
@@ -228,10 +232,11 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
                 self.tableView.isHidden = false
                 
                 self.tableView.reloadData()
-            }else {
+            } else {
                 self.tableView.isHidden = true
                 self.messageView.isHidden = false
             }
+            //}
         }) {
             (error) -> Void in
         }
@@ -301,6 +306,7 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print ("MyUpToUsContactsViewController : searchBar: Starting")
         self.filterListArr.removeAll()
         self.fullListArr.removeAll()
         self.allIDArr.removeAll()
@@ -315,8 +321,9 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
             searchChar = "0"
             self.limit = 150
             getContacts(searchItem: searchChar, offset: self.offset, limit: 150)
-            
-        }else {
+        } else if searchBar.text!.count <= 2 {
+            // do nothing
+        } else {
             searchChar = text
             searchBar.becomeFirstResponder()
             getContacts1(searchItem: searchChar, offset: self.offset, limit: 150)
@@ -597,6 +604,7 @@ extension MyUpToUsContactsViewController: UITableViewDelegate, UITableViewDataSo
     }
     
     func communitySelected(_ sender: NSInteger) {
+        print ("MyUpToUsContactsViewController: communitySelected")
         topMenuSelected = 0
         appDelegate.tabbarView?.isHidden = false
         let data = self.communityList[sender] as? Community
