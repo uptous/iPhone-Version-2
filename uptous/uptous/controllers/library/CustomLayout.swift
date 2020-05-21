@@ -34,7 +34,7 @@ class CustomLayout: UICollectionViewFlowLayout {
             // Use the aspect ratio of the current item size to determine how tall the items should be
             if itemSize.height > 0 {
                 let itemAspectRatio = itemSize.width / itemSize.height
-                newItemSize.height = (newItemSize.width / itemAspectRatio) + 10
+                newItemSize.height = (newItemSize.width / itemAspectRatio) + 0
             }
             
             // Set the new item size
