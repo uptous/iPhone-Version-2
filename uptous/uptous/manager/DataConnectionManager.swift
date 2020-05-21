@@ -22,6 +22,7 @@ class DataConnectionManager: NSObject {
         AF.request(api, method: .post,parameters: para, encoding: URLEncoding.default, headers: appDelegate.loginHeaderCredentials).responseJSON { (response:AFDataResponse<Any>) in
             
             ActivityIndicator.hide()
+            print("RequestPostURL: result: \(response.result)")
             switch(response.result) {
                 
             case .success(let result):
@@ -119,6 +120,8 @@ class DataConnectionManager: NSObject {
     
     
     // GET
+
+        
     class func requestGETURL1(api:String, para: [String : String] ,success:@escaping (Any) -> Void, failure:@escaping (Error) -> Void) {
         
         print("RequestGETURL1 api = " + api)
@@ -156,70 +159,12 @@ class DataConnectionManager: NSObject {
         }
     }
     
-    
-    //MARK:-Upload Profile Image
-    class func uploadImageOne(api:String,img: UIImage){
-        let username = "asmithutu@gmail.com"
-        let password = "alpha123"
-        
-        let credentialData = "\(username):\(password)".data(using: String.Encoding.utf8)!
-        let base64Credentials = credentialData.base64EncodedString(options: [])
-
-        
-       // let imageData = UIImageJPEGRepresentation(Utility.scaleUIImageToSize(img, size: CGSize(width: 120, height: 120)), 0.6)?.base64EncodedString()
-        
-        let imageData = img.jpegData(compressionQuality: 0.9)?.base64EncodedString()//UIImageJPEGRepresentation(0.9, img)?.base64EncodedString()
-        
-        let stringPost = "photo=" + ("\(imageData!)")
-    
-        if imageData != nil{
-            let api1 = api.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-            let urlpost = URL(string: api1!)
-            let request = NSMutableURLRequest(url: urlpost!)
-            
-            request.httpMethod = "POST"
-            
-            let boundary = NSString(format: "---------------------------14737809831466499882746641449")
-            let contentType = NSString(format: "multipart/form-data; boundary=%@",boundary)
-            request.addValue(contentType as String, forHTTPHeaderField: "Content-Type")
-            request.setValue("Basic \(base64Credentials)", forHTTPHeaderField: "Authorization")
-            
-            let body = NSMutableData()
-            
-            // Title
-            /*body.append(NSString(format: "\r\n--%@\r\n",boundary).data(using: String.Encoding.utf8.rawValue)!)
-            body.append(NSString(format:"Content-Disposition: form-data; name=\"title\"\r\n\r\n").data(using: String.Encoding.utf8.rawValue)!)
-            body.append("Hello World".data(using: String.Encoding.utf8, allowLossyConversion: true)!)*/
-            let data = stringPost.data(using: String.Encoding.utf8)
-            // Image
-            body.append(NSString(format: "\r\n--%@\r\n", boundary).data(using: String.Encoding.utf8.rawValue)!)
-            body.append(NSString(format:"Content-Disposition: form-data; name=\"profile_img\"; filename=\"img.jpg\"\\r\n").data(using: String.Encoding.utf8.rawValue)!)
-            body.append(NSString(format: "Content-Type: application/octet-stream\r\n\r\n").data(using: String.Encoding.utf8.rawValue)!)
-            body.append(data!)
-            body.append(NSString(format: "\r\n--%@\r\n", boundary).data(using: String.Encoding.utf8.rawValue)!)
-            
-            request.httpBody = body as Data
-            
-            let task = URLSession.shared.dataTask(with: request as URLRequest, completionHandler: {(data,response,error)->Void in
-                
-                //let data1 = text.data(using: .utf8)
-                _ = try! JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any]
-                //success(t1!)
-            })
-            task.resume()
-        }
-        
-        
-    }
     //POST
     class func requestPOSTURL1(api:String, stringPost:String ,success:@escaping ([String: Any]) -> Void) {
         
         print("RequestPOSTURL1 api = " + api)
-        //UserPreferences.LoginID = username
-        //UserPreferences.Password = password
-        let username = UserPreferences.LoginID //UserDefaults.standard.value(forKey: "email") as? String//"asmithutu@gmail.com"
-        let password = UserPreferences.Password //UserDefaults.standard.value(forKey: "password") as? String
-        print(username)
+        let username = UserPreferences.LoginID
+        let password = UserPreferences.Password
         
         let credentialData = "\(username):\(password)".data(using: String.Encoding.utf8)!
         let base64Credentials = credentialData.base64EncodedString(options: [])
@@ -241,7 +186,6 @@ class DataConnectionManager: NSObject {
         
         let task = URLSession.shared.dataTask(with: request as URLRequest, completionHandler: {(data,response,error)->Void in
             ActivityIndicator.hide()
-            //using breaking point to show data
             if let response1 = response as? HTTPURLResponse {
                 if response1.statusCode == 401 {
                     self.relogin()
@@ -254,6 +198,8 @@ class DataConnectionManager: NSObject {
             //let strData = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
             
             let result = try! JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any]
+            print("RequestPostURL1: result: \(result!)")
+            
             success(result!)
         })
         task.resume()

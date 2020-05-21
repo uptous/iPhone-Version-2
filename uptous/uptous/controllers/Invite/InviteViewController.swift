@@ -58,12 +58,12 @@ class InviteViewController: GeneralViewController,InviteCellDelegate {
     func accept(inviteID: Int) {
         let apiName = AcceptInvite + ("\(inviteID)") + ("/accept")
         
-        let stringPost = ""
+        let para = ["":""]
+        //let stringPost = ""
         
-        DataConnectionManager.requestPOSTURL1(api: apiName, stringPost: stringPost, success: {
+        DataConnectionManager.requestPOSTURL(api: apiName, para: para, success: {
             (response) -> Void in
             
-            print("InviteViewController : acceot: "); print(response["status"]!)
             if response["status"] as? String == "0" {
                 self.fetchInviteList()
                 Utility.showAlertWithoutCancel("Alert", message: "You Successfully Joined This Community.")
@@ -72,6 +72,8 @@ class InviteViewController: GeneralViewController,InviteCellDelegate {
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
+        }, failure: {
+            (error) -> Void in
         })
     }
 

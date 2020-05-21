@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 
 class ProfileViewController: GeneralViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
@@ -153,13 +154,16 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
     func updateProfile() {
         let imageData = Utility.scaleUIImageToSize(self.profileImage.image!, size: CGSize(width: 120, height: 120)).jpegData(compressionQuality: 0.9)?.base64EncodedString()
         
-        var stringPost = "firstname=" + firstNameTxtField.text!
-        stringPost += "&lastname=" + lastNameTxtField.text!
-        stringPost += "&email=" + emailTxtField.text!
-        stringPost += "&phone=" + mobileTxtField.text!
-        stringPost += "&photo=" + ("\(imageData!)")
+        let para = ["firstname":firstNameTxtField.text!,"lastname":lastNameTxtField.text!,"email":emailTxtField.text!,"phone":mobileTxtField.text!, "photo":imageData!]
         
-        DataConnectionManager.requestPOSTURL1(api: UpdateProfile, stringPost: stringPost, success: {
+        //var stringPost = "firstname=" + firstNameTxtField.text!
+        //stringPost += "&lastname=" + lastNameTxtField.text!
+        //stringPost += "&email=" + emailTxtField.text!
+        //stringPost += "&phone=" + mobileTxtField.text!
+        //stringPost += "&photo=" + ("\(imageData!)")
+        
+        DataConnectionManager.requestPOSTURL(api: UpdateProfile, para: para,
+        success: {
                 (response) -> Void in
             
             if response["status"] as? String == "0" {
@@ -168,19 +172,23 @@ class ProfileViewController: GeneralViewController,UIImagePickerControllerDelega
             }else {
                 self.showAlertWithoutCancel(title: "Alert", message: "Your Profile is not updated.")
             }
-        })
-    }
+        }, failure: {
+            (error) -> Void in
+        }
+    )}
     
     func showAlertWithoutCancel(title:String?, message:String?) {
         
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        DispatchQueue.main.async {
+            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
-        let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
-            print("you have pressed OK button");
+            let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
+                print("you have pressed OK button");
+            }
+            alertController.addAction(OKAction)
+                
+            self.present(alertController, animated: true, completion: nil)
         }
-        alertController.addAction(OKAction)
-        
-        self.present(alertController, animated: true, completion: nil)
     }
        
     @IBAction func back(_ sender: UIButton) {

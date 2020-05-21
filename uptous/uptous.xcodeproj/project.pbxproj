@@ -967,8 +967,8 @@
 				D3D8A6401D5EDB45000AB922 /* uptousTests */,
 				D3D8A64B1D5EDB45000AB922 /* uptousUITests */,
 				D3D8A6271D5EDB44000AB922 /* Products */,
-				CE09E5BAAD6C5C1C0C8EF56C /* Frameworks */,
 				3C57708D171B68E5CA2B8FEB /* Pods */,
+				CE09E5BAAD6C5C1C0C8EF56C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1433,7 +1433,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n";
+			shellScript = "
+";
 		};
 		979E86DFA9F62B15676FDF9A /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
