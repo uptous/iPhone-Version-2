@@ -40,19 +40,19 @@ class FileListViewController: GeneralViewController,ReaderViewControllerDelegate
     
     func webViewDidStartLoad(_ :UIWebView){
         //ActivityIndicator.show()
-        NSLog("Webview load has started")
+        //NSLog("Webview load has started")
     }// here show your indicator
     
     func webViewDidFinishLoad(_ :UIWebView){
         ActivityIndicator.hide()
         
-        NSLog("Webview load had finished")
+        //NSLog("Webview load had finished")
     }// here hide it
     
     func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
         ActivityIndicator.hide()
         
-        NSLog("Webview load had finished")
+        //NSLog("Webview load had finished")
     }
     /*func webViewDidStartLoad(_ :UIWebView){
         ActivityIndicator.show()

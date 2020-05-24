@@ -19,7 +19,7 @@ class TabBarViewController: UITabBarController {
         appDelegate.tabbarView =  Bundle.main.loadNibNamed("CustomTabBarView", owner: nil, options: nil)?.first! as? CustomTabBarView
         appDelegate.tabbarView?.frame = CGRect(x: 0, y: self.view.frame.height - 50, width: self.view.frame.width, height: 50)
         self.view.addSubview(appDelegate.tabbarView!)
-        self.selectedIndex = 0
+        //self.selectedIndex = 0
         
         //Custom Button Action
         appDelegate.tabbarView!.newsFeedTapHandler = {

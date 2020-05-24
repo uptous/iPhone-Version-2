@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
         <array key="HelveticaNeue.ttc">
             <string>HelveticaNeue</string>
-            <string>HelveticaNeue-Bold</string>
-            <string>HelveticaNeue-Medium</string>
         </array>
     </customFonts>
     <objects>
@@ -22,14 +18,14 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="311"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fLT-W0-cTv" id="LAr-Ia-Xgr">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="310.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="311"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zoq-ql-naj">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="310"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="310.5"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yVi-1B-nqi" customClass="CustomView" customModule="uptous" customModuleProvider="target">
-                                <rect key="frame" x="10" y="56" width="300" height="234"/>
+                                <rect key="frame" x="10" y="56" width="300" height="234.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Yesterday" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x5O-Ld-Pjw">
                                         <rect key="frame" x="141" y="0.0" width="150" height="21"/>
@@ -42,7 +38,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CpG-an-71H">
-                                        <rect key="frame" x="0.0" y="189" width="149.5" height="45"/>
+                                        <rect key="frame" x="0.0" y="189.5" width="149.5" height="45"/>
                                         <color key="backgroundColor" red="0.94509803921568625" green="0.94509803921568625" blue="0.94509803921568625" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="45" id="9YN-mS-hKf"/>
@@ -57,7 +53,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ui-ma-Jet">
-                                        <rect key="frame" x="150.5" y="189" width="149.5" height="45"/>
+                                        <rect key="frame" x="150.5" y="189.5" width="149.5" height="45"/>
                                         <color key="backgroundColor" red="0.94509803921568625" green="0.94509803921568625" blue="0.94509803921568625" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="45" id="pTb-AG-C45"/>
@@ -80,12 +76,13 @@
                                         <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p0i-Eb-JXb">
-                                        <rect key="frame" x="12" y="55" width="276" height="111"/>
-                                        <color key="backgroundColor" red="0.28958413" green="0.31462949509999999" blue="0.32950475810000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <webView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p0i-Eb-JXb">
+                                        <rect key="frame" x="12" y="55" width="276" height="111.5"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="tintColor" red="0.32345476750000002" green="0.51689571140000001" blue="0.87798660989999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </webView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V5h-tw-w0M">
-                                        <rect key="frame" x="147" y="166" width="142" height="22"/>
+                                        <rect key="frame" x="147" y="166.5" width="142" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="142" id="QTc-9o-vPI"/>
                                             <constraint firstAttribute="height" constant="22" id="RVI-4h-Uf3"/>
@@ -119,17 +116,6 @@
                                     <constraint firstAttribute="bottom" secondItem="0ui-ma-Jet" secondAttribute="bottom" id="qEq-xW-rK1"/>
                                     <constraint firstItem="x5O-Ld-Pjw" firstAttribute="top" secondItem="yVi-1B-nqi" secondAttribute="top" id="yHU-eO-gj5"/>
                                 </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="8"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="1"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                        <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
                             </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gGc-4r-onf">
                                 <rect key="frame" x="10" y="20" width="50" height="50"/>
@@ -222,7 +208,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="comment" width="12" height="12"/>
-        <image name="reply" width="13" height="10"/>
+        <image name="comment" width="12" height="12.5"/>
+        <image name="reply" width="13.5" height="10"/>
     </resources>
 </document>

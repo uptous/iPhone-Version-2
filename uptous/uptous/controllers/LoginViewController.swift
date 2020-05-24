@@ -24,18 +24,6 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view. // yuval.spector@uptous.com
-        //emailTxtField.text! = "asmithutu@gmail.com"
-        //passwordTxtField.text! = "alpha123"
-        //emailTxtField.text! = "yuval.spector@uptous.com"
-        //passwordTxtField.text! = "aaabbb"  //
-        //emailTxtField.text! = "testp2@uptous.com"
-        //passwordTxtField.text! = "alpha1"  //
-        //emailTxtField.text! = "kalanit@stanford.edu"
-        //passwordTxtField.text! = "140796"
-
-        //emailTxtField.text! = "testp1@uptous.com"
-        //passwordTxtField.text! = "alpha1"  //
         
         //emailTxtField.becomeFirstResponder()
         let paddingView = UIView(frame: CGRect.init(x: 0, y: 0, width: 10, height:self.emailTxtField.frame.height ))
@@ -176,34 +164,37 @@ class LoginViewController: GeneralViewController,SFSafariViewControllerDelegate 
                 appDelegate.tabbarView?.libraryBtn1.isHidden = true
                 appDelegate.tabbarView?.calendarBtn1.isHidden = true
                 
-                self.fetchSignUpItems(ID: array[5])
                 self.navigationController?.pushViewController(controller, animated: false)
+                self.fetchSignUpItems(ID: array[5])
                 UserPreferences.DeepLinkingStatus = ""
                 
             }else if array[3] == "communityAlbum" {
                 controller.selectedIndex = 3
                 appDelegate.tabbarView?.deselectButton()
                 appDelegate.tabbarView?.libraryBtn.isSelected = true
-                
                 appDelegate.tabbarView?.newsFeedBtn1.isHidden = true
                 appDelegate.tabbarView?.contactsBtn1.isHidden = true
                 appDelegate.tabbarView?.signupBtn1.isHidden = true
                 appDelegate.tabbarView?.libraryBtn1.isHidden = false
                 appDelegate.tabbarView?.calendarBtn1.isHidden = true
                 
+                self.navigationController?.pushViewController(controller, animated: false)
+                
                 let pushVC = self.storyboard?.instantiateViewController(withIdentifier: "DetailsLibraryViewController") as! DetailsLibraryViewController
                 pushVC.albumID = array[5]
                 pushVC.modalPresentationStyle = UIModalPresentationStyle.currentContext
-                self.present(pushVC, animated: false, completion: nil)
-                self.navigationController?.pushViewController(controller, animated: false)
+                self.present(pushVC, animated: true, completion: nil)
+                
                 UserPreferences.DeepLinkingStatus = ""
                 
             }else if array[3] == "communityInvite" {
                 controller.selectedIndex = 0
+                self.navigationController?.pushViewController(controller, animated: false)
+                
                 let pushVC = self.storyboard?.instantiateViewController(withIdentifier: "InviteViewController") as! InviteViewController
                 pushVC.modalPresentationStyle = UIModalPresentationStyle.currentContext
                 self.present(pushVC, animated: false, completion: nil)
-                self.navigationController?.pushViewController(controller, animated: false)
+                
                 UserPreferences.DeepLinkingStatus = ""
             }
         }

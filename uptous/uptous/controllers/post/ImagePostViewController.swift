@@ -7,10 +7,7 @@
 //
 
 import UIKit
-//import IBAnimatable
-//import AnimatedTextInput
-//import AnimatableView
-
+import IBAnimatable
 
 class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
@@ -25,15 +22,11 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
     @IBOutlet weak var displayImage2 : UIImageView!
     @IBOutlet weak var displayImage3 : UIImageView!
     @IBOutlet weak var displayImage4 : UIImageView!
-    @IBOutlet var addMoreButton: UIButton!
     
     //@IBOutlet weak var albumView1 : AnimatableView!
     @IBOutlet weak var albumView2 : UIView!
-    @IBOutlet weak var albumView3 : UIView!
-    @IBOutlet weak var albumView4 : UIView!
-    @IBOutlet weak var albumView5 : UIView!
     
-    var selectedAlbumStatus = ""
+    var selectedAlbumStatus = "1"
     var selectedAlbumID = 0
     var uploadedAlbumID = 0
     var selectedImg = 0
@@ -62,8 +55,6 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        //albumView2.isHidden = true
-        addMoreButton.isEnabled = false
         imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         addNewAlbumButton.isEnabled = false
@@ -86,48 +77,54 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
         albumMenuView.isHidden = true
     }
     
-    @IBAction func addMoreButtonClick(_ sender: UIButton) {
-        albumView2.isHidden = true
-    }
-    
     func uploadExitingAlbum(imgData: String) {
-        var stringPost = ""
+        
         if selectedAlbumID != 0 {
             let urlString = PostImageMessage + ("\(selectedCommunityID!)") + ("/album/\(selectedAlbumID)")
-            stringPost += "&filname=" + addNewAlbumTextField.text!
-            stringPost += "&photo=" + ("\(imgData)")
             
-            DataConnectionManager.requestPOSTURL1(api: urlString, stringPost: stringPost, success: {
+            let para = ["filname":addNewAlbumTextField.text!,"photo":("\(imgData)")]
+            
+            //var stringPost = ""
+            //stringPost += "&filname=" + addNewAlbumTextField.text!
+            //stringPost += "&photo=" + ("\(imgData)")
+            
+            DataConnectionManager.requestPOSTURL(api: urlString, para: para, success: {
                 (response) -> Void in
                 
                 if response["status"] as? String == "0" {
-                    DispatchQueue.main.async(execute: {
-                        self.dismiss(animated: true, completion: {})
-                    })
+                    //DispatchQueue.main.async(execute: {
+                    //    self.dismiss(animated: true, completion: {})
+                    //})
                 }else {
                     let msg = response["message"] as? String
                     let alert = UIAlertController(title: "Alert", message: msg, preferredStyle: UIAlertController.Style.alert)
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                 }
+            }, failure: {
+                (error) -> Void in
             })
         }
     }
     
     func uploadImage(imgData: String) {
-        var stringPost = ""
-        let urlString = PostImageMessage + ("\(selectedCommunityID!)") + ("/title/\(fileTextField.text!)")
-    
-        stringPost = "caption=" + captionTextField.text!
-        stringPost += "&filname=" + fileTextField.text!
-        stringPost += "&photo=" + ("\(imgData)")
         
-        DataConnectionManager.requestPOSTURL1(api: urlString, stringPost: stringPost, success: {
+        let albumTitle = fileTextField.text!.replacingOccurrences(of: " ", with: "%20")
+        
+        let urlString = PostImageMessage + ("\(selectedCommunityID!)") + ("/title/\(albumTitle)")
+    
+        let para = ["caption":captionTextField.text!,"filname":albumTitle,"photo":("\(imgData)")]
+        //var stringPost = ""
+        //stringPost = "caption=" + captionTextField.text!
+        //stringPost += "&filname=" + fileTextField.text!
+        //stringPost += "&photo=" + ("\(imgData)")
+        
+        DataConnectionManager.requestPOSTURL(api: urlString, para: para, success: {
             (response) -> Void in
             
             if response["status"] as? String == "0" {
                 self.uploadedAlbumID = Int(response["albumId"] as! String)!//response["albumId"] as! Int
-                DispatchQueue.main.async(execute: {
+                //DispatchQueue.main.async(execute: {
                     if self.displayImage1.image != nil {
                         self.selectedAlbumID = self.uploadedAlbumID
                         self.uploadExitingAlbum(imgData: self.imageData1)
@@ -151,7 +148,7 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
                     self.dismiss(animated: true, completion: {
                     
                     })
-                })
+                //})
                 
             }else {
                 let msg = response["message"] as? String
@@ -159,6 +156,8 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
+        }, failure: {
+            (error) -> Void in
         })
     }
     
@@ -196,6 +195,9 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
             if displayImage4.image != nil {
                 self.uploadExitingAlbum(imgData: imageData4)
             }
+            
+            self.dismiss(animated: true, completion: {
+            })
         }
     }
     
@@ -304,8 +306,8 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
     //MARK: - Delegates
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 // Local variable inserted by Swift 4.2 migrator.
-let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
-
+        
+        let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         
         var chosenImage = UIImage()
         chosenImage = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as! UIImage //2
@@ -317,8 +319,6 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         if selectedImg == 0 {
             imageData = chosenImage.jpegData(compressionQuality: 0.5)?.base64EncodedString()
             self.displayImage.image = chosenImage
-            addMoreButton.isEnabled = true
-            //albumView2.isHidden = true
         }else if selectedImg == 1 {
             imageData1 = chosenImage.jpegData(compressionQuality: 0.5)?.base64EncodedString()
             self.displayImage1.image = chosenImage
@@ -333,11 +333,11 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
             self.displayImage4.image = chosenImage
         }
         
-        dismiss(animated:true, completion: nil)
+        picker.dismiss(animated:true, completion: nil)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
+        picker.dismiss(animated: true, completion: nil)
     }
     
     //MARK: - Crop Photo
@@ -407,7 +407,7 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
             imagePicker.allowsEditing = false
             imagePicker.sourceType = UIImagePickerController.SourceType.camera
             imagePicker.cameraCaptureMode = .photo
-            imagePicker.modalPresentationStyle = .fullScreen
+            imagePicker.modalPresentationStyle = .popover
             present(imagePicker,animated: true,completion: nil)
         }
     }

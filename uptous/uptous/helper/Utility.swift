@@ -230,20 +230,6 @@ class Utility: NSObject {
         (UIApplication.shared.delegate as! AppDelegate).window!.rootViewController?.present(alertController, animated: true, completion: nil)
     }
     
-    class func showAlertWithoutCancel(_ title:String?, message:String?) {
-        
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        
-        let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
-            print("you have pressed OK button");
-        }
-        alertController.addAction(OKAction)
-        
-        print ("Utility: Showing alert from root without cancel")
-        (UIApplication.shared.delegate as! AppDelegate).window!.rootViewController?.present(alertController, animated: true, completion: nil)
-    }
-
-
     class func formateDate(_ date:Date) ->String?
     {
         //Thu, Jan 29, 2015

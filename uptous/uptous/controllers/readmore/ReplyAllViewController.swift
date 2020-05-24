@@ -92,17 +92,6 @@ class ReplyAllViewController: GeneralViewController,MFMailComposeViewControllerD
         })
     }
     
-    func showAlertWithoutCancel(title:String?, message:String?) {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        
-        let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
-            self.fetchOldReplyList()
-            print("you have pressed OK button");
-        }
-        alertController.addAction(OKAction)
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
     //Fetch Old Reply List
     func fetchOldReplyList() {
         let apiName = FetchReplyAPI + ("\(data.newsItemId!)")

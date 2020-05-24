@@ -96,21 +96,24 @@ class MessagePostViewController: UIViewController,DropperDelegate {
         if subjectTextField.text != "" &&  messageTextView.text != "" && selectedCommunity != "" {
             let t1 = content.replacingOccurrences(of: "\n", with: "<br>")
             let urlString = PostMessage + ("\(selectedCommunityID!)")
-            var stringPost = "subject=" + msg
-            stringPost += "&contents=" + t1
+            
+            let para = ["subject":msg,"contents":t1]
+            //var stringPost = "subject=" + msg
+            //stringPost += "&contents=" + t1
 
-            DataConnectionManager.requestPOSTURL1(api: urlString, stringPost: stringPost, success: {
+            DataConnectionManager.requestPOSTURL(api: urlString, para: para, success: {
                 (response) -> Void in
                 if response["status"] as? String == "0" {
                     self.dismiss(animated: true, completion: nil)
                     
                 }else {
-                    //Utility.showAlertWithoutCancel("Alert", message: "Your Post is not Uploaded.")
                     let msg = response["message"] as? String
                     let alert = UIAlertController(title: "Alert", message: msg, preferredStyle: UIAlertController.Style.alert)
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                 }
+            }, failure: {
+                (error) -> Void in
             })
         }else {
             let alert = UIAlertController(title: "Alert", message: "Field missing", preferredStyle: UIAlertController.Style.alert)
@@ -146,7 +149,9 @@ extension MessagePostViewController: UITextViewDelegate {
     }
     
     func addToolBar(textView: UITextView){
-        let toolBar = UIToolbar()
+        
+        //let toolBar = UIToolbar()
+        let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 35))
         toolBar.barStyle = UIBarStyle.default
         toolBar.isTranslucent = true
         toolBar.tintColor = UIColor(red: 76/255, green: 217/255, blue: 100/255, alpha: 1)
@@ -155,7 +160,7 @@ extension MessagePostViewController: UITextViewDelegate {
         let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
         toolBar.setItems([cancelButton, spaceButton, doneButton], animated: false)
         toolBar.isUserInteractionEnabled = true
-        toolBar.sizeToFit()
+        //toolBar.sizeToFit()
         
         textView.delegate = self
         textView.inputAccessoryView = toolBar

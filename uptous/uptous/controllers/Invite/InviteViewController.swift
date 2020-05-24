@@ -66,7 +66,7 @@ class InviteViewController: GeneralViewController,InviteCellDelegate {
             
             if response["status"] as? String == "0" {
                 self.fetchInviteList()
-                Utility.showAlertWithoutCancel("Alert", message: "You Successfully Joined This Community.")
+                self.showAlertWithoutCancel(title: "Alert", message: "You Successfully Joined This Community.")
             }else if response["status"] as? String == "1" {
                 let alert = UIAlertController(title: "Alert", message: response["message"] as? String, preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
@@ -77,6 +77,19 @@ class InviteViewController: GeneralViewController,InviteCellDelegate {
         })
     }
 
+    func showAlertWithoutCancel(title:String?, message:String?) {
+        
+        DispatchQueue.main.async {
+            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+            let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
+                print("you have pressed OK button");
+            }
+            alertController.addAction(OKAction)
+                
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
     
     @IBAction func back(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)

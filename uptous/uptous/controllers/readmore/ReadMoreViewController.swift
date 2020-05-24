@@ -155,17 +155,6 @@ class ReadMoreViewController: GeneralViewController {
         })
     }
     
-    func showAlertWithoutCancel(title:String?, message:String?) {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        
-        let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
-            self.fetchCommentList()
-            print("you have pressed OK button");
-        }
-        alertController.addAction(OKAction)
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
     //Fetch Comment
     func fetchCommentList() {
         let apiName = FetchCommentAPI + ("\(data.feedId!)")
