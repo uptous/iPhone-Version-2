@@ -233,7 +233,6 @@
 		F42D38042026D6F0007BB756 /* SQLTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D38022026D6F0007BB756 /* SQLTable.swift */; };
 		F42D380C2026D81B007BB756 /* ContactsDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D380B2026D81B007BB756 /* ContactsDB.swift */; };
 		F42D380E2026D880007BB756 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F42D380D2026D87F007BB756 /* libsqlite3.tbd */; };
-		F47A28371FC0AFB1009AE620 /* uptous.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 0104484C1FA8BEB600C2B709 /* uptous.entitlements */; };
 		F4B3FFBA202E194200E902C7 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B3FFB8202E194200E902C7 /* WebViewViewController.swift */; };
 		F4B3FFBB202E194200E902C7 /* WebViewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4B3FFB9202E194200E902C7 /* WebViewViewController.xib */; };
 		F4E373CB1FAF30BE00B6BD40 /* DescCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E373C91FAF30BE00B6BD40 /* DescCell.swift */; };
@@ -1256,7 +1255,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
 				LastUpgradeCheck = 1130;
-				ORGANIZATIONNAME = SPA;
+				ORGANIZATIONNAME = UpToUs;
 				TargetAttributes = {
 					D3D8A6251D5EDB44000AB922 = {
 						CreatedOnToolsVersion = 7.2;
@@ -1491,7 +1490,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F47A28371FC0AFB1009AE620 /* uptous.entitlements in Sources */,
 				D35CC7411DE13BF500F8E251 /* SDWebImageDownloader.m in Sources */,
 				D3D42DC21DFB378A00F5E5C7 /* PDFDownload.swift in Sources */,
 				D35CC7401DE13BF500F8E251 /* SDWebImageDecoder.m in Sources */,
@@ -1818,6 +1816,7 @@
 				CODE_SIGN_ENTITLEMENTS = uptous/uptous.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = U8DTDCNJ53;
@@ -1864,9 +1863,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = uptous/uptous.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: UTU, Inc. (U8DTDCNJ53)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: UTU, Inc. (U8DTDCNJ53)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = U8DTDCNJ53;
 				"FRAMEWORK_SEARCH_PATHS[arch=*]" = (
 					"$(inherited)",
@@ -1885,7 +1885,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.uptous.uptous-mobile";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = UpToUsProduction;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "uptous/uptous-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
