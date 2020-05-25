@@ -92,9 +92,7 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
                 (response) -> Void in
                 
                 if response["status"] as? String == "0" {
-                    //DispatchQueue.main.async(execute: {
-                    //    self.dismiss(animated: true, completion: {})
-                    //})
+                    
                 }else {
                     let msg = response["message"] as? String
                     let alert = UIAlertController(title: "Alert", message: msg, preferredStyle: UIAlertController.Style.alert)
@@ -123,7 +121,8 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
             (response) -> Void in
             
             if response["status"] as? String == "0" {
-                self.uploadedAlbumID = Int(response["albumId"] as! String)!//response["albumId"] as! Int
+                self.uploadedAlbumID = Int(response["albumId"] as! String)!
+                
                 //DispatchQueue.main.async(execute: {
                     if self.displayImage1.image != nil {
                         self.selectedAlbumID = self.uploadedAlbumID
@@ -145,9 +144,7 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
                         self.uploadExitingAlbum(imgData: self.imageData4)
                     }
                     
-                    self.dismiss(animated: true, completion: {
                     
-                    })
                 //})
                 
             }else {
@@ -159,6 +156,7 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
         }, failure: {
             (error) -> Void in
         })
+        
     }
     
     @IBAction func uploadButtonClick(_ sender: UIButton) {
@@ -196,9 +194,9 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
                 self.uploadExitingAlbum(imgData: imageData4)
             }
             
-            self.dismiss(animated: true, completion: {
-            })
+            //self.dismiss(animated: true, completion: nil)
         }
+        self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func fetchAlbumClick(_ sender: UIButton) {
@@ -398,7 +396,7 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
         imagePicker.allowsEditing = false
         imagePicker.sourceType = .photoLibrary
         imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
-        imagePicker.modalPresentationStyle = .popover
+        imagePicker.modalPresentationStyle = .overCurrentContext
         present(imagePicker, animated: true, completion: nil)
     }
     
@@ -407,7 +405,7 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
             imagePicker.allowsEditing = false
             imagePicker.sourceType = UIImagePickerController.SourceType.camera
             imagePicker.cameraCaptureMode = .photo
-            imagePicker.modalPresentationStyle = .popover
+            imagePicker.modalPresentationStyle = .overCurrentContext
             present(imagePicker,animated: true,completion: nil)
         }
     }

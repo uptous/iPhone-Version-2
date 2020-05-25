@@ -131,7 +131,8 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     
     //MARK:- SEARCH API HIT
     func getContacts(searchItem: String, offset: Int, limit: Int) {
-         let api = ("\(Members)") + ("/community/0") + ("/search/\(searchItem)") + ("/limit/\(limit)") + ("/offset/\(offset)")
+        let searchKeyword = searchItem.replacingOccurrences(of: " ", with: "%20")
+         let api = ("\(Members)") + ("/community/0") + ("/search/\(searchKeyword)") + ("/limit/\(limit)") + ("/offset/\(offset)")
         DataConnectionManager.requestGETURL(api: api, para: ["":""], success: {
             (jsonResult) -> Void in
             let listArr = jsonResult as! NSArray
@@ -183,7 +184,8 @@ class MyUpToUsContactsViewController: GeneralViewController,LandingCellDelegate,
     
     func getContacts1(searchItem: String, offset: Int, limit: Int) {
         
-        let api = ("\(Members)") + ("/community/0") + ("/search/\(searchItem)") + ("/limit/\(limit)") + ("/offset/\(offset)")
+        let searchKeyword = searchItem.replacingOccurrences(of: " ", with: "%20")
+        let api = ("\(Members)") + ("/community/0") + ("/search/\(searchKeyword)") + ("/limit/\(limit)") + ("/offset/\(offset)")
         
         DataConnectionManager.requestGETURL1(api: api, para: ["":""], success: {
             (jsonResult) -> Void in
