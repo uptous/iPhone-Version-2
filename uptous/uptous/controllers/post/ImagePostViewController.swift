@@ -49,8 +49,9 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
     var imageData4 : String!
     var selectedCommunity = "0"
     var selectedAlbum = "0"
+    var lastImageId = -1
 
-     private var imagePicker : UIImagePickerController!
+    private var imagePicker : UIImagePickerController!
 
 
     override func viewDidLoad() {
@@ -75,24 +76,23 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
     override func viewWillAppear(_ animated: Bool) {
         menuView.isHidden = true
         albumMenuView.isHidden = true
+        lastImageId = -1
     }
     
-    func uploadExitingAlbum(imgData: String) {
+    func uploadExitingAlbum(imgData: String, toDismiss: Bool) {
         
         if selectedAlbumID != 0 {
             let urlString = PostImageMessage + ("\(selectedCommunityID!)") + ("/album/\(selectedAlbumID)")
             
             let para = ["filname":addNewAlbumTextField.text!,"photo":("\(imgData)")]
             
-            //var stringPost = ""
-            //stringPost += "&filname=" + addNewAlbumTextField.text!
-            //stringPost += "&photo=" + ("\(imgData)")
-            
             DataConnectionManager.requestPOSTURL(api: urlString, para: para, success: {
                 (response) -> Void in
                 
                 if response["status"] as? String == "0" {
-                    
+                    if toDismiss {
+                        self.dismiss(animated: true, completion: nil)
+                    }
                 }else {
                     let msg = response["message"] as? String
                     let alert = UIAlertController(title: "Alert", message: msg, preferredStyle: UIAlertController.Style.alert)
@@ -110,12 +110,7 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
         let albumTitle = fileTextField.text!.replacingOccurrences(of: " ", with: "%20")
         
         let urlString = PostImageMessage + ("\(selectedCommunityID!)") + ("/title/\(albumTitle)")
-    
         let para = ["caption":captionTextField.text!,"filname":albumTitle,"photo":("\(imgData)")]
-        //var stringPost = ""
-        //stringPost = "caption=" + captionTextField.text!
-        //stringPost += "&filname=" + fileTextField.text!
-        //stringPost += "&photo=" + ("\(imgData)")
         
         DataConnectionManager.requestPOSTURL(api: urlString, para: para, success: {
             (response) -> Void in
@@ -123,31 +118,34 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
             if response["status"] as? String == "0" {
                 self.uploadedAlbumID = Int(response["albumId"] as! String)!
                 
-                //DispatchQueue.main.async(execute: {
-                    if self.displayImage1.image != nil {
-                        self.selectedAlbumID = self.uploadedAlbumID
-                        self.uploadExitingAlbum(imgData: self.imageData1)
-                    }
-                    
-                    if self.displayImage2.image != nil {
-                        self.selectedAlbumID = self.uploadedAlbumID
-                        self.uploadExitingAlbum(imgData: self.imageData2)
-                    }
-                    
-                    if self.displayImage3.image != nil {
-                        self.selectedAlbumID = self.uploadedAlbumID
-                        self.uploadExitingAlbum(imgData: self.imageData3)
-                    }
-                    
-                    if self.displayImage4.image != nil {
-                        self.selectedAlbumID = self.uploadedAlbumID
-                        self.uploadExitingAlbum(imgData: self.imageData4)
-                    }
-                    
-                    
-                //})
+                if self.lastImageId == 0 {
+                    self.dismiss(animated: true, completion: nil)
+                } else {
                 
-            }else {
+                    //DispatchQueue.main.async(execute: {
+                        if self.displayImage1.image != nil {
+                            self.selectedAlbumID = self.uploadedAlbumID
+                            self.uploadExitingAlbum(imgData: self.imageData1, toDismiss: self.lastImageId == 1)
+                        }
+                        
+                        if self.displayImage2.image != nil {
+                            self.selectedAlbumID = self.uploadedAlbumID
+                            self.uploadExitingAlbum(imgData: self.imageData2, toDismiss: self.lastImageId == 2)
+                        }
+                        
+                        if self.displayImage3.image != nil {
+                            self.selectedAlbumID = self.uploadedAlbumID
+                            self.uploadExitingAlbum(imgData: self.imageData3, toDismiss: self.lastImageId == 3)
+                        }
+                        
+                        if self.displayImage4.image != nil {
+                            self.selectedAlbumID = self.uploadedAlbumID
+                            self.uploadExitingAlbum(imgData: self.imageData4, toDismiss: self.lastImageId == 4)
+                        }
+                    //})
+                }
+                
+            } else {
                 let msg = response["message"] as? String
                 let alert = UIAlertController(title: "Alert", message: msg, preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
@@ -175,28 +173,27 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
             
         }else if (selectedAlbumStatus == "2") {
             if displayImage.image != nil {
-                self.uploadExitingAlbum(imgData: imageData)
+                self.uploadExitingAlbum(imgData: imageData, toDismiss: false)
             }
             
             if displayImage1.image != nil {
-                self.uploadExitingAlbum(imgData: imageData1)
+                self.uploadExitingAlbum(imgData: imageData1, toDismiss: false)
             }
             
             if displayImage2.image != nil {
-                self.uploadExitingAlbum(imgData: imageData2)
+                self.uploadExitingAlbum(imgData: imageData2, toDismiss: false)
             }
             
             if displayImage3.image != nil {
-                self.uploadExitingAlbum(imgData: imageData3)
+                self.uploadExitingAlbum(imgData: imageData3, toDismiss: false)
             }
             
             if displayImage4.image != nil {
-                self.uploadExitingAlbum(imgData: imageData4)
+                self.uploadExitingAlbum(imgData: imageData4, toDismiss: false)
             }
-            
-            //self.dismiss(animated: true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         }
-        self.dismiss(animated: true, completion: nil)
+        //self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func fetchAlbumClick(_ sender: UIButton) {
@@ -317,18 +314,33 @@ class ImagePostViewController: UIViewController,UIImagePickerControllerDelegate,
         if selectedImg == 0 {
             imageData = chosenImage.jpegData(compressionQuality: 0.5)?.base64EncodedString()
             self.displayImage.image = chosenImage
+            if self.lastImageId <= 0 {
+                self.lastImageId = 0
+            }
         }else if selectedImg == 1 {
             imageData1 = chosenImage.jpegData(compressionQuality: 0.5)?.base64EncodedString()
             self.displayImage1.image = chosenImage
+            if self.lastImageId <= 1 {
+                self.lastImageId = 1
+            }
         }else if selectedImg == 2 {
             imageData2 = chosenImage.jpegData(compressionQuality: 0.5)?.base64EncodedString()
             self.displayImage2.image = chosenImage
+            if self.lastImageId <= 2 {
+                self.lastImageId = 2
+            }
         }else if selectedImg == 3 {
             imageData3 = chosenImage.jpegData(compressionQuality: 0.5)?.base64EncodedString()
             self.displayImage3.image = chosenImage
+            if self.lastImageId <= 3 {
+                self.lastImageId = 3
+            }
         }else if selectedImg == 4 {
             imageData4 = chosenImage.jpegData(compressionQuality: 0.5)?.base64EncodedString()
             self.displayImage4.image = chosenImage
+            if self.lastImageId <= 4 {
+                self.lastImageId = 4
+            }
         }
         
         picker.dismiss(animated:true, completion: nil)

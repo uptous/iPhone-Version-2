@@ -46,7 +46,6 @@ class SignUpType3ViewController: UIViewController,UITableViewDelegate, UITableVi
         descTableView.rowHeight = UITableView.automaticDimension
         itemTableView.estimatedRowHeight = 95
         itemTableView.rowHeight = UITableView.automaticDimension
-        print("SignUpType3: ViewDidLoad - Finish")
     }
     
     func updateData(_ data: SignupSheet)  {
@@ -55,7 +54,10 @@ class SignUpType3ViewController: UIViewController,UITableViewDelegate, UITableVi
         print("Notes Length: " + String(notesLength))
         var notesHeight = 220.0
         if (notesLength > 0) {
-            notesHeight = 240.0 + Double(notesLength / 2)
+            notesHeight = 240.0 + Double(notesLength * 4 / 9)
+        }
+        if notesHeight > 400.0 {
+            notesHeight = 400.0
         }
         contentView.updateConstraint(attribute: NSLayoutConstraint.Attribute.height, constant: CGFloat(notesHeight))
         

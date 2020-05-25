@@ -48,7 +48,10 @@ class SignUpType1ViewController: UIViewController,UITableViewDelegate, UITableVi
         print("Notes Length: " + String(notesLength))
         var notesHeight = 120.0
         if (notesLength > 0) {
-            notesHeight = 150.0 + Double(notesLength / 2)
+            notesHeight = 150.0 + Double(notesLength * 4 / 9 )
+        }
+        if notesHeight > 350.0 {
+            notesHeight = 350.0
         }
         contentView.updateConstraint(attribute: NSLayoutConstraint.Attribute.height, constant: CGFloat(notesHeight))
         
